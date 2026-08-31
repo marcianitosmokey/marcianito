@@ -3,38 +3,862 @@
 <head>
     <meta charset="UTF-8">
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-    <meta name="description" content="MARCianito — un pequeño rincón extraño de Internet.">
+    <meta
+        name="description"
+        content="MARCianito.exe — un pequeño rincón extraño de Internet."
+    >
+
+    <meta name="theme-color" content="#6c4cff">
 
     <title>MARCianito.exe</title>
 
-    <style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-        /* =====================================================
-           MARCIANITO.EXE
-           Retro internet / Frutiger Aero / Glitch / Psychedelic
-        ===================================================== */
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Press+Start+2P&family=Space+Mono:wght@400;700&display=swap"
+        rel="stylesheet"
+    >
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+    <link rel="stylesheet" href="style.css">
+</head>
 
-        html {
-            scroll-behavior: smooth;
-        }
+<body>
 
-        body {
-            min-height: 100vh;
-            font-family: "Trebuchet MS", Arial, sans-serif;
+    <!-- EFECTOS GLOBALES -->
 
-            color: #ffffff;
+    <div id="cursor-glow"></div>
+    <div class="noise"></div>
+    <div class="scanlines"></div>
+    <div class="stars"></div>
 
-            background:
-                radial-gradient(circle at 15% 20%, rgba(0, 255, 170, .30), transparent 25%),
-                radial-gradient(circle at 85% 15%, rgba(170, 0, 255, .35), transparent 28%),
+
+    <!-- BARRA SUPERIOR -->
+
+    <header class="topbar glass">
+
+        <a href="#home" class="logo">
+            🛸 MARC<span>IA</span>NITO.exe
+        </a>
+
+        <nav>
+            <a href="#about">about</a>
+            <a href="#links">portals</a>
+            <a href="#music">music</a>
+            <a href="#bots">bots</a>
+        </nav>
+
+        <button id="chaosBtn" class="mini-btn">
+            ✦ CHAOS
+        </button>
+
+    </header>
+
+
+    <main>
+
+        <!-- ================================================= -->
+        <!-- HERO -->
+        <!-- ================================================= -->
+
+        <section id="home" class="section hero">
+
+            <div class="hero-copy">
+
+                <p class="terminal-line">
+                    <span class="blink">●</span>
+                    SIGNAL RECEIVED / EARTH
+                </p>
+
+                <h1
+                    class="glitch"
+                    data-text="MARCianito"
+                >
+                    MARCianito
+                </h1>
+
+                <p class="subtitle">
+                    a little alien corner of the internet
+                    <span>⋆｡°✩</span>
+                </p>
+
+
+                <div class="status glass">
+
+                    <span class="status-dot"></span>
+
+                    <span>
+                        TRANSMISSION ONLINE
+                    </span>
+
+                    <span
+                        id="typing"
+                        class="typing"
+                    ></span>
+
+                </div>
+
+
+                <div class="hero-actions">
+
+                    <a
+                        href="#links"
+                        class="aero-btn primary"
+                    >
+                        ✦ ENTER PORTALS
+                    </a>
+
+                    <button
+                        id="randomPortal"
+                        class="aero-btn"
+                    >
+                        ⤨ RANDOM PORTAL
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- PLANETA / IMAGEN PRINCIPAL -->
+
+            <div class="hero-art">
+
+                <div class="orbit orbit-1"></div>
+                <div class="orbit orbit-2"></div>
+
+                <div class="planet">
+
+                    <img
+                        src="94628.gif"
+                        alt="Animación cósmica"
+                    >
+
+                </div>
+
+
+                <div class="floating-sticker sticker-one">
+                    ૮₍ ˶ᵔ ᵕ ᵔ˶ ₎ა
+                </div>
+
+                <div class="floating-sticker sticker-two">
+                    𖦹 ࣪˖ 🪼
+                </div>
+
+                <div class="floating-sticker sticker-three">
+                    ERROR? 404
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ================================================= -->
+        <!-- ABOUT -->
+        <!-- ================================================= -->
+
+        <section id="about" class="section split">
+
+            <div class="window glass">
+
+                <div class="window-bar">
+
+                    <span>● ● ●</span>
+
+                    <b>
+                        who_am_i.exe
+                    </b>
+
+                    <span>
+                        ↗
+                    </span>
+
+                </div>
+
+
+                <div class="window-body">
+
+                    <p class="eyebrow">
+                        ﹒⌗﹒🛸 TRANSMISSION LOG
+                    </p>
+
+                    <h2>
+                        ¿Quién es este marciano?
+                    </h2>
+
+                    <p>
+                        Bienvenido a mi pequeño rincón de Internet.
+                        Aquí viven mis redes, proyectos, bots,
+                        música, tarot y una cantidad cuestionable
+                        de ventanas abiertas.
+                    </p>
+
+                    <p class="muted">
+                        psychology student · tarot · bot creator ·
+                        internet creature
+                    </p>
+
+
+                    <div class="ascii">
+
+╭──────────────────╮
+│ signal: 100%     │
+│ mood: ???????    │
+│ location: ???    │
+│ species: unknown │
+╰──────────────────╯
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="aero-scene">
+
+                <img
+                    src="93565.gif"
+                    alt="Paisaje Frutiger Aero"
+                >
+
+                <span class="scene-label">
+                    dream_server_01
+                </span>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ================================================= -->
+        <!-- REDES -->
+        <!-- ================================================= -->
+
+        <section id="links" class="section">
+
+            <div class="section-heading">
+
+                <p class="eyebrow">
+                    𖦹˙— PORTALS —˙𖦹
+                </p>
+
+                <h2>
+                    Mis redes
+                </h2>
+
+                <p>
+                    Selecciona una puerta y abandona esta
+                    página bajo tu propia responsabilidad.
+                </p>
+
+            </div>
+
+
+            <div class="portal-grid">
+
+                <a
+                    class="portal-card"
+                    href="https://x.com/afterthesmok3"
+                    target="_blank"
+                    rel="noopener"
+                >
+
+                    <span class="portal-icon">
+                        𝕏
+                    </span>
+
+                    <span>
+                        <b>
+                            afterthesmok3
+                        </b>
+
+                        <small>
+                            social signal
+                        </small>
+                    </span>
+
+                    <i>
+                        ↗
+                    </i>
+
+                </a>
+
+
+                <a
+                    class="portal-card"
+                    href="https://www.instagram.com/josslyn.f4ck"
+                    target="_blank"
+                    rel="noopener"
+                >
+
+                    <span class="portal-icon">
+                        ◎
+                    </span>
+
+                    <span>
+                        <b>
+                            josslyn.f4ck
+                        </b>
+
+                        <small>
+                            visual transmission
+                        </small>
+                    </span>
+
+                    <i>
+                        ↗
+                    </i>
+
+                </a>
+
+            </div>
+
+
+            <div class="marquee">
+
+                <span>
+                    🫧 WELCOME TO THE WEIRD SIDE OF THE WEB
+                    ⋆｡°✩ 🛸 KEEP SCROLLING 🫧
+                </span>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ================================================= -->
+        <!-- MÚSICA -->
+        <!-- ================================================= -->
+
+        <section id="music" class="section music-section">
+
+            <div class="section-heading">
+
+                <p class="eyebrow">
+                    💿 AUDIO SIGNAL
+                </p>
+
+                <h2>
+                    My little radio station
+                </h2>
+
+                <p>
+                    Dale play a lo que quieras escuchar.
+                </p>
+
+            </div>
+
+
+            <div class="music-layout">
+
+                <div class="spotify-column">
+
+
+                    <!-- PLAYLIST 1 -->
+
+                    <article class="music-window glass">
+
+                        <div class="window-bar">
+
+                            <b>
+                                playlist_01.exe
+                            </b>
+
+                            <span>
+                                ♫
+                            </span>
+
+                        </div>
+
+
+                        <iframe
+                            title="Spotify playlist 1"
+                            src="https://open.spotify.com/embed/playlist/2Gi9fghWLLI5qETHwMrKrc?utm_source=generator"
+                            width="100%"
+                            height="352"
+                            frameborder="0"
+                            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                            loading="lazy"
+                        ></iframe>
+
+                    </article>
+
+
+
+                    <!-- PLAYLIST 2 -->
+
+                    <article class="music-window glass">
+
+                        <div class="window-bar">
+
+                            <b>
+                                playlist_02.exe
+                            </b>
+
+                            <span>
+                                ♫
+                            </span>
+
+                        </div>
+
+
+                        <iframe
+                            title="Spotify playlist 2"
+                            src="https://open.spotify.com/embed/playlist/7pKuho7nNNbIDeihFLvNuO?utm_source=generator"
+                            width="100%"
+                            height="352"
+                            frameborder="0"
+                            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                            loading="lazy"
+                        ></iframe>
+
+                    </article>
+
+                </div>
+
+
+
+                <!-- CASSETTE -->
+
+                <aside class="cassette glass">
+
+                    <div class="cassette-label">
+
+                        MARC'S
+                        <br>
+                        RADIO
+
+                    </div>
+
+
+                    <div class="cassette-reel reel-a"></div>
+                    <div class="cassette-reel reel-b"></div>
+
+                    <div class="cassette-tape"></div>
+
+
+                    <p>
+
+                        ♫ currently transmitting
+
+                        <br>
+
+                        <span>
+                            ∞ songs from another dimension
+                        </span>
+
+                    </p>
+
+                </aside>
+
+            </div>
+
+
+
+            <!-- TRACKS -->
+
+            <div class="tracks">
+
+                <h3>
+                    ✦ single transmissions
+                </h3>
+
+
+                <div class="track-grid">
+
+
+                    <iframe
+                        title="Spotify track 1"
+                        src="https://open.spotify.com/embed/track/2mIUxMNXw0u9gewwnomdjL?utm_source=generator"
+                        loading="lazy"
+                    ></iframe>
+
+
+                    <iframe
+                        title="Spotify track 2"
+                        src="https://open.spotify.com/embed/track/5T3yTmOJ1hJxnH8boXgm3l?utm_source=generator"
+                        loading="lazy"
+                    ></iframe>
+
+
+                    <iframe
+                        title="Spotify track 3"
+                        src="https://open.spotify.com/embed/track/3u2hfoDnXpCiQQRQkblecj?utm_source=generator"
+                        loading="lazy"
+                    ></iframe>
+
+
+                    <iframe
+                        title="Spotify track 4"
+                        src="https://open.spotify.com/embed/track/2FAZskT9yRjp2Oow9szJD8?utm_source=generator"
+                        loading="lazy"
+                    ></iframe>
+
+
+                    <iframe
+                        title="Spotify track 5"
+                        src="https://open.spotify.com/embed/track/6M8r5ddeOm2jxoagsSzuFh?utm_source=generator"
+                        loading="lazy"
+                    ></iframe>
+
+
+                    <iframe
+                        title="Spotify track 6"
+                        src="https://open.spotify.com/embed/track/56fgrIPr54E85K98kmgqwy?utm_source=generator"
+                        loading="lazy"
+                    ></iframe>
+
+
+                    <iframe
+                        title="Spotify track 7"
+                        src="https://open.spotify.com/embed/track/1v3rQg6uPY6AnOY5TtxN7I?utm_source=generator"
+                        loading="lazy"
+                    ></iframe>
+
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ================================================= -->
+        <!-- BOTS -->
+        <!-- ================================================= -->
+
+        <section id="bots" class="section">
+
+            <div class="section-heading">
+
+                <p class="eyebrow">
+                    🤖 BOT DIMENSION
+                </p>
+
+                <h2>
+                    My creatures
+                </h2>
+
+                <p>
+                    Mis bots y experimentos repartidos
+                    por diferentes rincones.
+                </p>
+
+            </div>
+
+
+            <div class="bot-grid">
+
+
+                <a
+                    class="bot-card"
+                    href="https://tipsy.chat/es/profile/1787466424723383942"
+                    target="_blank"
+                    rel="noopener"
+                >
+
+                    <span>
+                        01
+                    </span>
+
+                    <b>
+                        Tipsy
+                    </b>
+
+                    <small>
+                        portal
+                    </small>
+
+                    <i>
+                        ↗
+                    </i>
+
+                </a>
+
+
+
+                <a
+                    class="bot-card"
+                    href="https://character.ai/profile/Bubbleseal"
+                    target="_blank"
+                    rel="noopener"
+                >
+
+                    <span>
+                        02
+                    </span>
+
+                    <b>
+                        Bubbleseal
+                    </b>
+
+                    <small>
+                        character portal
+                    </small>
+
+                    <i>
+                        ↗
+                    </i>
+
+                </a>
+
+
+
+                <a
+                    class="bot-card"
+                    href="https://www.hiwaifu.com/es/robot/16984395"
+                    target="_blank"
+                    rel="noopener"
+                >
+
+                    <span>
+                        03
+                    </span>
+
+                    <b>
+                        HiWaifu
+                    </b>
+
+                    <small>
+                        robot portal
+                    </small>
+
+                    <i>
+                        ↗
+                    </i>
+
+                </a>
+
+
+
+                <a
+                    class="bot-card"
+                    href="https://crushon.ai/es/profile/2bd70f05-969c-11f1-818b-6a5b879871a5"
+                    target="_blank"
+                    rel="noopener"
+                >
+
+                    <span>
+                        04
+                    </span>
+
+                    <b>
+                        CrushOn
+                    </b>
+
+                    <small>
+                        profile portal
+                    </small>
+
+                    <i>
+                        ↗
+                    </i>
+
+                </a>
+
+
+
+                <a
+                    class="bot-card"
+                    href="https://janitorai.com/es/profiles/2e56df3b-22bd-47be-aab4-27db8e41aaf1_profile-of-bubble-seal"
+                    target="_blank"
+                    rel="noopener"
+                >
+
+                    <span>
+                        05
+                    </span>
+
+                    <b>
+                        Bubble Seal
+                    </b>
+
+                    <small>
+                        profile portal
+                    </small>
+
+                    <i>
+                        ↗
+                    </i>
+
+                </a>
+
+
+            </div>
+
+
+
+            <!-- GALERÍA DIGITAL -->
+
+            <div class="glitch-gallery">
+
+                <img
+                    src="79908.gif"
+                    alt="Pantalla retro"
+                >
+
+                <img
+                    src="93569.gif"
+                    alt="Computadora submarina"
+                >
+
+                <img
+                    src="79907.gif"
+                    alt="Figura luminosa"
+                >
+
+                <img
+                    src="93568.gif"
+                    alt="Internet Explorer retro"
+                >
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ================================================= -->
+        <!-- GALERÍA FRUTIGER -->
+        <!-- ================================================= -->
+
+        <section class="section visual-zone">
+
+
+            <div class="visual-card big">
+
+                <img
+                    src="93571.gif"
+                    alt="Playa retro"
+                >
+
+                <div class="caption">
+                    paradise.exe has stopped responding
+                </div>
+
+            </div>
+
+
+            <div class="visual-stack">
+
+                <img
+                    src="93563.gif"
+                    alt="Ventana retro con palmeras"
+                >
+
+                <img
+                    src="93570.gif"
+                    alt="Acuario retro"
+                >
+
+            </div>
+
+
+            <div class="visual-stack">
+
+                <img
+                    src="79911.gif"
+                    alt="Bosque fluorescente"
+                >
+
+                <img
+                    src="93566.gif"
+                    alt="Paisaje acuático digital"
+                >
+
+            </div>
+
+
+        </section>
+
+
+
+        <!-- ================================================= -->
+        <!-- SECRET EASTER EGG -->
+        <!-- ================================================= -->
+
+        <section class="section easter">
+
+            <div class="easter-window glass">
+
+                <div class="window-bar">
+
+                    <b>
+                        SECRET_FOLDER
+                    </b>
+
+                    <span>
+                        ?
+                    </span>
+
+                </div>
+
+
+                <div class="easter-body">
+
+                    <p>
+                        𐔌՞ . .՞𐦯
+                    </p>
+
+                    <h2>
+                        you found the weird corner
+                    </h2>
+
+                    <p id="secretText">
+                        haz click aquí para alterar la realidad.
+                    </p>
+
+                    <button
+                        id="secretBtn"
+                        class="aero-btn"
+                    >
+                        ꩜ ALTER REALITY
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+
+    <!-- FOOTER -->
+
+    <footer>
+
+        <div>
+            🛸 MARCianito.exe
+        </div>
+
+        <div>
+            ﹒⌗﹒made somewhere between Earth & the internet﹒⌗﹒
+        </div>
+
+        <div id="clock">
+            00:00:00
+        </div>
+
+    </footer>
+
+
+    <script src="script.js"></script>
+
+</body>
+</html>                radial-gradient(circle at 85% 15%, rgba(170, 0, 255, .35), transparent 28%),
                 radial-gradient(circle at 50% 70%, rgba(0, 150, 255, .30), transparent 35%),
                 linear-gradient(135deg, #030817, #071a35 45%, #17052b);
 
