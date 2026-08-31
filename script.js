@@ -1,299 +1,467 @@
-/* =========================================================
-   MARCIANITO.EXE — script.js
-   ========================================================= */
+(() => {
+  "use strict";
 
-document.addEventListener("DOMContentLoaded", () => {
-  const $ = (s, root = document) => root.querySelector(s);
-  const $$ = (s, root = document) => [...root.querySelectorAll(s)];
+  const $ = (selector, root = document) => root.querySelector(selector);
+  const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
 
-  /* ---------- Loader ---------- */
-  const loader = $("#loader");
-  const progress = $("#progressBar");
-  const bootText = $("#bootText");
-  const bootLines = [
-    "establishing weird connection...",
-    "searching for signal...",
-    "loading internet creature...",
-    "opening portal...",
-    "connection accepted."
-  ];
-  let p = 0;
-  const bootTimer = setInterval(() => {
-    p += Math.floor(Math.random() * 15) + 7;
-    if (p >= 100) p = 100;
-    progress.style.width = p + "%";
-    bootText.textContent = bootLines[Math.min(bootLines.length - 1, Math.floor(p / 25))];
-    if (p >= 100) {
-      clearInterval(bootTimer);
-      setTimeout(() => loader.classList.add("hidden"), 450);
-    }
-  }, 120);
+  const state = {
+    lang: localStorage.getItem("marcianito-lang") || "es",
+    theme: localStorage.getItem("marcianito-theme") || "dark",
+    sound: localStorage.getItem("marcianito-sound") === "on",
+    comments: JSON.parse(localStorage.getItem("marcianito-comments") || "[]"),
+    typingIndex: 0
+  };
 
-  /* ---------- Cursor glow ---------- */
-  const glow = $(".cursor-glow");
-  window.addEventListener("pointermove", e => {
-    glow.style.left = e.clientX + "px";
-    glow.style.top = e.clientY + "px";
-  }, { passive: true });
-
-  /* ---------- Theme ---------- */
-  const themes = ["void", "ocean", "acid", "mono"];
-  let savedTheme = localStorage.getItem("marcianito-theme") || "void";
-  if (!themes.includes(savedTheme)) savedTheme = "void";
-  document.documentElement.dataset.theme = savedTheme;
-
-  $("#themeBtn").addEventListener("click", () => {
-    const next = themes[(themes.indexOf(document.documentElement.dataset.theme) + 1) % themes.length];
-    document.documentElement.dataset.theme = next;
-    localStorage.setItem("marcianito-theme", next);
-    toast(`theme: ${next.toUpperCase()} // signal changed`);
-    playTone(220, .06);
-  });
-
-  /* ---------- Language ---------- */
   const translations = {
     es: {
-      navAbout:"sobre mí", navPortals:"portales", navMusic:"música", navTarot:"tarot", navGuestbook:"guestbook",
-      online:"TRANSMISIÓN ONLINE", heroSub:"somewhere between earth & the internet",
-      intro:"Tarotista, creadora de bots, estudiante y criatura ocasional de Internet. Si llegaste hasta aquí, probablemente ya eres parte del experimento.",
-      enter:"ENTRAR", random:"SORPRÉNDEME", aboutTitle:"Sobre el marciano",
-      quote:"No sé cómo llegaste aquí, pero quédate tantito.",
-      aboutText:"Este es mi rincón personal: un archivo de mis proyectos, redes, música, bots, tarot y todas esas pequeñas cosas que terminan formando mi universo. No prometo que tenga sentido. Sí prometo que tendrá personalidad.",
-      portalsTitle:"Mis portales", musicPortal:"Mi música", botsPortal:"Mis bots", botsTitle:"Mis bots",
-      musicTitle:"La estación de música", tarotTitle:"Tarot & señales",
-      tarotHeading:"Un espacio para las cartas, símbolos y preguntas.",
-      tarotText:"Si quieres conocer más sobre mis lecturas o contactarme para una consulta, puedes hacerlo desde aquí. El tarot es una herramienta de reflexión y entretenimiento, no una garantía de lo que ocurrirá.",
-      tarotContact:"CONTACTAR", guestTitle:"Guestbook",
-      guestIntro:"Deja un mensaje. Puedes usar cualquier nombre o escribir como anónimo.",
-      nameLabel:"Nombre", messageLabel:"Mensaje",
-      localNote:"Nota: esta versión guarda los mensajes en el navegador. Para un guestbook público compartido entre visitantes se necesita conectar una base de datos.",
-      galleryTitle:"Archivo visual", footerText:"made somewhere between a browser tab and another dimension."
+      bootText: "estableciendo conexión interplanetaria...",
+      navAbout: "about", navPortals: "portals", navMusic: "music", navTarot: "tarot", navGuestbook: "guestbook",
+      windowTitle: "señal encontrada", online: "TRANSMISSION ONLINE",
+      heroSubtitle: "un pequeño rincón de Internet perdido entre estrellas, bots y cosas raras.",
+      openPortals: "abrir portales ↗", random: "sorpréndeme ✦",
+      whoami: "tarotista · creadora de bots · estudiante · programadora en proceso",
+      friendText: "hola, criatura terrestre", aboutTitle: "¿quién demonios es Marcianito?",
+      sectionSignal: "SIGNAL PROFILE", aboutCardTitle: "una criatura de Internet",
+      aboutText: "Este sitio es mi pequeño archivo personal: redes, música, bots, tarot, proyectos, gustos y cualquier cosa que parezca haber escapado de otra dimensión.",
+      profileOccupation: "tarot · bots · student", moodBtn: "generar mood",
+      sectionPortals: "PORTALS", portalsTitle: "mis coordenadas en Internet", visit: "entrar al portal ↗",
+      sectionMusic: "AUDIO SIGNAL", musicTitle: "lo que suena dentro de la nave",
+      trackNote: "elige una señal de Spotify", nextTrack: "siguiente señal ↻", trackWallTitle: "TRACK ARCHIVE",
+      sectionTarot: "ORACLE CHANNEL", tarotTitle: "una carta para tu señal", tarotHeading: "elige una carta",
+      tarotText: "No es una predicción absoluta. Úsalo como una dinámica simbólica para reflexionar, jugar y escuchar lo que ya traes dentro.",
+      drawCard: "sacar carta ✦", tarotWaiting: "la baraja está esperando...",
+      sectionGallery: "SIGNAL ARCHIVE", galleryTitle: "cosas encontradas flotando por ahí", randomFilter: "RANDOM",
+      sectionGuestbook: "GUESTBOOK", guestbookTitle: "deja una señal", nameLabel: "nombre o alias", messageLabel: "mensaje",
+      sendMessage: "transmitir ↗", guestNote: "Los mensajes se guardan en este navegador. Para que sean compartidos públicamente entre visitantes hace falta conectar un servicio de base de datos.",
+      footerText: "made somewhere between Earth and the void · press everything"
     },
     en: {
-      navAbout:"about", navPortals:"portals", navMusic:"music", navTarot:"tarot", navGuestbook:"guestbook",
-      online:"ONLINE TRANSMISSION", heroSub:"somewhere between earth & the internet",
-      intro:"Tarot reader, bot creator, student and occasional Internet creature. If you made it here, you're probably already part of the experiment.",
-      enter:"ENTER", random:"SURPRISE ME", aboutTitle:"About the alien",
-      quote:"I don't know how you got here, but stay for a bit.",
-      aboutText:"This is my personal corner: an archive of my projects, socials, music, bots, tarot and all those tiny things that end up forming my universe. I don't promise it will make sense. I do promise it will have personality.",
-      portalsTitle:"My portals", musicPortal:"My music", botsPortal:"My bots", botsTitle:"My bots",
-      musicTitle:"The music station", tarotTitle:"Tarot & signals",
-      tarotHeading:"A space for cards, symbols and questions.",
-      tarotText:"If you'd like to know more about my readings or contact me for a session, you can do it here. Tarot is a tool for reflection and entertainment, not a guarantee of what will happen.",
-      tarotContact:"CONTACT", guestTitle:"Guestbook",
-      guestIntro:"Leave a message. Use any name you want or write anonymously.",
-      nameLabel:"Name", messageLabel:"Message",
-      localNote:"Note: this version stores messages in your browser. A shared public guestbook requires a database connection.",
-      galleryTitle:"Visual archive", footerText:"made somewhere between a browser tab and another dimension."
+      bootText: "establishing interplanetary connection...",
+      navAbout: "about", navPortals: "portals", navMusic: "music", navTarot: "tarot", navGuestbook: "guestbook",
+      windowTitle: "signal found", online: "TRANSMISSION ONLINE",
+      heroSubtitle: "a tiny corner of the Internet lost somewhere between stars, bots and weird things.",
+      openPortals: "open portals ↗", random: "surprise me ✦",
+      whoami: "tarot reader · bot creator · student · programmer in progress",
+      friendText: "hello, earth creature", aboutTitle: "who the hell is Marcianito?",
+      sectionSignal: "SIGNAL PROFILE", aboutCardTitle: "an Internet creature",
+      aboutText: "This site is my little personal archive: socials, music, bots, tarot, projects, tastes and anything that looks like it escaped from another dimension.",
+      profileOccupation: "tarot · bots · student", moodBtn: "generate mood",
+      sectionPortals: "PORTALS", portalsTitle: "my coordinates on the Internet", visit: "enter portal ↗",
+      sectionMusic: "AUDIO SIGNAL", musicTitle: "what is playing inside the ship",
+      trackNote: "choose a Spotify signal", nextTrack: "next signal ↻", trackWallTitle: "TRACK ARCHIVE",
+      sectionTarot: "ORACLE CHANNEL", tarotTitle: "a card for your signal", tarotHeading: "choose a card",
+      tarotText: "Not an absolute prediction. Use it as a symbolic little game to reflect, play and listen to what you already carry inside.",
+      drawCard: "draw a card ✦", tarotWaiting: "the deck is waiting...",
+      sectionGallery: "SIGNAL ARCHIVE", galleryTitle: "things found floating around", randomFilter: "RANDOM",
+      sectionGuestbook: "GUESTBOOK", guestbookTitle: "leave a signal", nameLabel: "name or alias", messageLabel: "message",
+      sendMessage: "transmit ↗", guestNote: "Messages are stored in this browser. For messages to be shared publicly between visitors, a database service must be connected.",
+      footerText: "made somewhere between Earth and the void · press everything"
     }
   };
 
-  let lang = localStorage.getItem("marcianito-lang") || "es";
-  const setLanguage = value => {
-    lang = value;
-    localStorage.setItem("marcianito-lang", lang);
+  const typingES = [
+    "welcome, terrestrial being...",
+    "searching for lost signals...",
+    "loading weird internet...",
+    "tarot.exe ready.",
+    "bots online.",
+    "do not trust the fish."
+  ];
+  const typingEN = [
+    "welcome, terrestrial being...",
+    "searching for lost signals...",
+    "loading weird internet...",
+    "tarot.exe ready.",
+    "bots online.",
+    "do not trust the fish."
+  ];
+
+  function applyLanguage() {
+    const t = translations[state.lang];
+    document.documentElement.lang = state.lang;
     $$("[data-i18n]").forEach(el => {
       const key = el.dataset.i18n;
-      if (translations[lang][key]) el.textContent = translations[lang][key];
+      if (t[key]) el.textContent = t[key];
     });
-    $("#langBtn").textContent = lang === "es" ? "EN" : "ES";
-    document.documentElement.lang = lang;
-  };
-  setLanguage(lang);
-  $("#langBtn").addEventListener("click", () => {
-    setLanguage(lang === "es" ? "en" : "es");
-    toast(lang === "es" ? "idioma: español" : "language: english");
-    playTone(440, .05);
-  });
+    $("#langToggle").textContent = state.lang === "es" ? "EN" : "ES";
+    localStorage.setItem("marcianito-lang", state.lang);
+    renderComments();
+  }
 
-  /* ---------- Tiny audio synth: no external files ---------- */
-  let soundOn = localStorage.getItem("marcianito-sound") === "1";
+  function applyTheme() {
+    document.body.dataset.theme = state.theme;
+    localStorage.setItem("marcianito-theme", state.theme);
+  }
+
+  function cycleTheme() {
+    const themes = ["dark", "ocean", "violet", "toxic"];
+    state.theme = themes[(themes.indexOf(state.theme) + 1) % themes.length];
+    applyTheme();
+    toast(`theme → ${state.theme.toUpperCase()}`);
+    clickSound(520);
+  }
+
+  function toast(message) {
+    const el = $("#toast");
+    el.textContent = message;
+    el.classList.add("show");
+    clearTimeout(toast.timer);
+    toast.timer = setTimeout(() => el.classList.remove("show"), 2200);
+  }
+
+  function particle(x, y, symbol = "✦") {
+    const el = document.createElement("span");
+    el.className = "particle";
+    el.textContent = symbol;
+    el.style.left = `${x}px`;
+    el.style.top = `${y}px`;
+    el.style.setProperty("--dx", `${(Math.random() - .5) * 180}px`);
+    el.style.setProperty("--dy", `${-50 - Math.random() * 130}px`);
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 1200);
+  }
+
+  // Lightweight click sound using Web Audio; no external audio file is required.
   let audioCtx = null;
-  const playTone = (freq = 440, duration = .05) => {
-    if (!soundOn) return;
+  function clickSound(freq = 440) {
+    if (!state.sound) return;
     try {
       audioCtx ||= new (window.AudioContext || window.webkitAudioContext)();
       const osc = audioCtx.createOscillator();
       const gain = audioCtx.createGain();
-      osc.type = "square";
+      osc.type = "sine";
       osc.frequency.value = freq;
-      gain.gain.setValueAtTime(.018, audioCtx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(.0001, audioCtx.currentTime + duration);
+      gain.gain.setValueAtTime(.0001, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(.045, audioCtx.currentTime + .01);
+      gain.gain.exponentialRampToValueAtTime(.0001, audioCtx.currentTime + .12);
       osc.connect(gain).connect(audioCtx.destination);
       osc.start();
-      osc.stop(audioCtx.currentTime + duration);
-    } catch {}
-  };
-  const updateSoundButton = () => $("#soundBtn").textContent = soundOn ? "♫" : "♩";
-  updateSoundButton();
-  $("#soundBtn").addEventListener("click", () => {
-    soundOn = !soundOn;
-    localStorage.setItem("marcianito-sound", soundOn ? "1" : "0");
-    updateSoundButton();
-    if (soundOn) playTone(520, .08);
-    toast(soundOn ? "sound: ON" : "sound: OFF");
-  });
+      osc.stop(audioCtx.currentTime + .13);
+    } catch (_) {}
+  }
 
-  /* ---------- Visitor counter ---------- */
-  const visitorKey = "marcianito-visits";
-  const visits = Number(localStorage.getItem(visitorKey) || "0") + 1;
-  localStorage.setItem(visitorKey, visits);
-  $("#visitorCount").textContent = String(visits).padStart(6, "0");
+  function toggleSound() {
+    state.sound = !state.sound;
+    localStorage.setItem("marcianito-sound", state.sound ? "on" : "off");
+    $("#soundToggle").textContent = state.sound ? "♫" : "♪";
+    toast(state.sound ? "sound signal: ON" : "sound signal: OFF");
+    if (state.sound) clickSound(660);
+  }
 
-  /* ---------- Mood ---------- */
+  // Boot sequence
+  function boot() {
+    const screen = $("#boot-screen");
+    const bar = $("#boot-progress");
+    let p = 0;
+    const timer = setInterval(() => {
+      p += Math.floor(Math.random() * 9) + 4;
+      if (p >= 100) {
+        p = 100;
+        clearInterval(timer);
+        setTimeout(() => screen.classList.add("hidden"), 300);
+      }
+      bar.style.width = `${p}%`;
+    }, 65);
+  }
+
+  // Stars
+  function initStars() {
+    const canvas = $("#stars");
+    const ctx = canvas.getContext("2d");
+    let w, h, stars = [];
+    function resize() {
+      w = canvas.width = innerWidth * devicePixelRatio;
+      h = canvas.height = innerHeight * devicePixelRatio;
+      canvas.style.width = `${innerWidth}px`;
+      canvas.style.height = `${innerHeight}px`;
+      const count = Math.min(180, Math.floor(innerWidth / 7));
+      stars = Array.from({length: count}, () => ({
+        x: Math.random() * w, y: Math.random() * h, r: Math.random() * 1.5 + .2,
+        a: Math.random(), s: Math.random() * .015 + .003
+      }));
+    }
+    function draw() {
+      ctx.clearRect(0,0,w,h);
+      stars.forEach(s => {
+        s.a += s.s;
+        const alpha = .25 + (Math.sin(s.a * 6) + 1) * .22;
+        ctx.fillStyle = `rgba(255,255,255,${alpha})`;
+        ctx.beginPath();
+        ctx.arc(s.x,s.y,s.r * devicePixelRatio,0,Math.PI*2);
+        ctx.fill();
+      });
+      requestAnimationFrame(draw);
+    }
+    addEventListener("resize", resize, {passive:true});
+    resize(); draw();
+  }
+
+  // Cursor glow + tilt
+  function initEffects() {
+    const glow = $(".cursor-glow");
+    addEventListener("pointermove", e => {
+      glow.style.left = `${e.clientX}px`;
+      glow.style.top = `${e.clientY}px`;
+    }, {passive:true});
+
+    $$(".tilt-card").forEach(card => {
+      card.addEventListener("pointermove", e => {
+        if (matchMedia("(max-width: 780px)").matches) return;
+        const r = card.getBoundingClientRect();
+        const x = (e.clientX - r.left) / r.width - .5;
+        const y = (e.clientY - r.top) / r.height - .5;
+        card.style.transform = `perspective(900px) rotateX(${y * -2.5}deg) rotateY(${x * 2.5}deg) translateY(-2px)`;
+      });
+      card.addEventListener("pointerleave", () => card.style.transform = "");
+    });
+
+    document.addEventListener("click", e => {
+      if (e.target.closest("button,a,.gallery-item")) {
+        particle(e.clientX, e.clientY, ["✦","✧","⋆","♡","🛸"][Math.floor(Math.random()*5)]);
+        clickSound(300 + Math.random()*500);
+      }
+    });
+  }
+
+  // Typing line
+  function typingLoop() {
+    const el = $("#typing");
+    const lines = state.lang === "es" ? typingES : typingEN;
+    const line = lines[state.typingIndex % lines.length];
+    let i = 0;
+    el.textContent = "";
+    const interval = setInterval(() => {
+      el.textContent = line.slice(0, i++);
+      if (i > line.length) {
+        clearInterval(interval);
+        setTimeout(() => {
+          state.typingIndex++;
+          typingLoop();
+        }, 1200);
+      }
+    }, 45);
+  }
+
+  // Mood
   const moods = [
-    "purple static", "aquatic", "slightly confused", "dreamcore",
-    "404 feelings", "cosmic", "loading...", "mysterious"
+    "alien de lunes", "bruma cósmica", "404 emocional", "modo pez", "neon brain",
+    "tarot goblin", "internet fairy", "vibing.exe", "signal lost", "sweet chaos"
   ];
-  $("#moodText").textContent = moods[Math.floor(Math.random() * moods.length)];
+  $("#moodBtn").addEventListener("click", () => {
+    $("#moodText").textContent = moods[Math.floor(Math.random()*moods.length)];
+    toast("mood generated ✦");
+  });
 
-  /* ---------- Clock ---------- */
-  const tick = () => {
-    const d = new Date();
-    $("#clock").textContent = d.toLocaleTimeString([], { hour12: false });
-  };
-  tick();
-  setInterval(tick, 1000);
-
-  /* ---------- Random surprise ---------- */
-  const surprises = [
-    ["you found a secret signal.", "#guestbook"],
-    ["the alien says hi.", "#about"],
-    ["go listen to something.", "#music"],
-    ["perhaps the cards know.", "#tarot"],
-    ["open a portal.", "#portals"],
-    ["look at the visual noise.", ".gallery-section"]
-  ];
+  // Random portal
   $("#randomBtn").addEventListener("click", () => {
-    const [text, target] = surprises[Math.floor(Math.random() * surprises.length)];
-    toast(text);
-    playTone(330, .06);
-    document.querySelector(target)?.scrollIntoView({ behavior: "smooth", block: "center" });
+    const sections = ["#portals", "#music", "#tarot", "#gallery", "#guestbook"];
+    const target = sections[Math.floor(Math.random()*sections.length)];
+    document.querySelector(target).scrollIntoView({behavior:"smooth"});
+    document.body.classList.add("glitch-mode");
+    setTimeout(() => document.body.classList.remove("glitch-mode"), 1100);
+    toast(`portal selected → ${target.replace("#","").toUpperCase()}`);
   });
 
-  /* ---------- Tarot ---------- */
-  const cards = [
-    ["THE MOON", "la intuición también necesita preguntas claras."],
-    ["THE STAR", "una señal no siempre necesita ser ruidosa para ser importante."],
-    ["THE FOOL", "curiosidad primero; mapa después."],
-    ["THE HERMIT", "a veces desconectarse también es una forma de encontrar señal."],
-    ["THE MAGICIAN", "tienes más herramientas de las que crees."],
-    ["THE SUN", "algo puede ser simple y seguir siendo maravilloso."],
-    ["THE WORLD", "cerrar un ciclo también abre otra pestaña."]
+  // Track wall: all supplied Spotify URLs
+  const tracks = [
+    ["2mIUxMNXw0u9gewwnomdjL", "track signal 01", "Spotify track"],
+    ["5T3yTmOJ1hJxnH8boXgm3l", "track signal 02", "Spotify track"],
+    ["3u2hfoDnXpCiQQRQkblecj", "track signal 03", "Spotify track"],
+    ["2FAZskT9yRjp2Oow9szJD8", "track signal 04", "Spotify track"],
+    ["6M8r5ddeOm2jxoagsSzuFh", "track signal 05", "Spotify track"],
+    ["56fgrIPr54E85K98kmgqwy", "track signal 06", "Spotify track"],
+    ["1v3rQg6uPY6AnOY5TtxN7I", "track signal 07", "Spotify track"]
   ];
-  $("#drawCard").addEventListener("click", () => {
-    const [name, meaning] = cards[Math.floor(Math.random() * cards.length)];
-    $("#cardName").textContent = name;
-    $("#cardMeaning").textContent = meaning;
-    playTone(260, .09);
+  const playlists = [
+    ["2Gi9fghWLLI5qETHwMrKrc", "playlist 01"],
+    ["7pKuho7nNNbIDeihFLvNuO", "playlist 02"]
+  ];
+
+  function renderTracks() {
+    $("#trackList").innerHTML = tracks.map((t,i) => `
+      <div class="track-item">
+        <span class="track-number">${String(i+1).padStart(2,"0")}</span>
+        <a href="https://open.spotify.com/track/${t[0]}" target="_blank" rel="noopener noreferrer">${t[1]}</a>
+        <small>${t[2]}</small>
+      </div>
+    `).join("");
+  }
+
+  let trackIndex = 0;
+  $("#shuffleTrack").addEventListener("click", () => {
+    trackIndex = (trackIndex + 1) % (tracks.length + playlists.length);
+    const item = trackIndex < tracks.length ? tracks[trackIndex] : playlists[trackIndex - tracks.length];
+    const isPlaylist = trackIndex >= tracks.length;
+    $("#trackName").textContent = isPlaylist ? item[1] : item[1];
+    $("#trackNote").textContent = isPlaylist ? "playlist signal → Spotify" : "track signal → Spotify";
+    toast(`signal ${String(trackIndex+1).padStart(2,"0")} loaded`);
   });
 
-  /* ---------- Guestbook: local browser storage ---------- */
-  const messageKey = "marcianito-guestbook";
-  const messagesEl = $("#messages");
-  const nameInput = $("#guestName");
-  const messageInput = $("#guestMessage");
-  const charCount = $("#charCount");
+  // Tarot
+  const tarot = [
+    ["The Star / La Estrella", "esperanza, dirección y volver a mirar hacia arriba. Una señal de que puedes seguir avanzando sin tener todo resuelto."],
+    ["The Moon / La Luna", "intuición, dudas y cosas que todavía no se ven claras. No todo necesita una respuesta inmediata."],
+    ["The Magician / El Mago", "recursos, creatividad y capacidad de convertir una idea en algo real. Empieza con lo que ya tienes."],
+    ["The Fool / El Loco", "curiosidad, comienzo y experimentar. No significa actuar sin pensar; significa permitirte descubrir."],
+    ["The Hermit / El Ermitaño", "pausa, reflexión y escuchar tu propia señal antes de seguir el ruido exterior."],
+    ["The Sun / El Sol", "claridad, energía y una etapa más abierta. Deja que algo sencillo también pueda hacerte bien."],
+    ["Death / La Muerte", "cierre y transformación simbólica. Algo puede cambiar de forma sin que eso signifique una tragedia."],
+    ["The World / El Mundo", "cierre de ciclo, integración y reconocer cuánto camino ya existe detrás de ti."]
+  ];
 
-  const escapeHTML = str => {
-    const div = document.createElement("div");
-    div.textContent = str;
-    return div.innerHTML;
-  };
+  $("#drawCard").addEventListener("click", () => {
+    const result = $("#tarotResult");
+    const [name, meaning] = tarot[Math.floor(Math.random()*tarot.length)];
+    result.classList.add("revealed");
+    result.innerHTML = `<div><div class="tarot-card-name">${name}</div><p class="tarot-card-meaning">${meaning}</p><button class="aero-btn small" id="drawAgain" type="button">${state.lang === "es" ? "otra carta ↻" : "another card ↻"}</button></div>`;
+    $("#drawAgain").addEventListener("click", () => $("#drawCard").click());
+  });
 
-  const getMessages = () => {
-    try { return JSON.parse(localStorage.getItem(messageKey) || "[]"); }
-    catch { return []; }
-  };
+  // Gallery filters
+  $$(".filter-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      $$(".filter-btn").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      const filter = btn.dataset.filter;
+      const items = $$(".gallery-item");
+      if (filter === "random") {
+        items.forEach(i => i.classList.remove("hidden"));
+        items.sort(() => Math.random() - .5).forEach(i => $("#galleryGrid").appendChild(i));
+        toast("archive shuffled ✦");
+        return;
+      }
+      items.forEach(item => item.classList.toggle("hidden", filter !== "all" && !item.classList.contains(filter)));
+    });
+  });
 
-  const renderMessages = () => {
-    const data = getMessages();
-    if (!data.length) {
-      messagesEl.innerHTML = `<div class="message"><div class="message-text">No signals yet... be the first transmission.</div></div>`;
+  // Gallery modal
+  const modal = $("#modal"), modalContent = $("#modalContent");
+  $$(".gallery-item").forEach(item => {
+    item.addEventListener("click", () => {
+      const img = $("img", item);
+      const caption = $("figcaption", item)?.textContent || "";
+      modalContent.innerHTML = `<img class="modal-img" src="${img.src}" alt=""><div class="modal-caption">${caption}</div>`;
+      modal.classList.add("open");
+      modal.setAttribute("aria-hidden","false");
+    });
+  });
+  function closeModal() {
+    modal.classList.remove("open");
+    modal.setAttribute("aria-hidden","true");
+  }
+  $("#closeModal").addEventListener("click", closeModal);
+  modal.addEventListener("click", e => { if (e.target === modal) closeModal(); });
+  document.addEventListener("keydown", e => { if (e.key === "Escape") closeModal(); });
+
+  // Guestbook, local-only by design.
+  function renderComments() {
+    const list = $("#guestbookList");
+    const fallback = state.lang === "es"
+      ? "Todavía no hay señales. Sé la primera criatura en dejar una."
+      : "No signals yet. Be the first creature to leave one.";
+    if (!state.comments.length) {
+      list.innerHTML = `<div class="guest-entry"><strong>MARCIANITO.EXE</strong><p>${fallback}</p></div>`;
       return;
     }
-    messagesEl.innerHTML = data.slice().reverse().map(m => `
-      <article class="message">
-        <div class="message-head">
-          <span class="message-name">${escapeHTML(m.name || "ANÓNIMO")}</span>
-          <span class="message-date">${escapeHTML(m.date)}</span>
-        </div>
-        <p class="message-text">${escapeHTML(m.text)}</p>
+    list.innerHTML = state.comments.map(c => `
+      <article class="guest-entry">
+        <header><strong>${escapeHTML(c.name)}</strong><time>${escapeHTML(c.date)}</time></header>
+        <p>${escapeHTML(c.message)}</p>
       </article>
     `).join("");
-  };
+  }
 
-  messageInput.addEventListener("input", () => charCount.textContent = messageInput.value.length);
+  function escapeHTML(value) {
+    return String(value).replace(/[&<>"']/g, ch => ({
+      "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#039;"
+    }[ch]));
+  }
 
-  $("#guestForm").addEventListener("submit", e => {
-    e.preventDefault();
-    const name = nameInput.value.trim().slice(0, 30) || "ANÓNIMO";
-    const text = messageInput.value.trim().slice(0, 280);
-    if (!text) return;
-    const data = getMessages();
-    data.push({
+  const messageBox = $("#guestMessage");
+  messageBox.addEventListener("input", () => $("#charCount").textContent = `${messageBox.value.length}/300`);
+
+  $("#sendGuest").addEventListener("click", () => {
+    const name = ($("#guestName").value.trim() || (state.lang === "es" ? "criatura anónima" : "anonymous creature")).slice(0,32);
+    const message = messageBox.value.trim().slice(0,300);
+    if (!message) {
+      toast(state.lang === "es" ? "escribe una señal primero 👽" : "write a signal first 👽");
+      messageBox.focus();
+      return;
+    }
+    state.comments.unshift({
       name,
-      text,
-      date: new Date().toLocaleString(lang === "es" ? "es-MX" : "en-US", { dateStyle: "short", timeStyle: "short" })
+      message,
+      date: new Intl.DateTimeFormat(state.lang === "es" ? "es-MX" : "en-US", {dateStyle:"short", timeStyle:"short"}).format(new Date())
     });
-    localStorage.setItem(messageKey, JSON.stringify(data.slice(-30)));
-    e.target.reset();
-    charCount.textContent = "0";
-    renderMessages();
-    toast("signal transmitted ✦");
-    playTone(620, .08);
+    state.comments = state.comments.slice(0, 30);
+    localStorage.setItem("marcianito-comments", JSON.stringify(state.comments));
+    $("#guestName").value = "";
+    messageBox.value = "";
+    $("#charCount").textContent = "0/300";
+    renderComments();
+    toast(state.lang === "es" ? "señal transmitida ✦" : "signal transmitted ✦");
   });
 
-  $("#clearMessages").addEventListener("click", () => {
-    if (!getMessages().length) return toast("nothing to clear.");
-    localStorage.removeItem(messageKey);
-    renderMessages();
-    toast("local signals cleared.");
-  });
-  renderMessages();
-
-  /* ---------- Easter egg ---------- */
-  const egg = $("#easterEgg");
-  const openEgg = () => {
-    egg.classList.add("open");
-    egg.setAttribute("aria-hidden", "false");
-    playTone(180, .12);
-  };
-  const closeEgg = () => {
-    egg.classList.remove("open");
-    egg.setAttribute("aria-hidden", "true");
-  };
-  $("#easterEggBtn").addEventListener("click", openEgg);
-  $("#closeEgg").addEventListener("click", closeEgg);
-  $("#eggAction").addEventListener("click", () => {
-    toast("you clicked it AGAIN. impressive.");
-    playTone(760, .06);
-  });
-  egg.addEventListener("click", e => { if (e.target === egg) closeEgg(); });
-
-  /* ---------- Konami-style keyboard secret ---------- */
-  const secret = ["m","a","r","c","i","a","n","i","t","o"];
-  let secretIndex = 0;
-  window.addEventListener("keydown", e => {
-    if (e.key.toLowerCase() === secret[secretIndex]) secretIndex++;
-    else secretIndex = 0;
-    if (secretIndex === secret.length) {
-      secretIndex = 0;
-      openEgg();
-      toast("secret sequence accepted.");
+  // Easter eggs
+  let logoClicks = 0;
+  $(".brand-mini").addEventListener("click", e => {
+    logoClicks++;
+    if (logoClicks >= 5) {
+      logoClicks = 0;
+      document.body.classList.toggle("party-mode");
+      toast("MARCianito PARTY MODE ✦");
     }
   });
 
-  /* ---------- Interactive links ---------- */
-  $$("a").forEach(a => a.addEventListener("mouseenter", () => playTone(180 + Math.random()*250, .025)));
-});
+  let konami = [];
+  const secret = ["ArrowUp","ArrowUp","ArrowDown","ArrowDown","ArrowLeft","ArrowRight","ArrowLeft","ArrowRight","b","a"];
+  document.addEventListener("keydown", e => {
+    konami.push(e.key);
+    konami = konami.slice(-secret.length);
+    if (konami.join("|") === secret.join("|")) {
+      document.body.classList.toggle("party-mode");
+      toast("secret signal unlocked 🛸");
+      for (let i=0;i<25;i++) setTimeout(() => particle(Math.random()*innerWidth, innerHeight*.75, "✦"), i*30);
+    }
+  });
 
-/* Global toast because it is useful from several handlers */
-function toast(message) {
-  const el = document.querySelector("#toast");
-  if (!el) return;
-  el.textContent = message;
-  el.classList.add("show");
-  clearTimeout(window.__toastTimer);
-  window.__toastTimer = setTimeout(() => el.classList.remove("show"), 2300);
-}
+  $("#secretButton").addEventListener("click", () => {
+    const msgs = [
+      "you found the suspicious button.",
+      "there is no lore here. probably.",
+      "the fish knows.",
+      "MARCianito is watching the loading bar.",
+      "404: normal behavior not found."
+    ];
+    toast(msgs[Math.floor(Math.random()*msgs.length)]);
+  });
+
+  // Controls
+  $("#langToggle").addEventListener("click", () => {
+    state.lang = state.lang === "es" ? "en" : "es";
+    applyLanguage();
+    typingLoop();
+    clickSound(700);
+  });
+  $("#themeToggle").addEventListener("click", cycleTheme);
+  $("#soundToggle").addEventListener("click", toggleSound);
+
+  // Year + initial state
+  $("#year").textContent = new Date().getFullYear();
+  applyTheme();
+  applyLanguage();
+  $("#soundToggle").textContent = state.sound ? "♫" : "♪";
+  renderTracks();
+  renderComments();
+  initStars();
+  initEffects();
+  typingLoop();
+  boot();
+
+  // Keyboard shortcuts
+  document.addEventListener("keydown", e => {
+    if (e.target.matches("input,textarea")) return;
+    if (e.key.toLowerCase() === "t") $("#drawCard").click();
+    if (e.key.toLowerCase() === "r") $("#randomBtn").click();
+  });
+})();
