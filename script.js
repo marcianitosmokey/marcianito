@@ -1,299 +1,239 @@
-/* =========================================================
-   MARCIANITO.EXE — script.js
-   ========================================================= */
+const $ = (s, root=document) => root.querySelector(s);
+const $$ = (s, root=document) => [...root.querySelectorAll(s)];
 
-document.addEventListener("DOMContentLoaded", () => {
-  const $ = (s, root = document) => root.querySelector(s);
-  const $$ = (s, root = document) => [...root.querySelectorAll(s)];
+const translations = {
+  es: {
+    loading:"recibiendo señal...", status:"TRANSMISIÓN ONLINE", nav_about:"sobre mí", nav_portals:"portales", nav_music:"música", nav_bots:"bots", nav_tarot:"tarot", nav_guestbook:"guestbook",
+    hero_sub:"somewhere between earth & the internet", hero_text:"Un pequeño rincón de Internet para mis redes, música, bots, tarot y las cosas raras que encuentro por ahí.",
+    enter:"entrar al portal", random:"sorpréndeme", about_label:"ARCHIVO DEL MARCIANO", about_title:"¿quién está detrás de la señal?",
+    about_text:"Soy Marcianito: estudiante, creadora de bots, tarotista y persona que disfruta convertir Internet en un lugar un poquito más raro y divertido.",
+    change_mood:"cambiar mood ↻", portals_label:"PORTALES", portals_title:"mis coordenadas en Internet", x_desc:"pensamientos, caos y señales", ig_desc:"fotos, vida y estética",
+    tarot_desc:"lecturas y simbolismo", bot_desc:"personajes, ideas y mundos", music_label:"RADIO MARCIANITO", music_title:"mi transmisión musical",
+    music_text:"Dale play y deja que el portal haga lo suyo.", playlist1:"una señal directa desde mi universo", playlist2:"otra dimensión, misma criatura",
+    bots_label:"BOT LABORATORY", bots_title:"criaturas que viven en mis bots", visuals_label:"VISUAL FEED", visuals_title:"archivo visual / señales encontradas",
+    tarot_label:"ORÁCULO", tarot_title:"una carta para tu visita", tarot_text:"No sustituye una lectura profesional: es un pequeño juego interactivo para explorar símbolos.",
+    draw:"sacar una carta", guest_label:"GUESTBOOK", guest_title:"deja una señal", guest_text:"Elige el nombre que quieras. Tu mensaje se guarda localmente en este navegador.",
+    name:"nombre / alias", message:"mensaje", send:"transmitir", guest_note:"Nota: GitHub Pages es estático. Para comentarios públicos compartidos entre todos los visitantes se necesita conectar una base de datos/servicio externo; esta versión no expone datos personales y funciona sin backend.",
+    secret_title:"¿sigues aquí?", secret_text:"Entonces probablemente mereces encontrar los secretos.", secret_btn:"activar señal"
+  },
+  en: {
+    loading:"receiving signal...", status:"TRANSMISSION ONLINE", nav_about:"about me", nav_portals:"portals", nav_music:"music", nav_bots:"bots", nav_tarot:"tarot", nav_guestbook:"guestbook",
+    hero_sub:"somewhere between earth & the internet", hero_text:"A little corner of the Internet for my socials, music, bots, tarot and the weird things I find around here.",
+    enter:"enter portal", random:"surprise me", about_label:"MARTIAN FILE", about_title:"who is behind the signal?",
+    about_text:"I'm Marcianito: a student, bot creator, tarot reader and someone who likes turning the Internet into a slightly stranger, more fun place.",
+    change_mood:"change mood ↻", portals_label:"PORTALS", portals_title:"my coordinates on the Internet", x_desc:"thoughts, chaos & signals", ig_desc:"photos, life & aesthetics",
+    tarot_desc:"readings & symbolism", bot_desc:"characters, ideas & worlds", music_label:"MARTIAN RADIO", music_title:"my music transmission",
+    music_text:"Press play and let the portal do its thing.", playlist1:"a direct signal from my universe", playlist2:"another dimension, same creature",
+    bots_label:"BOT LABORATORY", bots_title:"creatures living in my bots", visuals_label:"VISUAL FEED", visuals_title:"visual archive / signals found",
+    tarot_label:"ORACLE", tarot_title:"a card for your visit", tarot_text:"Not a substitute for a professional reading: just a tiny interactive game for exploring symbols.",
+    draw:"draw a card", guest_label:"GUESTBOOK", guest_title:"leave a signal", guest_text:"Choose any name you like. Your message is stored locally in this browser.",
+    name:"name / alias", message:"message", send:"transmit", guest_note:"Note: GitHub Pages is static. Shared public comments require an external database/service; this version keeps entries local and works without a backend.",
+    secret_title:"still here?", secret_text:"Then you probably deserve to find the secrets.", secret_btn:"activate signal"
+  }
+};
 
-  /* ---------- Loader ---------- */
-  const loader = $("#loader");
-  const progress = $("#progressBar");
-  const bootText = $("#bootText");
-  const bootLines = [
-    "establishing weird connection...",
-    "searching for signal...",
-    "loading internet creature...",
-    "opening portal...",
-    "connection accepted."
-  ];
-  let p = 0;
-  const bootTimer = setInterval(() => {
-    p += Math.floor(Math.random() * 15) + 7;
-    if (p >= 100) p = 100;
-    progress.style.width = p + "%";
-    bootText.textContent = bootLines[Math.min(bootLines.length - 1, Math.floor(p / 25))];
-    if (p >= 100) {
-      clearInterval(bootTimer);
-      setTimeout(() => loader.classList.add("hidden"), 450);
-    }
-  }, 120);
-
-  /* ---------- Cursor glow ---------- */
-  const glow = $(".cursor-glow");
-  window.addEventListener("pointermove", e => {
-    glow.style.left = e.clientX + "px";
-    glow.style.top = e.clientY + "px";
-  }, { passive: true });
-
-  /* ---------- Theme ---------- */
-  const themes = ["void", "ocean", "acid", "mono"];
-  let savedTheme = localStorage.getItem("marcianito-theme") || "void";
-  if (!themes.includes(savedTheme)) savedTheme = "void";
-  document.documentElement.dataset.theme = savedTheme;
-
-  $("#themeBtn").addEventListener("click", () => {
-    const next = themes[(themes.indexOf(document.documentElement.dataset.theme) + 1) % themes.length];
-    document.documentElement.dataset.theme = next;
-    localStorage.setItem("marcianito-theme", next);
-    toast(`theme: ${next.toUpperCase()} // signal changed`);
-    playTone(220, .06);
+let lang = localStorage.getItem("marcianitoLang") || "es";
+function setLanguage(next){
+  lang=next; localStorage.setItem("marcianitoLang",lang);
+  document.documentElement.lang=lang;
+  $$("[data-i18n]").forEach(el=>{
+    const key=el.dataset.i18n;
+    if(translations[lang][key]) el.textContent=translations[lang][key];
   });
+  $("#langToggle").textContent=lang.toUpperCase();
+}
+$("#langToggle")?.addEventListener("click",()=>setLanguage(lang==="es"?"en":"es"));
+setLanguage(lang);
 
-  /* ---------- Language ---------- */
-  const translations = {
-    es: {
-      navAbout:"sobre mí", navPortals:"portales", navMusic:"música", navTarot:"tarot", navGuestbook:"guestbook",
-      online:"TRANSMISIÓN ONLINE", heroSub:"somewhere between earth & the internet",
-      intro:"Tarotista, creadora de bots, estudiante y criatura ocasional de Internet. Si llegaste hasta aquí, probablemente ya eres parte del experimento.",
-      enter:"ENTRAR", random:"SORPRÉNDEME", aboutTitle:"Sobre el marciano",
-      quote:"No sé cómo llegaste aquí, pero quédate tantito.",
-      aboutText:"Este es mi rincón personal: un archivo de mis proyectos, redes, música, bots, tarot y todas esas pequeñas cosas que terminan formando mi universo. No prometo que tenga sentido. Sí prometo que tendrá personalidad.",
-      portalsTitle:"Mis portales", musicPortal:"Mi música", botsPortal:"Mis bots", botsTitle:"Mis bots",
-      musicTitle:"La estación de música", tarotTitle:"Tarot & señales",
-      tarotHeading:"Un espacio para las cartas, símbolos y preguntas.",
-      tarotText:"Si quieres conocer más sobre mis lecturas o contactarme para una consulta, puedes hacerlo desde aquí. El tarot es una herramienta de reflexión y entretenimiento, no una garantía de lo que ocurrirá.",
-      tarotContact:"CONTACTAR", guestTitle:"Guestbook",
-      guestIntro:"Deja un mensaje. Puedes usar cualquier nombre o escribir como anónimo.",
-      nameLabel:"Nombre", messageLabel:"Mensaje",
-      localNote:"Nota: esta versión guarda los mensajes en el navegador. Para un guestbook público compartido entre visitantes se necesita conectar una base de datos.",
-      galleryTitle:"Archivo visual", footerText:"made somewhere between a browser tab and another dimension."
-    },
-    en: {
-      navAbout:"about", navPortals:"portals", navMusic:"music", navTarot:"tarot", navGuestbook:"guestbook",
-      online:"ONLINE TRANSMISSION", heroSub:"somewhere between earth & the internet",
-      intro:"Tarot reader, bot creator, student and occasional Internet creature. If you made it here, you're probably already part of the experiment.",
-      enter:"ENTER", random:"SURPRISE ME", aboutTitle:"About the alien",
-      quote:"I don't know how you got here, but stay for a bit.",
-      aboutText:"This is my personal corner: an archive of my projects, socials, music, bots, tarot and all those tiny things that end up forming my universe. I don't promise it will make sense. I do promise it will have personality.",
-      portalsTitle:"My portals", musicPortal:"My music", botsPortal:"My bots", botsTitle:"My bots",
-      musicTitle:"The music station", tarotTitle:"Tarot & signals",
-      tarotHeading:"A space for cards, symbols and questions.",
-      tarotText:"If you'd like to know more about my readings or contact me for a session, you can do it here. Tarot is a tool for reflection and entertainment, not a guarantee of what will happen.",
-      tarotContact:"CONTACT", guestTitle:"Guestbook",
-      guestIntro:"Leave a message. Use any name you want or write anonymously.",
-      nameLabel:"Name", messageLabel:"Message",
-      localNote:"Note: this version stores messages in your browser. A shared public guestbook requires a database connection.",
-      galleryTitle:"Visual archive", footerText:"made somewhere between a browser tab and another dimension."
-    }
-  };
+window.addEventListener("load",()=>setTimeout(()=>$("#preloader")?.classList.add("done"),650));
 
-  let lang = localStorage.getItem("marcianito-lang") || "es";
-  const setLanguage = value => {
-    lang = value;
-    localStorage.setItem("marcianito-lang", lang);
-    $$("[data-i18n]").forEach(el => {
-      const key = el.dataset.i18n;
-      if (translations[lang][key]) el.textContent = translations[lang][key];
-    });
-    $("#langBtn").textContent = lang === "es" ? "EN" : "ES";
-    document.documentElement.lang = lang;
-  };
-  setLanguage(lang);
-  $("#langBtn").addEventListener("click", () => {
-    setLanguage(lang === "es" ? "en" : "es");
-    toast(lang === "es" ? "idioma: español" : "language: english");
-    playTone(440, .05);
-  });
+const stars=$("#stars");
+for(let i=0;i<90;i++){
+  const s=document.createElement("i"); s.className="star";
+  s.style.left=Math.random()*100+"%"; s.style.top=Math.random()*100+"%";
+  s.style.animationDelay=(Math.random()*3)+"s"; s.style.opacity=.2+Math.random()*.8;
+  stars.appendChild(s);
+}
+const particles=$("#particles");
+for(let i=0;i<18;i++){
+  const p=document.createElement("i"); p.className="particle";
+  p.style.left=Math.random()*100+"%"; p.style.animationDuration=(10+Math.random()*15)+"s";
+  p.style.animationDelay=(-Math.random()*20)+"s";
+  p.style.background=i%2?"#ff42d0":"#34e9ff"; particles.appendChild(p);
+}
 
-  /* ---------- Tiny audio synth: no external files ---------- */
-  let soundOn = localStorage.getItem("marcianito-sound") === "1";
-  let audioCtx = null;
-  const playTone = (freq = 440, duration = .05) => {
-    if (!soundOn) return;
-    try {
-      audioCtx ||= new (window.AudioContext || window.webkitAudioContext)();
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      osc.type = "square";
-      osc.frequency.value = freq;
-      gain.gain.setValueAtTime(.018, audioCtx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(.0001, audioCtx.currentTime + duration);
-      osc.connect(gain).connect(audioCtx.destination);
-      osc.start();
-      osc.stop(audioCtx.currentTime + duration);
-    } catch {}
-  };
-  const updateSoundButton = () => $("#soundBtn").textContent = soundOn ? "♫" : "♩";
-  updateSoundButton();
-  $("#soundBtn").addEventListener("click", () => {
-    soundOn = !soundOn;
-    localStorage.setItem("marcianito-sound", soundOn ? "1" : "0");
-    updateSoundButton();
-    if (soundOn) playTone(520, .08);
-    toast(soundOn ? "sound: ON" : "sound: OFF");
-  });
+const terminalLines = [
+  "booting MARCIANITO.EXE...",
+  "loading strange internet...",
+  "checking bot laboratory...",
+  "tarot module: online",
+  "music signal: detected",
+  "identity: marcianito",
+  "status: probably fine.",
+  ">> welcome, traveler."
+];
+let lineIndex=0;
+function typeTerminal(){
+  const box=$("#terminalText"); if(!box) return;
+  box.innerHTML="";
+  const line=terminalLines[lineIndex%terminalLines.length];
+  const span=document.createElement("span"); span.className="cursor"; box.appendChild(span);
+  let i=0;
+  const timer=setInterval(()=>{
+    span.textContent=line.slice(0,i++);
+    if(i>line.length){clearInterval(timer);span.classList.remove("cursor");setTimeout(()=>{lineIndex++;typeTerminal()},850)}
+  },34);
+}
+typeTerminal();
 
-  /* ---------- Visitor counter ---------- */
-  const visitorKey = "marcianito-visits";
-  const visits = Number(localStorage.getItem(visitorKey) || "0") + 1;
-  localStorage.setItem(visitorKey, visits);
-  $("#visitorCount").textContent = String(visits).padStart(6, "0");
+$$("[data-scroll]").forEach(btn=>btn.addEventListener("click",()=>$(btn.dataset.scroll)?.scrollIntoView({behavior:"smooth"})));
 
-  /* ---------- Mood ---------- */
-  const moods = [
-    "purple static", "aquatic", "slightly confused", "dreamcore",
-    "404 feelings", "cosmic", "loading...", "mysterious"
-  ];
-  $("#moodText").textContent = moods[Math.floor(Math.random() * moods.length)];
+const themeNames=["void","light","ocean","toxic","candy"];
+let currentTheme=localStorage.getItem("marcianitoTheme")||"void";
+function applyTheme(){
+  document.body.classList.remove("alt-theme","theme-ocean","theme-toxic","theme-candy");
+  if(currentTheme==="light") document.body.classList.add("alt-theme");
+  if(currentTheme==="ocean") document.body.classList.add("theme-ocean");
+  if(currentTheme==="toxic") document.body.classList.add("theme-toxic");
+  if(currentTheme==="candy") document.body.classList.add("theme-candy");
+  const icons={void:"☾",light:"☀",ocean:"◉",toxic:"☢",candy:"♡"};
+  $("#themeToggle").textContent=icons[currentTheme]||"☾";
+  $("#themeToggle").title="Tema: "+currentTheme;
+}
+$("#themeToggle")?.addEventListener("click",()=>{
+  currentTheme=themeNames[(themeNames.indexOf(currentTheme)+1)%themeNames.length];
+  localStorage.setItem("marcianitoTheme",currentTheme); applyTheme(); toast("theme: "+currentTheme+" ✦");
+});
+applyTheme();
 
-  /* ---------- Clock ---------- */
-  const tick = () => {
-    const d = new Date();
-    $("#clock").textContent = d.toLocaleTimeString([], { hour12: false });
-  };
-  tick();
-  setInterval(tick, 1000);
-
-  /* ---------- Random surprise ---------- */
-  const surprises = [
-    ["you found a secret signal.", "#guestbook"],
-    ["the alien says hi.", "#about"],
-    ["go listen to something.", "#music"],
-    ["perhaps the cards know.", "#tarot"],
-    ["open a portal.", "#portals"],
-    ["look at the visual noise.", ".gallery-section"]
-  ];
-  $("#randomBtn").addEventListener("click", () => {
-    const [text, target] = surprises[Math.floor(Math.random() * surprises.length)];
-    toast(text);
-    playTone(330, .06);
-    document.querySelector(target)?.scrollIntoView({ behavior: "smooth", block: "center" });
-  });
-
-  /* ---------- Tarot ---------- */
-  const cards = [
-    ["THE MOON", "la intuición también necesita preguntas claras."],
-    ["THE STAR", "una señal no siempre necesita ser ruidosa para ser importante."],
-    ["THE FOOL", "curiosidad primero; mapa después."],
-    ["THE HERMIT", "a veces desconectarse también es una forma de encontrar señal."],
-    ["THE MAGICIAN", "tienes más herramientas de las que crees."],
-    ["THE SUN", "algo puede ser simple y seguir siendo maravilloso."],
-    ["THE WORLD", "cerrar un ciclo también abre otra pestaña."]
-  ];
-  $("#drawCard").addEventListener("click", () => {
-    const [name, meaning] = cards[Math.floor(Math.random() * cards.length)];
-    $("#cardName").textContent = name;
-    $("#cardMeaning").textContent = meaning;
-    playTone(260, .09);
-  });
-
-  /* ---------- Guestbook: local browser storage ---------- */
-  const messageKey = "marcianito-guestbook";
-  const messagesEl = $("#messages");
-  const nameInput = $("#guestName");
-  const messageInput = $("#guestMessage");
-  const charCount = $("#charCount");
-
-  const escapeHTML = str => {
-    const div = document.createElement("div");
-    div.textContent = str;
-    return div.innerHTML;
-  };
-
-  const getMessages = () => {
-    try { return JSON.parse(localStorage.getItem(messageKey) || "[]"); }
-    catch { return []; }
-  };
-
-  const renderMessages = () => {
-    const data = getMessages();
-    if (!data.length) {
-      messagesEl.innerHTML = `<div class="message"><div class="message-text">No signals yet... be the first transmission.</div></div>`;
-      return;
-    }
-    messagesEl.innerHTML = data.slice().reverse().map(m => `
-      <article class="message">
-        <div class="message-head">
-          <span class="message-name">${escapeHTML(m.name || "ANÓNIMO")}</span>
-          <span class="message-date">${escapeHTML(m.date)}</span>
-        </div>
-        <p class="message-text">${escapeHTML(m.text)}</p>
-      </article>
-    `).join("");
-  };
-
-  messageInput.addEventListener("input", () => charCount.textContent = messageInput.value.length);
-
-  $("#guestForm").addEventListener("submit", e => {
-    e.preventDefault();
-    const name = nameInput.value.trim().slice(0, 30) || "ANÓNIMO";
-    const text = messageInput.value.trim().slice(0, 280);
-    if (!text) return;
-    const data = getMessages();
-    data.push({
-      name,
-      text,
-      date: new Date().toLocaleString(lang === "es" ? "es-MX" : "en-US", { dateStyle: "short", timeStyle: "short" })
-    });
-    localStorage.setItem(messageKey, JSON.stringify(data.slice(-30)));
-    e.target.reset();
-    charCount.textContent = "0";
-    renderMessages();
-    toast("signal transmitted ✦");
-    playTone(620, .08);
-  });
-
-  $("#clearMessages").addEventListener("click", () => {
-    if (!getMessages().length) return toast("nothing to clear.");
-    localStorage.removeItem(messageKey);
-    renderMessages();
-    toast("local signals cleared.");
-  });
-  renderMessages();
-
-  /* ---------- Easter egg ---------- */
-  const egg = $("#easterEgg");
-  const openEgg = () => {
-    egg.classList.add("open");
-    egg.setAttribute("aria-hidden", "false");
-    playTone(180, .12);
-  };
-  const closeEgg = () => {
-    egg.classList.remove("open");
-    egg.setAttribute("aria-hidden", "true");
-  };
-  $("#easterEggBtn").addEventListener("click", openEgg);
-  $("#closeEgg").addEventListener("click", closeEgg);
-  $("#eggAction").addEventListener("click", () => {
-    toast("you clicked it AGAIN. impressive.");
-    playTone(760, .06);
-  });
-  egg.addEventListener("click", e => { if (e.target === egg) closeEgg(); });
-
-  /* ---------- Konami-style keyboard secret ---------- */
-  const secret = ["m","a","r","c","i","a","n","i","t","o"];
-  let secretIndex = 0;
-  window.addEventListener("keydown", e => {
-    if (e.key.toLowerCase() === secret[secretIndex]) secretIndex++;
-    else secretIndex = 0;
-    if (secretIndex === secret.length) {
-      secretIndex = 0;
-      openEgg();
-      toast("secret sequence accepted.");
-    }
-  });
-
-  /* ---------- Interactive links ---------- */
-  $$("a").forEach(a => a.addEventListener("mouseenter", () => playTone(180 + Math.random()*250, .025)));
+const moods=["floating...","in another tab","loading thoughts","transmitting","404 brain","cosmic","making bots","probably asleep"];
+$("#moodBtn")?.addEventListener("click",()=>{
+  $("#moodText").textContent=moods[Math.floor(Math.random()*moods.length)];
+  toast("mood updated ✦");
 });
 
-/* Global toast because it is useful from several handlers */
-function toast(message) {
-  const el = document.querySelector("#toast");
-  if (!el) return;
-  el.textContent = message;
-  el.classList.add("show");
-  clearTimeout(window.__toastTimer);
-  window.__toastTimer = setTimeout(() => el.classList.remove("show"), 2300);
+const randomTargets=["#about","#portals","#music","#bots","#visuals","#tarot","#guestbook"];
+$("#randomBtn")?.addEventListener("click",()=>{
+  const target=randomTargets[Math.floor(Math.random()*randomTargets.length)];
+  $(target)?.scrollIntoView({behavior:"smooth"});
+  flash();
+});
+
+const tarotDeck=[
+ ["0","The Fool","new paths, curiosity, movement"],
+ ["I","The Magician","creation, skill, making something real"],
+ ["II","The High Priestess","intuition, mystery, inner knowledge"],
+ ["III","The Empress","growth, creativity, abundance"],
+ ["IV","The Emperor","structure, boundaries, direction"],
+ ["V","The Hierophant","learning, tradition, shared meaning"],
+ ["VI","The Lovers","choice, connection, alignment"],
+ ["VII","The Chariot","momentum, will, determination"],
+ ["VIII","Strength","patience, courage, gentle power"],
+ ["IX","The Hermit","reflection, solitude, perspective"],
+ ["X","Wheel of Fortune","change, cycles, unexpected turns"],
+ ["XI","Justice","clarity, balance, consequences"],
+ ["XII","The Hanged One","pause, surrender, seeing differently"],
+ ["XIII","Death","transition, endings that make room"],
+ ["XIV","Temperance","balance, blending, patience"],
+ ["XV","The Devil","attachment, temptation, awareness"],
+ ["XVI","The Tower","sudden change, truth, rebuilding"],
+ ["XVII","The Star","hope, inspiration, renewal"],
+ ["XVIII","The Moon","dreams, uncertainty, imagination"],
+ ["XIX","The Sun","joy, openness, vitality"],
+ ["XX","Judgement","awakening, reflection, a call"],
+ ["XXI","The World","completion, integration, a new cycle"]
+];
+$("#drawCard")?.addEventListener("click",()=>{
+  const [num,name,meaning]=tarotDeck[Math.floor(Math.random()*tarotDeck.length)];
+  $("#tarotCard").classList.add("drawn");
+  $(".tarot-back").classList.add("hidden");
+  $(".tarot-result").classList.remove("hidden");
+  $("#tarotCard").querySelector(".tarot-number").textContent=num;
+  $("#tarotName").textContent=name;
+  $("#tarotMeaning").textContent=meaning;
+  toast("card drawn ✦");
+});
+
+const form=$("#guestForm"), nameInput=$("#guestName"), msgInput=$("#guestMessage"), list=$("#guestList"), count=$("#charCount");
+msgInput?.addEventListener("input",()=>count.textContent=msgInput.value.length);
+function getEntries(){try{return JSON.parse(localStorage.getItem("marcianitoGuestbook")||"[]")}catch{return[]}}
+function saveEntries(a){localStorage.setItem("marcianitoGuestbook",JSON.stringify(a))}
+function renderEntries(){
+  const entries=getEntries();
+  list.innerHTML=entries.length?entries.map((e,i)=>`
+    <article class="guest-entry">
+      <header><b>✦ ${escapeHTML(e.name)}</b><time>${escapeHTML(e.date)}</time></header>
+      <p>${escapeHTML(e.message)}</p>
+    </article>`).join(""):`<article class="guest-entry"><header><b>✦ transmission empty</b></header><p>${lang==="es"?"Sé la primera señal aquí.":"Be the first signal here."}</p></article>`;
+}
+function escapeHTML(v){return String(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]))}
+form?.addEventListener("submit",e=>{
+  e.preventDefault();
+  const name=(nameInput.value.trim()||"anonymous").slice(0,30);
+  const message=msgInput.value.trim().slice(0,240);
+  if(!message)return;
+  const entries=getEntries();
+  entries.unshift({name,message,date:new Date().toLocaleString(lang==="es"?"es-MX":"en-US")});
+  saveEntries(entries.slice(0,30)); form.reset(); count.textContent="0"; renderEntries(); toast(lang==="es"?"señal transmitida ✦":"signal transmitted ✦");
+});
+renderEntries();
+
+$$(".visual-card img").forEach(img=>img.addEventListener("click",()=>{
+  $("#lightboxImg").src=img.currentSrc||img.src; $("#lightbox").classList.add("open");
+}));
+$("#closeLightbox")?.addEventListener("click",()=>$("#lightbox").classList.remove("open"));
+$("#lightbox")?.addEventListener("click",e=>{if(e.target.id==="lightbox")$("#lightbox").classList.remove("open")});
+
+function toast(text){const t=$("#toast");t.textContent=text;t.classList.add("show");clearTimeout(window.__toast);window.__toast=setTimeout(()=>t.classList.remove("show"),2200)}
+function flash(){document.body.animate([{filter:"hue-rotate(0deg)"},{filter:"hue-rotate(80deg)"},{filter:"hue-rotate(0deg)"}],{duration:550})}
+
+$("#secretBtn")?.addEventListener("click",()=>$("#secretOverlay").classList.add("open"));
+$("#closeSecret")?.addEventListener("click",()=>$("#secretOverlay").classList.remove("open"));
+$("#secretCloseBtn")?.addEventListener("click",()=>$("#secretOverlay").classList.remove("open"));
+$("#topBtn")?.addEventListener("click",()=>window.scrollTo({top:0,behavior:"smooth"}));
+
+document.addEventListener("keydown",e=>{
+  if(e.key==="Escape"){ $("#lightbox")?.classList.remove("open"); $("#secretOverlay")?.classList.remove("open");}
+});
+
+let konami=[];
+const sequence=["ArrowDown","ArrowDown","ArrowUp","ArrowUp","ArrowLeft","ArrowRight","ArrowLeft","ArrowRight","b","a"];
+document.addEventListener("keydown",e=>{
+  konami.push(e.key); if(konami.length>sequence.length)konami.shift();
+  if(sequence.every((x,i)=>konami[i]?.toLowerCase()===x.toLowerCase())){$("#secretOverlay").classList.add("open");toast("secret signal found ✦");konami=[]}
+});
+
+
+let soundEnabled=localStorage.getItem("marcianitoSound")!=="off";
+function updateSoundButton(){
+  const b=$("#soundToggle"); if(!b) return;
+  b.textContent=soundEnabled?"♪":"×";
+  b.classList.toggle("sound-on",soundEnabled);
+  b.title=soundEnabled?"Sonidos activados":"Sonidos desactivados";
+}
+$("#soundToggle")?.addEventListener("click",()=>{
+  soundEnabled=!soundEnabled;
+  localStorage.setItem("marcianitoSound",soundEnabled?"on":"off");
+  updateSoundButton(); toast(soundEnabled?"sound on ✦":"sound off");
+});
+updateSoundButton();
+
+let audioCtx;
+function clickSound(){
+  try{
+    audioCtx ||= new (window.AudioContext||window.webkitAudioContext)();
+    const o=audioCtx.createOscillator(), g=audioCtx.createGain();
+    o.frequency.value=480; o.type="sine"; g.gain.setValueAtTime(.025,audioCtx.currentTime);
+    g.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+.09); o.connect(g);g.connect(audioCtx.destination);o.start();o.stop(audioCtx.currentTime+.09);
+  }catch{}
+}
+document.addEventListener("click",e=>{if(soundEnabled && e.target.closest("button,.neon-button,.portal-card,.bot-row"))clickSound()});
+
+const tilt=$(".tilt-card");
+if(tilt && matchMedia("(pointer:fine)").matches){
+  tilt.addEventListener("pointermove",e=>{
+    const r=tilt.getBoundingClientRect(), x=(e.clientX-r.left)/r.width-.5, y=(e.clientY-r.top)/r.height-.5;
+    tilt.style.transform=`perspective(900px) rotateX(${y*-5}deg) rotateY(${x*6}deg)`;
+  });
+  tilt.addEventListener("pointerleave",()=>tilt.style.transform="rotate(2deg)");
 }
