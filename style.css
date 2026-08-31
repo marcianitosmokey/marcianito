@@ -1,1 +1,2091 @@
+:root {
+    --cyan: #6ff7ff;
+    --blue: #4d6dff;
+    --purple: #a66cff;
+    --pink: #ff54c8;
+    --green: #7dff9d;
+    --yellow: #fff18a;
 
+    --ink: #080817;
+
+    --glass: rgba(16, 20, 49, 0.72);
+
+    --line: rgba(164, 239, 255, 0.32);
+
+    --shadow:
+        0 0 30px rgba(110, 110, 255, 0.22);
+}
+
+
+* {
+    box-sizing: border-box;
+}
+
+
+html {
+    scroll-behavior: smooth;
+}
+
+
+body {
+
+    margin: 0;
+
+    min-height: 100vh;
+
+    overflow-x: hidden;
+
+    color: #eef4ff;
+
+    font-family:
+        "Space Mono",
+        monospace;
+
+    background:
+
+        radial-gradient(
+            circle at 20% 10%,
+            rgba(50, 255, 213, 0.12),
+            transparent 30%
+        ),
+
+        radial-gradient(
+            circle at 80% 25%,
+            rgba(255, 55, 206, 0.13),
+            transparent 28%
+        ),
+
+        radial-gradient(
+            circle at 50% 80%,
+            rgba(74, 93, 255, 0.14),
+            transparent 35%
+        ),
+
+        #050510;
+}
+
+
+body.chaos {
+
+    animation:
+        hue 7s linear infinite;
+
+}
+
+
+a {
+
+    color: inherit;
+
+    text-decoration: none;
+
+}
+
+
+button {
+
+    font: inherit;
+
+    color: inherit;
+
+}
+
+
+/* =========================
+   EFECTOS DE PANTALLA
+========================= */
+
+
+.noise {
+
+    position: fixed;
+
+    inset: 0;
+
+    pointer-events: none;
+
+    z-index: 100;
+
+    opacity: 0.08;
+
+    mix-blend-mode: screen;
+
+    background-image:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+
+}
+
+
+.scanlines {
+
+    position: fixed;
+
+    inset: 0;
+
+    pointer-events: none;
+
+    z-index: 99;
+
+    opacity: 0.45;
+
+    background:
+        repeating-linear-gradient(
+            0deg,
+            rgba(255,255,255,.025) 0 1px,
+            transparent 1px 4px
+        );
+
+}
+
+
+.stars {
+
+    position: fixed;
+
+    inset: 0;
+
+    z-index: -1;
+
+    opacity: 0.18;
+
+    background-image:
+        radial-gradient(
+            #fff 1px,
+            transparent 1px
+        );
+
+    background-size:
+        75px 75px;
+
+    animation:
+        starMove 18s linear infinite;
+
+}
+
+
+#cursor-glow {
+
+    position: fixed;
+
+    width: 220px;
+
+    height: 220px;
+
+    border-radius: 50%;
+
+    pointer-events: none;
+
+    z-index: 98;
+
+    transform:
+        translate(-50%, -50%);
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(102,247,255,.12),
+            transparent 65%
+        );
+
+}
+
+
+/* =========================
+   GLASS
+========================= */
+
+
+.glass {
+
+    background:
+        var(--glass);
+
+    backdrop-filter:
+        blur(18px);
+
+    box-shadow:
+        var(--shadow);
+
+    border:
+        1px solid var(--line);
+
+}
+
+
+/* =========================
+   TOPBAR
+========================= */
+
+
+.topbar {
+
+    position: fixed;
+
+    top: 14px;
+
+    left: 50%;
+
+    transform:
+        translateX(-50%);
+
+    z-index: 80;
+
+    width:
+        min(
+            1100px,
+            calc(100% - 24px)
+        );
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 20px;
+
+    padding: 12px 16px;
+
+    border-radius: 22px;
+
+}
+
+
+.logo {
+
+    font-family:
+        Orbitron,
+        sans-serif;
+
+    font-weight: 900;
+
+    letter-spacing: .05em;
+
+    font-size: .95rem;
+
+}
+
+
+.logo span {
+
+    color:
+        var(--cyan);
+
+}
+
+
+nav {
+
+    display: flex;
+
+    gap: 18px;
+
+    margin-left: auto;
+
+    font-size: .75rem;
+
+}
+
+
+nav a {
+
+    opacity: .7;
+
+    transition:
+        .2s;
+
+}
+
+
+nav a:hover {
+
+    opacity: 1;
+
+    color:
+        var(--cyan);
+
+    text-shadow:
+        0 0 12px var(--cyan);
+
+}
+
+
+.mini-btn,
+.aero-btn {
+
+    border:
+        1px solid var(--line);
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(95,245,255,.16),
+            rgba(177,75,255,.15)
+        );
+
+    border-radius: 12px;
+
+    padding:
+        9px 13px;
+
+    cursor: pointer;
+
+    transition:
+        .25s;
+
+    box-shadow:
+        inset 0 0 15px
+        rgba(255,255,255,.04),
+
+        0 5px 20px
+        rgba(0,0,0,.25);
+
+}
+
+
+.mini-btn:hover,
+.aero-btn:hover {
+
+    transform:
+        translateY(-3px)
+        scale(1.02);
+
+    border-color:
+        var(--cyan);
+
+    box-shadow:
+        0 0 24px
+        rgba(111,247,255,.25);
+
+}
+
+
+/* =========================
+   SECCIONES
+========================= */
+
+
+.section {
+
+    width:
+        min(
+            1100px,
+            calc(100% - 28px)
+        );
+
+    margin:
+        0 auto;
+
+    padding:
+        110px 0;
+
+}
+
+
+.hero {
+
+    min-height:
+        820px;
+
+    display:
+        grid;
+
+    grid-template-columns:
+        1.1fr .9fr;
+
+    align-items:
+        center;
+
+    gap:
+        40px;
+
+    padding-top:
+        150px;
+
+}
+
+
+.terminal-line,
+.eyebrow {
+
+    font-size:
+        .72rem;
+
+    color:
+        var(--cyan);
+
+    letter-spacing:
+        .13em;
+
+}
+
+
+.blink {
+
+    color:
+        #65ff8e;
+
+    animation:
+        blink 1s steps(2) infinite;
+
+}
+
+
+h1 {
+
+    font-family:
+        Orbitron,
+        sans-serif;
+
+    font-size:
+        clamp(4rem, 12vw, 9.5rem);
+
+    line-height:
+        .8;
+
+    margin:
+        22px 0;
+
+    letter-spacing:
+        -.08em;
+
+    color:
+        #fff;
+
+    text-shadow:
+        4px 4px 0 #704aff,
+        0 0 30px #704aff;
+
+}
+
+
+.glitch {
+
+    position:
+        relative;
+
+}
+
+
+.glitch::before,
+.glitch::after {
+
+    content:
+        attr(data-text);
+
+    position:
+        absolute;
+
+    inset:
+        0;
+
+    opacity:
+        .5;
+
+    pointer-events:
+        none;
+
+}
+
+
+.glitch::before {
+
+    transform:
+        translate(3px,-2px);
+
+    color:
+        var(--cyan);
+
+    clip-path:
+        inset(0 0 55% 0);
+
+    animation:
+        glitchA 2.2s infinite;
+
+}
+
+
+.glitch::after {
+
+    transform:
+        translate(-3px,2px);
+
+    color:
+        var(--pink);
+
+    clip-path:
+        inset(55% 0 0 0);
+
+    animation:
+        glitchB 1.8s infinite;
+
+}
+
+
+.subtitle {
+
+    font-size:
+        1rem;
+
+    color:
+        #d8ddff;
+
+}
+
+
+.status {
+
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    gap:
+        9px;
+
+    margin-top:
+        22px;
+
+    padding:
+        11px 14px;
+
+    border-radius:
+        999px;
+
+    font-size:
+        .72rem;
+
+}
+
+
+.status-dot {
+
+    width:
+        8px;
+
+    height:
+        8px;
+
+    border-radius:
+        50%;
+
+    background:
+        #65ff8e;
+
+    box-shadow:
+        0 0 14px #65ff8e;
+
+}
+
+
+.hero-actions {
+
+    display:
+        flex;
+
+    gap:
+        12px;
+
+    margin-top:
+        22px;
+
+    flex-wrap:
+        wrap;
+
+}
+
+
+.primary {
+
+    background:
+        linear-gradient(
+            90deg,
+            #3f8dff,
+            #b04cff
+        );
+
+}
+
+
+/* =========================
+   PLANETA
+========================= */
+
+
+.hero-art {
+
+    position:
+        relative;
+
+    min-height:
+        470px;
+
+    display:
+        grid;
+
+    place-items:
+        center;
+
+}
+
+
+.planet {
+
+    width:
+        min(390px,80vw);
+
+    aspect-ratio:
+        1;
+
+    border-radius:
+        50%;
+
+    overflow:
+        hidden;
+
+    border:
+        2px solid
+        rgba(255,255,255,.35);
+
+    box-shadow:
+        0 0 80px
+        rgba(125,83,255,.4),
+
+        inset 0 0 60px #000;
+
+    animation:
+        float 5s ease-in-out infinite;
+
+}
+
+
+.planet img {
+
+    width:
+        100%;
+
+    height:
+        100%;
+
+    object-fit:
+        cover;
+
+}
+
+
+.orbit {
+
+    position:
+        absolute;
+
+    border:
+        1px solid
+        rgba(111,247,255,.35);
+
+    border-radius:
+        50%;
+
+    width:
+        80%;
+
+    height:
+        28%;
+
+    transform:
+        rotate(-25deg);
+
+    animation:
+        spin 12s linear infinite;
+
+}
+
+
+.orbit-2 {
+
+    width:
+        95%;
+
+    height:
+        40%;
+
+    transform:
+        rotate(55deg);
+
+    animation-duration:
+        19s;
+
+    border-color:
+        rgba(255,84,200,.3);
+
+}
+
+
+.floating-sticker {
+
+    position:
+        absolute;
+
+    padding:
+        8px 12px;
+
+    background:
+        #fff;
+
+    color:
+        #161225;
+
+    border-radius:
+        12px;
+
+    box-shadow:
+        5px 6px 0 #7d63ff;
+
+    font-size:
+        .7rem;
+
+}
+
+
+.sticker-one {
+
+    top:
+        12%;
+
+    right:
+        4%;
+
+    transform:
+        rotate(-8deg);
+
+}
+
+
+.sticker-two {
+
+    bottom:
+        18%;
+
+    left:
+        2%;
+
+    transform:
+        rotate(9deg);
+
+}
+
+
+.sticker-three {
+
+    bottom:
+        7%;
+
+    right:
+        10%;
+
+    background:
+        #101018;
+
+    color:
+        var(--green);
+
+}
+
+
+/* =========================
+   VENTANAS
+========================= */
+
+
+.window {
+
+    border-radius:
+        18px;
+
+    overflow:
+        hidden;
+
+}
+
+
+.window-bar {
+
+    display:
+        flex;
+
+    justify-content:
+        space-between;
+
+    align-items:
+        center;
+
+    padding:
+        10px 14px;
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(94,110,255,.28),
+            rgba(255,74,205,.18)
+        );
+
+    border-bottom:
+        1px solid var(--line);
+
+    font-size:
+        .75rem;
+
+}
+
+
+.window-body {
+
+    padding:
+        30px;
+
+}
+
+
+.window-body h2,
+.section-heading h2 {
+
+    font-family:
+        Orbitron,
+        sans-serif;
+
+    font-size:
+        clamp(2rem,5vw,4rem);
+
+    margin:
+        10px 0 20px;
+
+}
+
+
+.window-body p {
+
+    line-height:
+        1.8;
+
+    color:
+        #dfe5ff;
+
+}
+
+
+.muted {
+
+    color:
+        #a9b1d9 !important;
+
+    font-size:
+        .8rem;
+
+}
+
+
+.ascii {
+
+    white-space:
+        pre;
+
+    color:
+        var(--green);
+
+    border-left:
+        2px solid var(--green);
+
+    padding:
+        14px;
+
+    margin-top:
+        25px;
+
+    font-size:
+        .75rem;
+
+}
+
+
+.split {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap:
+        28px;
+
+}
+
+
+.aero-scene {
+
+    position:
+        relative;
+
+    overflow:
+        hidden;
+
+    border-radius:
+        20px;
+
+    border:
+        1px solid
+        rgba(111,247,255,.4);
+
+}
+
+
+.aero-scene img {
+
+    width:
+        100%;
+
+    height:
+        100%;
+
+    min-height:
+        410px;
+
+    object-fit:
+        cover;
+
+    display:
+        block;
+
+}
+
+
+.scene-label {
+
+    position:
+        absolute;
+
+    bottom:
+        12px;
+
+    left:
+        12px;
+
+    padding:
+        7px 10px;
+
+    background:
+        rgba(0,0,0,.6);
+
+    border:
+        1px solid
+        var(--cyan);
+
+    border-radius:
+        8px;
+
+    font-size:
+        .65rem;
+
+}
+
+
+/* =========================
+   REDES
+========================= */
+
+
+.section-heading {
+
+    text-align:
+        center;
+
+    max-width:
+        800px;
+
+    margin:
+        0 auto 40px;
+
+}
+
+
+.section-heading p:not(.eyebrow) {
+
+    color:
+        #aeb8db;
+
+}
+
+
+.portal-grid {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(2,1fr);
+
+    gap:
+        18px;
+
+}
+
+
+.portal-card,
+.bot-card {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        16px;
+
+    padding:
+        20px;
+
+    border-radius:
+        18px;
+
+    border:
+        1px solid
+        var(--line);
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(60,72,150,.25),
+            rgba(255,58,208,.08)
+        );
+
+    transition:
+        .25s;
+
+}
+
+
+.portal-card:hover,
+.bot-card:hover {
+
+    transform:
+        translateY(-7px)
+        rotate(.3deg);
+
+    border-color:
+        #fff;
+
+    box-shadow:
+        0 15px 35px
+        rgba(74,73,255,.2);
+
+}
+
+
+.portal-icon {
+
+    width:
+        45px;
+
+    height:
+        45px;
+
+    display:
+        grid;
+
+    place-items:
+        center;
+
+    border-radius:
+        13px;
+
+    background:
+        rgba(255,255,255,.1);
+
+    font-size:
+        1.5rem;
+
+}
+
+
+.portal-card span:nth-child(2) {
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+}
+
+
+.portal-card small,
+.bot-card small {
+
+    color:
+        #9fa9d0;
+
+    margin-top:
+        4px;
+
+}
+
+
+.portal-card i,
+.bot-card i {
+
+    margin-left:
+        auto;
+
+}
+
+
+.marquee {
+
+    margin-top:
+        35px;
+
+    overflow:
+        hidden;
+
+    border-block:
+        1px solid
+        var(--line);
+
+    padding:
+        12px 0;
+
+    color:
+        var(--cyan);
+
+    white-space:
+        nowrap;
+
+}
+
+
+.marquee span {
+
+    display:
+        inline-block;
+
+    animation:
+        marquee 18s linear infinite;
+
+}
+
+
+/* =========================
+   SPOTIFY
+========================= */
+
+
+.music-layout {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        1fr 250px;
+
+    gap:
+        22px;
+
+    align-items:
+        start;
+
+}
+
+
+.spotify-column {
+
+    display:
+        grid;
+
+    gap:
+        18px;
+
+}
+
+
+.music-window {
+
+    overflow:
+        hidden;
+
+    border-radius:
+        18px;
+
+}
+
+
+.music-window iframe {
+
+    display:
+        block;
+
+}
+
+
+.cassette {
+
+    position:
+        sticky;
+
+    top:
+        100px;
+
+    min-height:
+        260px;
+
+    border-radius:
+        22px;
+
+    padding:
+        25px;
+
+    text-align:
+        center;
+
+    background:
+        linear-gradient(
+            145deg,
+            #e6f5ff,
+            #7b8eff 45%,
+            #f0a5ff
+        );
+
+    color:
+        #141126;
+
+}
+
+
+.cassette-label {
+
+    font-family:
+        "Press Start 2P";
+
+    font-size:
+        .7rem;
+
+    background:
+        #fff3a8;
+
+    border:
+        3px solid #161225;
+
+    padding:
+        12px;
+
+}
+
+
+.cassette-reel {
+
+    width:
+        46px;
+
+    height:
+        46px;
+
+    border-radius:
+        50%;
+
+    background:
+        repeating-conic-gradient(
+            #fff 0 12deg,
+            #6a68a8 12deg 24deg
+        );
+
+    border:
+        5px solid #161225;
+
+    position:
+        absolute;
+
+    top:
+        105px;
+
+    animation:
+        spin 4s linear infinite;
+
+}
+
+
+.reel-a {
+
+    left:
+        47px;
+
+}
+
+
+.reel-b {
+
+    right:
+        47px;
+
+}
+
+
+.cassette-tape {
+
+    height:
+        28px;
+
+    background:
+        #1c1834;
+
+    border-radius:
+        5px;
+
+    margin:
+        35px 10px;
+
+}
+
+
+.cassette p {
+
+    font-size:
+        .72rem;
+
+}
+
+
+.cassette span {
+
+    font-size:
+        .6rem;
+
+}
+
+
+.tracks {
+
+    margin-top:
+        45px;
+
+}
+
+
+.track-grid {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(2,1fr);
+
+    gap:
+        15px;
+
+}
+
+
+.track-grid iframe {
+
+    width:
+        100%;
+
+    height:
+        152px;
+
+    border:
+        0;
+
+    border-radius:
+        12px;
+
+}
+
+
+/* =========================
+   BOTS
+========================= */
+
+
+.bot-grid {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(5,1fr);
+
+    gap:
+        13px;
+
+}
+
+
+.bot-card {
+
+    display:
+        block;
+
+    position:
+        relative;
+
+    min-height:
+        170px;
+
+    background:
+        linear-gradient(
+            160deg,
+            rgba(117,79,255,.2),
+            rgba(18,239,220,.06)
+        );
+
+}
+
+
+.bot-card span {
+
+    display:
+        block;
+
+    color:
+        var(--cyan);
+
+    font-size:
+        .65rem;
+
+    margin-bottom:
+        35px;
+
+}
+
+
+.bot-card b {
+
+    display:
+        block;
+
+    font-family:
+        Orbitron;
+
+}
+
+
+.bot-card i {
+
+    position:
+        absolute;
+
+    right:
+        15px;
+
+    bottom:
+        15px;
+
+}
+
+
+.glitch-gallery {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        2fr 1fr 1fr 1fr;
+
+    gap:
+        12px;
+
+    margin-top:
+        25px;
+
+}
+
+
+.glitch-gallery img {
+
+    width:
+        100%;
+
+    height:
+        150px;
+
+    object-fit:
+        cover;
+
+    border-radius:
+        12px;
+
+    border:
+        1px solid
+        var(--line);
+
+    filter:
+        saturate(1.35)
+        contrast(1.1);
+
+    transition:
+        .25s;
+
+}
+
+
+.glitch-gallery img:hover {
+
+    transform:
+        scale(1.04)
+        rotate(-1deg);
+
+    filter:
+        saturate(2);
+
+}
+
+
+/* =========================
+   GALERÍA
+========================= */
+
+
+.visual-zone {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        1.4fr .8fr .8fr;
+
+    gap:
+        14px;
+
+}
+
+
+.visual-card {
+
+    position:
+        relative;
+
+    min-height:
+        450px;
+
+    overflow:
+        hidden;
+
+    border-radius:
+        18px;
+
+    border:
+        1px solid
+        var(--line);
+
+}
+
+
+.visual-card img {
+
+    width:
+        100%;
+
+    height:
+        100%;
+
+    object-fit:
+        cover;
+
+}
+
+
+.visual-stack {
+
+    display:
+        grid;
+
+    gap:
+        14px;
+
+}
+
+
+.visual-stack img {
+
+    width:
+        100%;
+
+    height:
+        218px;
+
+    object-fit:
+        cover;
+
+    border-radius:
+        18px;
+
+    border:
+        1px solid
+        var(--line);
+
+}
+
+
+.caption {
+
+    position:
+        absolute;
+
+    left:
+        15px;
+
+    bottom:
+        15px;
+
+    padding:
+        10px 12px;
+
+    background:
+        rgba(0,0,0,.72);
+
+    border:
+        1px solid #fff;
+
+    border-radius:
+        10px;
+
+    font-size:
+        .7rem;
+
+}
+
+
+/* =========================
+   EASTER EGG
+========================= */
+
+
+.easter {
+
+    padding-top:
+        30px;
+
+}
+
+
+.easter-window {
+
+    max-width:
+        700px;
+
+    margin:
+        auto;
+
+    border-radius:
+        18px;
+
+    text-align:
+        center;
+
+}
+
+
+.easter-body {
+
+    padding:
+        45px;
+
+}
+
+
+.easter-body p:first-child {
+
+    font-size:
+        3rem;
+
+}
+
+
+.easter-body h2 {
+
+    font-family:
+        Orbitron;
+
+}
+
+
+/* =========================
+   FOOTER
+========================= */
+
+
+footer {
+
+    border-top:
+        1px solid
+        var(--line);
+
+    padding:
+        35px 15px;
+
+    text-align:
+        center;
+
+    display:
+        grid;
+
+    gap:
+        8px;
+
+    color:
+        #8f9bc6;
+
+    font-size:
+        .65rem;
+
+}
+
+
+#clock {
+
+    color:
+        var(--cyan);
+
+}
+
+
+/* =========================
+   ANIMACIONES
+========================= */
+
+
+@keyframes float {
+
+    50% {
+        transform:
+            translateY(-15px)
+            rotate(2deg);
+    }
+
+}
+
+
+@keyframes spin {
+
+    to {
+        transform:
+            rotate(360deg);
+    }
+
+}
+
+
+@keyframes blink {
+
+    50% {
+        opacity:
+            0;
+    }
+
+}
+
+
+@keyframes starMove {
+
+    to {
+        background-position:
+            0 300px;
+    }
+
+}
+
+
+@keyframes marquee {
+
+    to {
+        transform:
+            translateX(-100%);
+    }
+
+}
+
+
+@keyframes glitchA {
+
+    0%,90%,100% {
+        transform:
+            translate(0);
+    }
+
+    92% {
+        transform:
+            translate(8px,-2px);
+    }
+
+    95% {
+        transform:
+            translate(-4px,3px);
+    }
+
+}
+
+
+@keyframes glitchB {
+
+    0%,88%,100% {
+        transform:
+            translate(0);
+    }
+
+    90% {
+        transform:
+            translate(-7px,3px);
+    }
+
+    94% {
+        transform:
+            translate(5px,-2px);
+    }
+
+}
+
+
+@keyframes hue {
+
+    to {
+        filter:
+            hue-rotate(360deg);
+    }
+
+}
+
+
+/* =========================
+   MODO REALIDAD ALTERADA
+========================= */
+
+
+body.reality .section {
+
+    filter:
+        hue-rotate(100deg)
+        saturate(1.5);
+
+}
+
+
+body.reality .glitch {
+
+    animation:
+        shake .12s infinite;
+
+}
+
+
+body.reality .planet {
+
+    animation:
+        float .8s ease-in-out infinite;
+
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+
+@media(max-width:850px) {
+
+    nav {
+        display:
+            none;
+    }
+
+
+    .hero,
+    .split,
+    .music-layout,
+    .visual-zone {
+
+        grid-template-columns:
+            1fr;
+
+    }
+
+
+    .hero {
+
+        min-height:
+            auto;
+
+        padding-top:
+            150px;
+
+    }
+
+
+    .hero-art {
+
+        min-height:
+            390px;
+
+    }
+
+
+    .bot-grid {
+
+        grid-template-columns:
+            repeat(2,1fr);
+
+    }
+
+
+    .bot-card:last-child {
+
+        grid-column:
+            1/-1;
+
+    }
+
+
+    .cassette {
+
+        position:
+            relative;
+
+        top:
+            auto;
+
+    }
+
+
+    .track-grid {
+
+        grid-template-columns:
+            1fr;
+
+    }
+
+
+    .glitch-gallery {
+
+        grid-template-columns:
+            1fr 1fr;
+
+    }
+
+
+    .glitch-gallery img:first-child {
+
+        grid-column:
+            1/-1;
+
+    }
+
+}
+
+
+@media(max-width:520px) {
+
+    .topbar {
+
+        top:
+            8px;
+
+    }
+
+
+    .logo {
+
+        font-size:
+            .72rem;
+
+    }
+
+
+    .mini-btn {
+
+        font-size:
+            .58rem;
+
+        padding:
+            8px;
+
+    }
+
+
+    .section {
+
+        padding:
+            80px 0;
+
+    }
+
+
+    h1 {
+
+        font-size:
+            clamp(3.2rem,18vw,5rem);
+
+    }
+
+
+    .portal-grid,
+    .bot-grid {
+
+        grid-template-columns:
+            1fr;
+
+    }
+
+
+    .bot-card:last-child {
+
+        grid-column:
+            auto;
+
+    }
+
+
+    .hero-art {
+
+        min-height:
+            320px;
+
+    }
+
+
+    .planet {
+
+        width:
+            280px;
+
+    }
+
+
+    .floating-sticker {
+
+        font-size:
+            .58rem;
+
+    }
+
+
+    .window-body {
+
+        padding:
+            20px;
+
+    }
+
+
+    .visual-stack img {
+
+        height:
+            200px;
+
+    }
+
+
+    .glitch-gallery {
+
+        grid-template-columns:
+            1fr;
+
+    }
+
+      }
