@@ -1,467 +1,232 @@
-(() => {
-  "use strict";
 
-  const $ = (selector, root = document) => root.querySelector(selector);
-  const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
+const $ = (s, root=document) => root.querySelector(s);
+const $$ = (s, root=document) => [...root.querySelectorAll(s)];
 
-  const state = {
-    lang: localStorage.getItem("marcianito-lang") || "es",
-    theme: localStorage.getItem("marcianito-theme") || "dark",
-    sound: localStorage.getItem("marcianito-sound") === "on",
-    comments: JSON.parse(localStorage.getItem("marcianito-comments") || "[]"),
-    typingIndex: 0
+const state = {
+  lang: localStorage.getItem("marc-lang") || "es",
+  theme: localStorage.getItem("marc-theme") || "neon",
+  sound: localStorage.getItem("marc-sound") !== "off"
+};
+
+const translations = {
+  es: {
+    "nav.about":"about","nav.portals":"portales","nav.bots":"bots","nav.tarot":"tarot","nav.guestbook":"guestbook",
+    "hero.status":"TRANSMISSION ONLINE","hero.sub":"una criatura de Internet con demasiadas pestañas abiertas.","hero.enter":"ENTRAR A LOS PORTALES","hero.random":"SORPRÉNDEME",
+    "about.kicker":"FILE FOUND","about.title":"¿QUIÉN ES EL MARCIANITO?","about.p1":"No hay expediente completo. Solo señales, proyectos, gustos raros y una cantidad cuestionable de ideas.","about.p2":"Aquí viven mis redes, bots, tarot, música, experimentos y pequeñas cosas que se me ocurren cuando Internet se pone interesante.",
+    "portals.kicker":"EXTERNAL LINKS","portals.title":"MIS PORTALES","portals.x":"X / pensamientos y cosas","portals.personal":"cosas sin sentido / ideas","portals.critics":"críticas, chismes y demás","portals.niece":"animaciones y dibujos",
+    "music.kicker":"AUDIO SIGNAL","music.title":"FRECUENCIA DEL MARCIANO","music.tracks":"TRACK FILES",
+    "bots.kicker":"BOT ARCHIVE","bots.title":"CRIATURAS DIGITALES",
+    "tarot.kicker":"ORACLE MODULE","tarot.title":"TAROT DEL MARCIANITO","tarot.draw":"SACAR UNA CARTA","tarot.note":"Lectura recreativa: úsala como herramienta de reflexión, no como una predicción segura.",
+    "zodiac.title":"ZODIAC MODULE","zodiac.choose":"elige tu signo",
+    "gallery.kicker":"VISUAL MEMORY","gallery.title":"ARCHIVO VISUAL","gallery.hint":"Toca una imagen. Algunas cosas de este archivo no deberían estar aquí.",
+    "posts.kicker":"PERSONAL LOG","posts.title":"TRANSMISIONES","posts.save":"GUARDAR EN ESTE DISPOSITIVO","posts.clear":"BORRAR MIS LOGS",
+    "guest.kicker":"VISITOR LOG","guest.title":"GUESTBOOK","guest.anonymous":"mostrar como anónimo","guest.send":"ENVIAR SEÑAL","guest.local":"Este muro funciona localmente en cada dispositivo. No publica datos en un servidor.",
+    "join.kicker":"OPEN CHANNEL","join.title":"¿QUIERES RECIBIR UNA SEÑAL?","join.text":"Puedes dejar tu correo para abrir tu cliente de correo y escribirle directamente al Marcianito. La página no guarda correos por sí sola.","join.button":"UNIRME",
+    "footer":"made somewhere between earth & the internet · 404 normality not found"
+  },
+  en: {
+    "nav.about":"about","nav.portals":"portals","nav.bots":"bots","nav.tarot":"tarot","nav.guestbook":"guestbook",
+    "hero.status":"TRANSMISSION ONLINE","hero.sub":"an Internet creature with way too many tabs open.","hero.enter":"ENTER THE PORTALS","hero.random":"SURPRISE ME",
+    "about.kicker":"FILE FOUND","about.title":"WHO IS THE MARCIANITO?","about.p1":"There is no complete file. Only signals, projects, strange tastes and a questionable amount of ideas.","about.p2":"This is where my links, music, tarot, experiments and little Internet discoveries live.",
+    "portals.kicker":"EXTERNAL LINKS","portals.title":"MY PORTALS","portals.x":"X / thoughts and stuff","portals.personal":"random things / ideas","portals.critics":"reviews, gossip and more","portals.niece":"animations and drawings",
+    "music.kicker":"AUDIO SIGNAL","music.title":"MARCIANITO FREQUENCY","music.tracks":"TRACK FILES",
+    "bots.kicker":"BOT ARCHIVE","bots.title":"DIGITAL CREATURES",
+    "tarot.kicker":"ORACLE MODULE","tarot.title":"MARCIANITO TAROT","tarot.draw":"DRAW A CARD","tarot.note":"For fun and reflection: use it as a prompt, not as a certain prediction.",
+    "zodiac.title":"ZODIAC MODULE","zodiac.choose":"choose your sign",
+    "gallery.kicker":"VISUAL MEMORY","gallery.title":"VISUAL ARCHIVE","gallery.hint":"Tap an image. Some things in this archive probably should not be here.",
+    "posts.kicker":"PERSONAL LOG","posts.title":"TRANSMISSIONS","posts.save":"SAVE ON THIS DEVICE","posts.clear":"DELETE MY LOGS",
+    "guest.kicker":"VISITOR LOG","guest.title":"GUESTBOOK","guest.anonymous":"show as anonymous","guest.send":"SEND SIGNAL","guest.local":"This wall works locally on each device. It does not publish data to a server.",
+    "join.kicker":"OPEN CHANNEL","join.title":"WANT TO RECEIVE A SIGNAL?","join.text":"Enter your email to open your mail app and write directly to the Marcianito. This page does not store emails by itself.","join.button":"JOIN",
+    "footer":"made somewhere between earth & the internet · 404 normality not found"
+  }
+};
+
+function applyLang(){
+  document.documentElement.lang = state.lang;
+  $$("[data-i18n]").forEach(el => {
+    const key=el.dataset.i18n;
+    if(translations[state.lang][key]) el.textContent=translations[state.lang][key];
+  });
+  $("#langBtn").textContent=state.lang.toUpperCase();
+  $("#guestName").placeholder=state.lang==="es"?"nombre / alias (opcional)":"name / alias (optional)";
+  $("#guestMessage").placeholder=state.lang==="es"?"deja una opinión, saludo o mensaje...":"leave a thought, hello or message...";
+  $("#postTitle").placeholder=state.lang==="es"?"título / title":"title";
+  $("#postText").placeholder=state.lang==="es"?"escribe algo... / write something...":"write something... / escribe algo...";
+  renderZodiac();
+}
+function setTheme(){
+  document.documentElement.dataset.theme=state.theme==="neon"?"":state.theme;
+  $("#themeBtn").textContent=state.theme==="neon"?"◐":state.theme==="aqua"?"◉":"◑";
+  localStorage.setItem("marc-theme",state.theme);
+}
+
+let audioCtx;
+function beep(freq=520,duration=.045,type="sine"){
+  if(!state.sound) return;
+  try{
+    audioCtx ||= new (window.AudioContext||window.webkitAudioContext)();
+    const o=audioCtx.createOscillator(), g=audioCtx.createGain();
+    o.type=type;o.frequency.value=freq;g.gain.setValueAtTime(.0001,audioCtx.currentTime);
+    g.gain.exponentialRampToValueAtTime(.045,audioCtx.currentTime+.008);
+    g.gain.exponentialRampToValueAtTime(.0001,audioCtx.currentTime+duration);
+    o.connect(g).connect(audioCtx.destination);o.start();o.stop(audioCtx.currentTime+duration+.01);
+  }catch{}
+}
+document.addEventListener("click",e=>{ if(e.target.closest("button,a,.portal-card,.bot-card")) beep(440,.035); });
+
+$("#langBtn").addEventListener("click",()=>{state.lang=state.lang==="es"?"en":"es";localStorage.setItem("marc-lang",state.lang);applyLang();toast(state.lang==="es"?"Idioma: español":"Language: English");});
+$("#themeBtn").addEventListener("click",()=>{state.theme=state.theme==="neon"?"aqua":state.theme==="aqua"?"black":"neon";setTheme();toast(`theme: ${state.theme}`);});
+$("#soundBtn").addEventListener("click",()=>{state.sound=!state.sound;localStorage.setItem("marc-sound",state.sound?"on":"off");$("#soundBtn").textContent=state.sound?"♪":"×";toast(state.sound?"sound on":"sound off");});
+$("#menuBtn").addEventListener("click",()=>{$(".nav").classList.toggle("open");$("#menuBtn").setAttribute("aria-expanded",$(".nav").classList.contains("open"));});
+$$(".nav a").forEach(a=>a.addEventListener("click",()=>$(".nav").classList.remove("open")));
+
+function toast(text){const t=$("#toast");t.textContent=text;t.classList.add("show");clearTimeout(window._toast);window._toast=setTimeout(()=>t.classList.remove("show"),1800)}
+
+const moods=["dreaming.exe","pixelated","404-ish","cosmic","hyperactive","offline but online","strange"];
+$("#mood").textContent=moods[Math.floor(Math.random()*moods.length)];
+const visits=(+localStorage.getItem("marc-visits")||0)+1;localStorage.setItem("marc-visits",visits);$("#visitors").textContent=String(visits).padStart(6,"0");
+
+for(let i=0;i<90;i++){const s=document.createElement("i");s.className="star";s.style.left=Math.random()*100+"%";s.style.top=Math.random()*100+"%";s.style.animationDelay=Math.random()*3+"s";s.style.opacity=(.15+Math.random()*.65);$("#stars").appendChild(s)}
+document.addEventListener("pointermove",e=>{const g=$(".cursor-glow");g.style.left=e.clientX+"px";g.style.top=e.clientY+"px"});
+
+const imageFiles=[
+"27ec1d01f3606a1139891fb477d0823c.gif",
+"367ada851d5b95fa915a6516483ff2de.gif",
+"48f28d74336c94cb69c3f013cdb010d7.gif",
+"5054002216b1146455414c5109803df8.gif",
+"61bbb334f5612c279e4762249156901d.gif",
+"6825366421a47665a758e68408528d7f.gif",
+"84fc7bdae8ee0e30b5b7523deb4b9bf4.gif",
+"8a5d7e646532fd7fa5b9f2d43b4aed9d.gif",
+"931dd278c86d39915e40505d9746798b.gif",
+"9373bea609b7ff817932c9a5f7423018.gif",
+"97e7c21b1e9eba1725b150f6b40c2192c.gif",
+"9a18d5537fc7c3d42ae447fee9cfe93.gif",
+"9b29799821c199a6e51e7c4f189630fa.gif",
+"Fiesta.gif","Gatozaza.jpg","Icon.png",
+"b45c6843824977b67180889cf770ccf.gif",
+"bc81e814b7f91a5f7ebfc77b09d53ad0.gif",
+"bc985ac37c2a7bc798014c272c8e9fed.gif",
+"ce2ae6a95e299dbba8f4bf88a882ae2.gif",
+"d20e4f017003e8d391df53655f1755b6.gif",
+"d51c6960cdd215c35626921faae9ddb3.gif",
+"d8cb9352502196709a46ec16fdad7635.gif",
+"e3608abfc943aa2fddbe524c399ebea3.gif",
+"e8dfa1defe4972bfc6ce279438fcd0fb.gif",
+"fa1270c9ddc8098e871c5c16d39c7cbea.gif",
+"icono-generado-opcional.png"
+];
+const gallery=$("#galleryGrid");
+imageFiles.forEach((file,i)=>{
+  const item=document.createElement("button");item.type="button";item.className="gallery-item";item.title=file;
+  const img=document.createElement("img");img.src=file;img.alt=`MARCianito visual ${i+1}`;img.loading="lazy";
+  img.onerror=()=>{if(img.src.endsWith(file)){item.style.display="none"}};
+  item.appendChild(img);item.addEventListener("click",()=>openLightbox(file));
+  gallery.appendChild(item);
+});
+function openLightbox(file){
+  $("#lightboxImg").src=file;$("#lightboxCaption").textContent=file;$("#lightbox").classList.add("show");$("#lightbox").setAttribute("aria-hidden","false");
+}
+function closeLightbox(){$("#lightbox").classList.remove("show");$("#lightbox").setAttribute("aria-hidden","true");$("#lightboxImg").src=""}
+$("#lightboxClose").addEventListener("click",closeLightbox);$("#lightbox").addEventListener("click",e=>{if(e.target.id==="lightbox")closeLightbox()});
+
+const tracks=[
+["01","https://open.spotify.com/track/2mIUxMNXw0u9gewwnomdjL","track signal"],
+["02","https://open.spotify.com/track/5T3yTmOJ1hJxnH8boXgm3l","track signal"],
+["03","https://open.spotify.com/track/3u2hfoDnXpCiQQRQkblecj","track signal"],
+["04","https://open.spotify.com/track/2FAZskT9yRjp2Oow9szJD8","track signal"],
+["05","https://open.spotify.com/track/6M8r5ddeOm2jxoagsSzuFh","track signal"],
+["06","https://open.spotify.com/track/56fgrIPr54E85K98kmgqwy","track signal"],
+["07","https://open.spotify.com/track/1v3rQg6uPY6AnOY5TtxN7I","track signal"]
+];
+$("#trackList").innerHTML=tracks.map(([n,url,name])=>`<div class="track"><span>TRACK_${n} // ${name}</span><a href="${url}" target="_blank" rel="noopener">OPEN ↗</a></div>`).join("");
+
+const tarot=[
+["THE STAR","✦","hope · curiosity · looking forward"],
+["THE MOON","☾","intuition · uncertainty · imagination"],
+["THE SUN","☼","energy · clarity · joy"],
+["THE MAGICIAN","✧","initiative · creativity · making things"],
+["THE HERMIT","◌","pause · reflection · your own signal"],
+["THE FOOL","∞","new route · experiment · begin"],
+["THE WORLD","◎","closure · connection · a bigger picture"],
+["TEMPERANCE","≈","balance · patience · mixing opposites"],
+["THE TOWER","⌁","change · disruption · rebuild"],
+["THE EMPRESS","❀","creation · care · abundance"]
+];
+function drawTarot(){
+  const [name,sym,msg]=tarot[Math.floor(Math.random()*tarot.length)],c=$("#tarotCard");
+  c.classList.remove("drawn");void c.offsetWidth;c.classList.add("drawn");
+  c.innerHTML=`<div class="card-stars">✦ ✧ ✦</div><div class="card-symbol">${sym}</div><strong>${name}</strong><small>${msg}</small>`;
+}
+$("#drawTarot").addEventListener("click",drawTarot);
+
+const zodiacData={
+aries:["♈","Aries","impulse · courage · movement"],taurus:["♉","Tauro","patience · comfort · persistence"],gemini:["♊","Géminis","curiosity · ideas · conversation"],cancer:["♋","Cáncer","intuition · memory · care"],leo:["♌","Leo","expression · warmth · confidence"],virgo:["♍","Virgo","detail · analysis · craft"],libra:["♎","Libra","balance · aesthetics · connection"],scorpio:["♏","Escorpio","depth · transformation · focus"],sagittarius:["♐","Sagitario","freedom · exploration · humor"],capricorn:["♑","Capricornio","structure · ambition · patience"],aquarius:["♒","Acuario","originality · independence · ideas"],pisces:["♓","Piscis","imagination · sensitivity · dreams"]
+};
+function renderZodiac(){
+  const d=zodiacData[$("#zodiacSelect").value], en=state.lang==="en";
+  const names={Tauro:"Taurus",Géminis:"Gemini",Cáncer:"Cancer",Escorpio:"Scorpio",Sagitario:"Sagittarius",Acuario:"Aquarius",Piscis:"Pisces"};
+  const traits={
+    "impulse · courage · movement":"impulse · courage · movement","patience · comfort · persistence":"patience · comfort · persistence",
+    "curiosity · ideas · conversation":"curiosity · ideas · conversation","intuition · memory · care":"intuition · memory · care",
+    "expression · warmth · confidence":"expression · warmth · confidence","detail · analysis · craft":"detail · analysis · craft",
+    "balance · aesthetics · connection":"balance · aesthetics · connection","depth · transformation · focus":"depth · transformation · focus",
+    "freedom · exploration · humor":"freedom · exploration · humor","structure · ambition · patience":"structure · ambition · patience",
+    "originality · independence · ideas":"originality · independence · ideas","imagination · sensitivity · dreams":"imagination · sensitivity · dreams"
   };
+  $("#zodiacResult").innerHTML=`<div class="zodiac-symbol">${d[0]}</div><b>${en?(names[d[1]]||d[1]):d[1]}</b><span>${traits[d[2]]||d[2]}</span>`;
+}
+$("#zodiacSelect").addEventListener("change",renderZodiac);
 
-  const translations = {
-    es: {
-      bootText: "estableciendo conexión interplanetaria...",
-      navAbout: "about", navPortals: "portals", navMusic: "music", navTarot: "tarot", navGuestbook: "guestbook",
-      windowTitle: "señal encontrada", online: "TRANSMISSION ONLINE",
-      heroSubtitle: "un pequeño rincón de Internet perdido entre estrellas, bots y cosas raras.",
-      openPortals: "abrir portales ↗", random: "sorpréndeme ✦",
-      whoami: "tarotista · creadora de bots · estudiante · programadora en proceso",
-      friendText: "hola, criatura terrestre", aboutTitle: "¿quién demonios es Marcianito?",
-      sectionSignal: "SIGNAL PROFILE", aboutCardTitle: "una criatura de Internet",
-      aboutText: "Este sitio es mi pequeño archivo personal: redes, música, bots, tarot, proyectos, gustos y cualquier cosa que parezca haber escapado de otra dimensión.",
-      profileOccupation: "tarot · bots · student", moodBtn: "generar mood",
-      sectionPortals: "PORTALS", portalsTitle: "mis coordenadas en Internet", visit: "entrar al portal ↗",
-      sectionMusic: "AUDIO SIGNAL", musicTitle: "lo que suena dentro de la nave",
-      trackNote: "elige una señal de Spotify", nextTrack: "siguiente señal ↻", trackWallTitle: "TRACK ARCHIVE",
-      sectionTarot: "ORACLE CHANNEL", tarotTitle: "una carta para tu señal", tarotHeading: "elige una carta",
-      tarotText: "No es una predicción absoluta. Úsalo como una dinámica simbólica para reflexionar, jugar y escuchar lo que ya traes dentro.",
-      drawCard: "sacar carta ✦", tarotWaiting: "la baraja está esperando...",
-      sectionGallery: "SIGNAL ARCHIVE", galleryTitle: "cosas encontradas flotando por ahí", randomFilter: "RANDOM",
-      sectionGuestbook: "GUESTBOOK", guestbookTitle: "deja una señal", nameLabel: "nombre o alias", messageLabel: "mensaje",
-      sendMessage: "transmitir ↗", guestNote: "Los mensajes se guardan en este navegador. Para que sean compartidos públicamente entre visitantes hace falta conectar un servicio de base de datos.",
-      footerText: "made somewhere between Earth and the void · press everything"
-    },
-    en: {
-      bootText: "establishing interplanetary connection...",
-      navAbout: "about", navPortals: "portals", navMusic: "music", navTarot: "tarot", navGuestbook: "guestbook",
-      windowTitle: "signal found", online: "TRANSMISSION ONLINE",
-      heroSubtitle: "a tiny corner of the Internet lost somewhere between stars, bots and weird things.",
-      openPortals: "open portals ↗", random: "surprise me ✦",
-      whoami: "tarot reader · bot creator · student · programmer in progress",
-      friendText: "hello, earth creature", aboutTitle: "who the hell is Marcianito?",
-      sectionSignal: "SIGNAL PROFILE", aboutCardTitle: "an Internet creature",
-      aboutText: "This site is my little personal archive: socials, music, bots, tarot, projects, tastes and anything that looks like it escaped from another dimension.",
-      profileOccupation: "tarot · bots · student", moodBtn: "generate mood",
-      sectionPortals: "PORTALS", portalsTitle: "my coordinates on the Internet", visit: "enter portal ↗",
-      sectionMusic: "AUDIO SIGNAL", musicTitle: "what is playing inside the ship",
-      trackNote: "choose a Spotify signal", nextTrack: "next signal ↻", trackWallTitle: "TRACK ARCHIVE",
-      sectionTarot: "ORACLE CHANNEL", tarotTitle: "a card for your signal", tarotHeading: "choose a card",
-      tarotText: "Not an absolute prediction. Use it as a symbolic little game to reflect, play and listen to what you already carry inside.",
-      drawCard: "draw a card ✦", tarotWaiting: "the deck is waiting...",
-      sectionGallery: "SIGNAL ARCHIVE", galleryTitle: "things found floating around", randomFilter: "RANDOM",
-      sectionGuestbook: "GUESTBOOK", guestbookTitle: "leave a signal", nameLabel: "name or alias", messageLabel: "message",
-      sendMessage: "transmit ↗", guestNote: "Messages are stored in this browser. For messages to be shared publicly between visitors, a database service must be connected.",
-      footerText: "made somewhere between Earth and the void · press everything"
-    }
-  };
+const postKey="marc-posts";
+function getPosts(){try{return JSON.parse(localStorage.getItem(postKey)||"[]")}catch{return[]}}
+function renderPosts(){
+  const posts=getPosts();$("#postList").innerHTML=posts.length?posts.map(p=>`<article class="post"><time>${escapeHTML(p.date)}</time><h3>${escapeHTML(p.title)}</h3><p>${escapeHTML(p.text)}</p></article>`).join(""):`<article class="post"><p>${state.lang==="es"?"Aún no hay transmisiones. Escribe la primera.":"No transmissions yet. Write the first one."}</p></article>`;
+}
+$("#savePost").addEventListener("click",()=>{
+  const title=$("#postTitle").value.trim(),text=$("#postText").value.trim();if(!title||!text){toast(state.lang==="es"?"Falta título o texto":"Title or text missing");return}
+  const posts=getPosts();posts.unshift({title,text,date:new Date().toLocaleString()});localStorage.setItem(postKey,JSON.stringify(posts.slice(0,20)));
+  $("#postTitle").value="";$("#postText").value="";renderPosts();toast(state.lang==="es"?"Transmisión guardada":"Transmission saved");
+});
+$("#clearPosts").addEventListener("click",()=>{localStorage.removeItem(postKey);renderPosts();toast("logs cleared")});
 
-  const typingES = [
-    "welcome, terrestrial being...",
-    "searching for lost signals...",
-    "loading weird internet...",
-    "tarot.exe ready.",
-    "bots online.",
-    "do not trust the fish."
-  ];
-  const typingEN = [
-    "welcome, terrestrial being...",
-    "searching for lost signals...",
-    "loading weird internet...",
-    "tarot.exe ready.",
-    "bots online.",
-    "do not trust the fish."
-  ];
+const guestKey="marc-guestbook";
+function getGuests(){try{return JSON.parse(localStorage.getItem(guestKey)||"[]")}catch{return[]}}
+function renderGuests(){
+  const gs=getGuests();$("#guestList").innerHTML=gs.length?gs.map(g=>`<article class="guest-msg"><header><span>${escapeHTML(g.name)}</span><time>${escapeHTML(g.date)}</time></header><p>${escapeHTML(g.message)}</p></article>`).join(""):`<article class="guest-msg"><p>${state.lang==="es"?"El muro está esperando señales.":"The wall is waiting for signals."}</p></article>`;
+}
+$("#guestForm").addEventListener("submit",e=>{
+  e.preventDefault();const message=$("#guestMessage").value.trim();if(!message)return;
+  const anonymous=$("#anonymous").checked;const name=anonymous?(state.lang==="es"?"ANÓNIMO":"ANONYMOUS"):($("#guestName").value.trim()||(state.lang==="es"?"VISITANTE":"VISITOR"));
+  const gs=getGuests();gs.unshift({name,message,date:new Date().toLocaleDateString()});localStorage.setItem(guestKey,JSON.stringify(gs.slice(0,50)));
+  $("#guestForm").reset();renderGuests();toast(state.lang==="es"?"Señal recibida":"Signal received");
+});
 
-  function applyLanguage() {
-    const t = translations[state.lang];
-    document.documentElement.lang = state.lang;
-    $$("[data-i18n]").forEach(el => {
-      const key = el.dataset.i18n;
-      if (t[key]) el.textContent = t[key];
-    });
-    $("#langToggle").textContent = state.lang === "es" ? "EN" : "ES";
-    localStorage.setItem("marcianito-lang", state.lang);
-    renderComments();
-  }
+function escapeHTML(str){return String(str).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
 
-  function applyTheme() {
-    document.body.dataset.theme = state.theme;
-    localStorage.setItem("marcianito-theme", state.theme);
-  }
+$("#joinForm").addEventListener("submit",e=>{
+  e.preventDefault();const email=$("#joinEmail").value.trim();if(!email)return;
+  // Replace this address with the email you want to receive messages.
+  window.location.href=`mailto:YOUR_EMAIL@example.com?subject=MARCianito%20signal&body=${encodeURIComponent(email+" wants to join the channel.")}`;
+});
 
-  function cycleTheme() {
-    const themes = ["dark", "ocean", "violet", "toxic"];
-    state.theme = themes[(themes.indexOf(state.theme) + 1) % themes.length];
-    applyTheme();
-    toast(`theme → ${state.theme.toUpperCase()}`);
-    clickSound(520);
-  }
+$("#randomBtn").addEventListener("click",()=>{
+  const targets=["#about","#portals","#music","#bots","#tarot","#gallery","#guestbook"];
+  const target=targets[Math.floor(Math.random()*targets.length)];document.querySelector(target).scrollIntoView({behavior:"smooth"});
+  toast(state.lang==="es"?"señal aleatoria encontrada":"random signal found");
+});
 
-  function toast(message) {
-    const el = $("#toast");
-    el.textContent = message;
-    el.classList.add("show");
-    clearTimeout(toast.timer);
-    toast.timer = setTimeout(() => el.classList.remove("show"), 2200);
-  }
+$("#secretBtn").addEventListener("click",()=>$("#easterEgg").classList.add("show"));
+$$("[data-close-secret]").forEach(b=>b.addEventListener("click",()=>$("#easterEgg").classList.remove("show")));
 
-  function particle(x, y, symbol = "✦") {
-    const el = document.createElement("span");
-    el.className = "particle";
-    el.textContent = symbol;
-    el.style.left = `${x}px`;
-    el.style.top = `${y}px`;
-    el.style.setProperty("--dx", `${(Math.random() - .5) * 180}px`);
-    el.style.setProperty("--dy", `${-50 - Math.random() * 130}px`);
-    document.body.appendChild(el);
-    setTimeout(() => el.remove(), 1200);
-  }
+$("#year").textContent=new Date().getFullYear();
 
-  // Lightweight click sound using Web Audio; no external audio file is required.
-  let audioCtx = null;
-  function clickSound(freq = 440) {
-    if (!state.sound) return;
-    try {
-      audioCtx ||= new (window.AudioContext || window.webkitAudioContext)();
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      osc.type = "sine";
-      osc.frequency.value = freq;
-      gain.gain.setValueAtTime(.0001, audioCtx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(.045, audioCtx.currentTime + .01);
-      gain.gain.exponentialRampToValueAtTime(.0001, audioCtx.currentTime + .12);
-      osc.connect(gain).connect(audioCtx.destination);
-      osc.start();
-      osc.stop(audioCtx.currentTime + .13);
-    } catch (_) {}
-  }
+setTheme();applyLang();renderZodiac();renderPosts();renderGuests();
 
-  function toggleSound() {
-    state.sound = !state.sound;
-    localStorage.setItem("marcianito-sound", state.sound ? "on" : "off");
-    $("#soundToggle").textContent = state.sound ? "♫" : "♪";
-    toast(state.sound ? "sound signal: ON" : "sound signal: OFF");
-    if (state.sound) clickSound(660);
-  }
-
-  // Boot sequence
-  function boot() {
-    const screen = $("#boot-screen");
-    const bar = $("#boot-progress");
-    let p = 0;
-    const timer = setInterval(() => {
-      p += Math.floor(Math.random() * 9) + 4;
-      if (p >= 100) {
-        p = 100;
-        clearInterval(timer);
-        setTimeout(() => screen.classList.add("hidden"), 300);
-      }
-      bar.style.width = `${p}%`;
-    }, 65);
-  }
-
-  // Stars
-  function initStars() {
-    const canvas = $("#stars");
-    const ctx = canvas.getContext("2d");
-    let w, h, stars = [];
-    function resize() {
-      w = canvas.width = innerWidth * devicePixelRatio;
-      h = canvas.height = innerHeight * devicePixelRatio;
-      canvas.style.width = `${innerWidth}px`;
-      canvas.style.height = `${innerHeight}px`;
-      const count = Math.min(180, Math.floor(innerWidth / 7));
-      stars = Array.from({length: count}, () => ({
-        x: Math.random() * w, y: Math.random() * h, r: Math.random() * 1.5 + .2,
-        a: Math.random(), s: Math.random() * .015 + .003
-      }));
-    }
-    function draw() {
-      ctx.clearRect(0,0,w,h);
-      stars.forEach(s => {
-        s.a += s.s;
-        const alpha = .25 + (Math.sin(s.a * 6) + 1) * .22;
-        ctx.fillStyle = `rgba(255,255,255,${alpha})`;
-        ctx.beginPath();
-        ctx.arc(s.x,s.y,s.r * devicePixelRatio,0,Math.PI*2);
-        ctx.fill();
-      });
-      requestAnimationFrame(draw);
-    }
-    addEventListener("resize", resize, {passive:true});
-    resize(); draw();
-  }
-
-  // Cursor glow + tilt
-  function initEffects() {
-    const glow = $(".cursor-glow");
-    addEventListener("pointermove", e => {
-      glow.style.left = `${e.clientX}px`;
-      glow.style.top = `${e.clientY}px`;
-    }, {passive:true});
-
-    $$(".tilt-card").forEach(card => {
-      card.addEventListener("pointermove", e => {
-        if (matchMedia("(max-width: 780px)").matches) return;
-        const r = card.getBoundingClientRect();
-        const x = (e.clientX - r.left) / r.width - .5;
-        const y = (e.clientY - r.top) / r.height - .5;
-        card.style.transform = `perspective(900px) rotateX(${y * -2.5}deg) rotateY(${x * 2.5}deg) translateY(-2px)`;
-      });
-      card.addEventListener("pointerleave", () => card.style.transform = "");
-    });
-
-    document.addEventListener("click", e => {
-      if (e.target.closest("button,a,.gallery-item")) {
-        particle(e.clientX, e.clientY, ["✦","✧","⋆","♡","🛸"][Math.floor(Math.random()*5)]);
-        clickSound(300 + Math.random()*500);
-      }
-    });
-  }
-
-  // Typing line
-  function typingLoop() {
-    const el = $("#typing");
-    const lines = state.lang === "es" ? typingES : typingEN;
-    const line = lines[state.typingIndex % lines.length];
-    let i = 0;
-    el.textContent = "";
-    const interval = setInterval(() => {
-      el.textContent = line.slice(0, i++);
-      if (i > line.length) {
-        clearInterval(interval);
-        setTimeout(() => {
-          state.typingIndex++;
-          typingLoop();
-        }, 1200);
-      }
-    }, 45);
-  }
-
-  // Mood
-  const moods = [
-    "alien de lunes", "bruma cósmica", "404 emocional", "modo pez", "neon brain",
-    "tarot goblin", "internet fairy", "vibing.exe", "signal lost", "sweet chaos"
-  ];
-  $("#moodBtn").addEventListener("click", () => {
-    $("#moodText").textContent = moods[Math.floor(Math.random()*moods.length)];
-    toast("mood generated ✦");
-  });
-
-  // Random portal
-  $("#randomBtn").addEventListener("click", () => {
-    const sections = ["#portals", "#music", "#tarot", "#gallery", "#guestbook"];
-    const target = sections[Math.floor(Math.random()*sections.length)];
-    document.querySelector(target).scrollIntoView({behavior:"smooth"});
-    document.body.classList.add("glitch-mode");
-    setTimeout(() => document.body.classList.remove("glitch-mode"), 1100);
-    toast(`portal selected → ${target.replace("#","").toUpperCase()}`);
-  });
-
-  // Track wall: all supplied Spotify URLs
-  const tracks = [
-    ["2mIUxMNXw0u9gewwnomdjL", "track signal 01", "Spotify track"],
-    ["5T3yTmOJ1hJxnH8boXgm3l", "track signal 02", "Spotify track"],
-    ["3u2hfoDnXpCiQQRQkblecj", "track signal 03", "Spotify track"],
-    ["2FAZskT9yRjp2Oow9szJD8", "track signal 04", "Spotify track"],
-    ["6M8r5ddeOm2jxoagsSzuFh", "track signal 05", "Spotify track"],
-    ["56fgrIPr54E85K98kmgqwy", "track signal 06", "Spotify track"],
-    ["1v3rQg6uPY6AnOY5TtxN7I", "track signal 07", "Spotify track"]
-  ];
-  const playlists = [
-    ["2Gi9fghWLLI5qETHwMrKrc", "playlist 01"],
-    ["7pKuho7nNNbIDeihFLvNuO", "playlist 02"]
-  ];
-
-  function renderTracks() {
-    $("#trackList").innerHTML = tracks.map((t,i) => `
-      <div class="track-item">
-        <span class="track-number">${String(i+1).padStart(2,"0")}</span>
-        <a href="https://open.spotify.com/track/${t[0]}" target="_blank" rel="noopener noreferrer">${t[1]}</a>
-        <small>${t[2]}</small>
-      </div>
-    `).join("");
-  }
-
-  let trackIndex = 0;
-  $("#shuffleTrack").addEventListener("click", () => {
-    trackIndex = (trackIndex + 1) % (tracks.length + playlists.length);
-    const item = trackIndex < tracks.length ? tracks[trackIndex] : playlists[trackIndex - tracks.length];
-    const isPlaylist = trackIndex >= tracks.length;
-    $("#trackName").textContent = isPlaylist ? item[1] : item[1];
-    $("#trackNote").textContent = isPlaylist ? "playlist signal → Spotify" : "track signal → Spotify";
-    toast(`signal ${String(trackIndex+1).padStart(2,"0")} loaded`);
-  });
-
-  // Tarot
-  const tarot = [
-    ["The Star / La Estrella", "esperanza, dirección y volver a mirar hacia arriba. Una señal de que puedes seguir avanzando sin tener todo resuelto."],
-    ["The Moon / La Luna", "intuición, dudas y cosas que todavía no se ven claras. No todo necesita una respuesta inmediata."],
-    ["The Magician / El Mago", "recursos, creatividad y capacidad de convertir una idea en algo real. Empieza con lo que ya tienes."],
-    ["The Fool / El Loco", "curiosidad, comienzo y experimentar. No significa actuar sin pensar; significa permitirte descubrir."],
-    ["The Hermit / El Ermitaño", "pausa, reflexión y escuchar tu propia señal antes de seguir el ruido exterior."],
-    ["The Sun / El Sol", "claridad, energía y una etapa más abierta. Deja que algo sencillo también pueda hacerte bien."],
-    ["Death / La Muerte", "cierre y transformación simbólica. Algo puede cambiar de forma sin que eso signifique una tragedia."],
-    ["The World / El Mundo", "cierre de ciclo, integración y reconocer cuánto camino ya existe detrás de ti."]
-  ];
-
-  $("#drawCard").addEventListener("click", () => {
-    const result = $("#tarotResult");
-    const [name, meaning] = tarot[Math.floor(Math.random()*tarot.length)];
-    result.classList.add("revealed");
-    result.innerHTML = `<div><div class="tarot-card-name">${name}</div><p class="tarot-card-meaning">${meaning}</p><button class="aero-btn small" id="drawAgain" type="button">${state.lang === "es" ? "otra carta ↻" : "another card ↻"}</button></div>`;
-    $("#drawAgain").addEventListener("click", () => $("#drawCard").click());
-  });
-
-  // Gallery filters
-  $$(".filter-btn").forEach(btn => {
-    btn.addEventListener("click", () => {
-      $$(".filter-btn").forEach(b => b.classList.remove("active"));
-      btn.classList.add("active");
-      const filter = btn.dataset.filter;
-      const items = $$(".gallery-item");
-      if (filter === "random") {
-        items.forEach(i => i.classList.remove("hidden"));
-        items.sort(() => Math.random() - .5).forEach(i => $("#galleryGrid").appendChild(i));
-        toast("archive shuffled ✦");
-        return;
-      }
-      items.forEach(item => item.classList.toggle("hidden", filter !== "all" && !item.classList.contains(filter)));
-    });
-  });
-
-  // Gallery modal
-  const modal = $("#modal"), modalContent = $("#modalContent");
-  $$(".gallery-item").forEach(item => {
-    item.addEventListener("click", () => {
-      const img = $("img", item);
-      const caption = $("figcaption", item)?.textContent || "";
-      modalContent.innerHTML = `<img class="modal-img" src="${img.src}" alt=""><div class="modal-caption">${caption}</div>`;
-      modal.classList.add("open");
-      modal.setAttribute("aria-hidden","false");
-    });
-  });
-  function closeModal() {
-    modal.classList.remove("open");
-    modal.setAttribute("aria-hidden","true");
-  }
-  $("#closeModal").addEventListener("click", closeModal);
-  modal.addEventListener("click", e => { if (e.target === modal) closeModal(); });
-  document.addEventListener("keydown", e => { if (e.key === "Escape") closeModal(); });
-
-  // Guestbook, local-only by design.
-  function renderComments() {
-    const list = $("#guestbookList");
-    const fallback = state.lang === "es"
-      ? "Todavía no hay señales. Sé la primera criatura en dejar una."
-      : "No signals yet. Be the first creature to leave one.";
-    if (!state.comments.length) {
-      list.innerHTML = `<div class="guest-entry"><strong>MARCIANITO.EXE</strong><p>${fallback}</p></div>`;
-      return;
-    }
-    list.innerHTML = state.comments.map(c => `
-      <article class="guest-entry">
-        <header><strong>${escapeHTML(c.name)}</strong><time>${escapeHTML(c.date)}</time></header>
-        <p>${escapeHTML(c.message)}</p>
-      </article>
-    `).join("");
-  }
-
-  function escapeHTML(value) {
-    return String(value).replace(/[&<>"']/g, ch => ({
-      "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#039;"
-    }[ch]));
-  }
-
-  const messageBox = $("#guestMessage");
-  messageBox.addEventListener("input", () => $("#charCount").textContent = `${messageBox.value.length}/300`);
-
-  $("#sendGuest").addEventListener("click", () => {
-    const name = ($("#guestName").value.trim() || (state.lang === "es" ? "criatura anónima" : "anonymous creature")).slice(0,32);
-    const message = messageBox.value.trim().slice(0,300);
-    if (!message) {
-      toast(state.lang === "es" ? "escribe una señal primero 👽" : "write a signal first 👽");
-      messageBox.focus();
-      return;
-    }
-    state.comments.unshift({
-      name,
-      message,
-      date: new Intl.DateTimeFormat(state.lang === "es" ? "es-MX" : "en-US", {dateStyle:"short", timeStyle:"short"}).format(new Date())
-    });
-    state.comments = state.comments.slice(0, 30);
-    localStorage.setItem("marcianito-comments", JSON.stringify(state.comments));
-    $("#guestName").value = "";
-    messageBox.value = "";
-    $("#charCount").textContent = "0/300";
-    renderComments();
-    toast(state.lang === "es" ? "señal transmitida ✦" : "signal transmitted ✦");
-  });
-
-  // Easter eggs
-  let logoClicks = 0;
-  $(".brand-mini").addEventListener("click", e => {
-    logoClicks++;
-    if (logoClicks >= 5) {
-      logoClicks = 0;
-      document.body.classList.toggle("party-mode");
-      toast("MARCianito PARTY MODE ✦");
-    }
-  });
-
-  let konami = [];
-  const secret = ["ArrowUp","ArrowUp","ArrowDown","ArrowDown","ArrowLeft","ArrowRight","ArrowLeft","ArrowRight","b","a"];
-  document.addEventListener("keydown", e => {
-    konami.push(e.key);
-    konami = konami.slice(-secret.length);
-    if (konami.join("|") === secret.join("|")) {
-      document.body.classList.toggle("party-mode");
-      toast("secret signal unlocked 🛸");
-      for (let i=0;i<25;i++) setTimeout(() => particle(Math.random()*innerWidth, innerHeight*.75, "✦"), i*30);
-    }
-  });
-
-  $("#secretButton").addEventListener("click", () => {
-    const msgs = [
-      "you found the suspicious button.",
-      "there is no lore here. probably.",
-      "the fish knows.",
-      "MARCianito is watching the loading bar.",
-      "404: normal behavior not found."
-    ];
-    toast(msgs[Math.floor(Math.random()*msgs.length)]);
-  });
-
-  // Controls
-  $("#langToggle").addEventListener("click", () => {
-    state.lang = state.lang === "es" ? "en" : "es";
-    applyLanguage();
-    typingLoop();
-    clickSound(700);
-  });
-  $("#themeToggle").addEventListener("click", cycleTheme);
-  $("#soundToggle").addEventListener("click", toggleSound);
-
-  // Year + initial state
-  $("#year").textContent = new Date().getFullYear();
-  applyTheme();
-  applyLanguage();
-  $("#soundToggle").textContent = state.sound ? "♫" : "♪";
-  renderTracks();
-  renderComments();
-  initStars();
-  initEffects();
-  typingLoop();
-  boot();
-
-  // Keyboard shortcuts
-  document.addEventListener("keydown", e => {
-    if (e.target.matches("input,textarea")) return;
-    if (e.key.toLowerCase() === "t") $("#drawCard").click();
-    if (e.key.toLowerCase() === "r") $("#randomBtn").click();
-  });
-})();
+const bootSeen=sessionStorage.getItem("marc-boot");
+if(bootSeen){$("#boot").classList.add("hidden")}
+else{
+  sessionStorage.setItem("marc-boot","1");
+  setTimeout(()=>$("#boot").classList.add("hidden"),2600);
+}
+$$("[data-close-boot]").forEach(b=>b.addEventListener("click",()=>$("#boot").classList.add("hidden")));
