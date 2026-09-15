@@ -1,335 +1,293 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <meta name="theme-color" content="#080514">
-  <meta name="description" content="MARCianito // Bubbles // Josslyn — un rincón extraño de Internet.">
-  <title>MARCianito.exe — signal received</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#08050f">
+  <meta name="description" content="MARCianito.EXE — un pequeño rincón extraño de Internet.">
+  <meta name="color-scheme" content="dark light">
+  <title>MARCianito.EXE — signal online</title>
   <link rel="icon" href="Icono.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="estilo.css">
 </head>
+
 <body>
-  <div id="boot-screen" class="boot-screen" aria-hidden="true">
-    <div class="boot-terminal">
-      <div class="boot-line">MARCianito.EXE</div>
-      <div class="boot-line">initializing strange little corner...</div>
-      <div class="boot-line">loading memories / bots / music / stars...</div>
-      <div class="boot-progress"><span></span></div>
-      <div class="boot-status">SIGNAL: <b>ONLINE</b></div>
+  <div id="preloader" class="preloader" aria-hidden="true">
+    <div class="boot-window">
+      <div class="boot-title">MARCianito.EXE <span>×</span></div>
+      <div class="boot-body">
+        <div class="boot-orb">🛸</div>
+        <p id="bootText">establishing connection...</p>
+        <div class="progress"><i></i></div>
+      </div>
     </div>
   </div>
 
-  <canvas id="space-canvas" aria-hidden="true"></canvas>
-  <div class="scanlines" aria-hidden="true"></div>
-  <div class="noise" aria-hidden="true"></div>
-  <div class="cursor-orb" aria-hidden="true"></div>
+  <canvas id="stars" aria-hidden="true"></canvas>
+  <div class="grain" aria-hidden="true"></div>
+  <div class="cursor-glow" aria-hidden="true"></div>
+  <div id="ripples" aria-hidden="true"></div>
 
   <header class="topbar">
     <a class="brand" href="#home" aria-label="MARCianito home">
-      <span class="brand-dot"></span>
-      <span>MARCianito<span class="brand-soft">.EXE</span></span>
+      <span class="brand-dot"></span><span>MARCianito.EXE</span>
     </a>
-    <nav class="nav" id="main-nav">
-      <a href="#about" data-i18n="navAbout">sobre mí</a>
-      <a href="#portals" data-i18n="navPortals">portales</a>
-      <a href="#music" data-i18n="navMusic">música</a>
-      <a href="#bots" data-i18n="navBots">bots</a>
-      <a href="#tarot" data-i18n="navTarot">tarot</a>
-      <a href="#wall" data-i18n="navWall">muro</a>
+    <nav class="nav" id="mainNav">
+      <a href="#about" data-i18n="nav.about">about</a>
+      <a href="#portals" data-i18n="nav.portals">portals</a>
+      <a href="#music" data-i18n="nav.music">music</a>
+      <a href="#tarot" data-i18n="nav.tarot">tarot</a>
+      <a href="#posts" data-i18n="nav.posts">posts</a>
+      <a href="#guestbook" data-i18n="nav.guestbook">guestbook</a>
     </nav>
-    <div class="top-actions">
-      <button class="icon-btn" id="soundToggle" type="button" title="Sound">◉</button>
-      <button class="icon-btn" id="themeBtn" type="button" title="Theme">◈</button>
-      <button class="lang-btn active" data-lang="es" type="button">ES</button>
-      <button class="lang-btn" data-lang="en" type="button">EN</button>
-      <button class="menu-btn" id="menuBtn" type="button" aria-label="Menu">☰</button>
+    <div class="tools">
+      <button class="icon-btn" id="langBtn" type="button" aria-label="Change language">EN</button>
+      <button class="icon-btn" id="themeBtn" type="button" aria-label="Change theme">◐</button>
+      <button class="icon-btn menu-btn" id="menuBtn" type="button" aria-label="Open menu">☰</button>
     </div>
   </header>
 
-  <div class="theme-panel" id="themePanel" aria-hidden="true">
-    <p>COLOR_MODULE</p>
-    <button data-theme-choice="default">◉ neon</button>
-    <button data-theme-choice="void">● void</button>
-    <button data-theme-choice="aqua">◎ aqua</button>
-    <button data-theme-choice="night">✦ night</button>
-  </div>
-
   <main>
     <section id="home" class="hero section">
-      <div class="hero-decor hero-decor-a">✦</div>
-      <div class="hero-decor hero-decor-b">🛸</div>
-      <div class="hero-decor hero-decor-c">𓆩♡𓆪</div>
-
-      <div class="hero-grid">
-        <div class="hero-copy reveal">
-          <div class="status-pill"><span></span> <span data-i18n="online">SEÑAL RECIBIDA / ONLINE</span></div>
-          <p class="eyebrow">﹒⌗﹒🦇﹒౨ৎ˚₊‧˙</p>
-          <h1><span>MARC</span><em>ianito</em><small>.exe</small></h1>
-          <p class="alias"><b>Marcianito</b> · <b>Bubbles</b> · <b>Josslyn</b></p>
-          <p class="hero-text" data-i18n="heroText">Tres nombres, una misma criatura de Internet. Este es mi pequeño rincón para guardar música, bots, ideas, tarot, dibujos, cosas raras y todo lo que se me ocurre antes de que desaparezca.</p>
-          <div class="hero-buttons">
-            <a class="btn primary" href="#portals" data-i18n="enter">ENTRAR AL RINCÓN</a>
-            <button class="btn ghost" id="randomizeBtn" type="button" data-i18n="surprise">SORPRÉNDEME ✦</button>
-          </div>
-          <div class="mini-terminal">
-            <span>&gt; whoami</span>
-            <strong id="whoamiText">signal received...</strong>
-            <span class="blink">_</span>
-          </div>
-        </div>
-
-        <div class="hero-art reveal">
-          <div class="orbital-ring ring-one"></div>
-          <div class="orbital-ring ring-two"></div>
-          <div class="art-window">
-            <div class="window-bar"><span>●</span><span>●</span><span>●</span><b>ALIEN_CHANNEL</b><span>×</span></div>
-            <div class="art-frame">
-              <img src="Alien.icon" alt="MARCianito icon" class="main-icon">
-              <div class="art-caption"><span>STATUS</span><b>weird / cute / online</b></div>
-            </div>
-          </div>
-          <div class="floating-chip chip-one">🪼 404 dreams</div>
-          <div class="floating-chip chip-two">♡ bubble signal</div>
-          <div class="floating-chip chip-three">✦ no context</div>
-        </div>
+      <div class="hero-art art-frame tilt" data-tilt>
+        <div class="scanlines"></div>
+        <img src="Icono.png" alt="MARCianito icon" class="hero-icon">
+        <span class="floating-sticker s1">🛸</span>
+        <span class="floating-sticker s2">✦</span>
+        <span class="floating-sticker s3">🫧</span>
+        <span class="floating-sticker s4">꩜</span>
       </div>
 
-      <div class="scroll-hint">↓ <span data-i18n="scroll">baja por la madriguera</span> ↓</div>
+      <div class="hero-copy">
+        <div class="status"><span></span><b data-i18n="hero.status">SIGNAL ONLINE</b><small id="visitorTime">00:00:00</small></div>
+        <p class="eyebrow" data-i18n="hero.eyebrow">three aliases / one signal</p>
+        <h1><span>MARC</span>ianito<span class="accent">.</span><br><em>EXE</em></h1>
+        <p class="hero-sub" data-i18n="hero.sub">a tiny portal for weird thoughts, digital creatures, music, tarot & random internet things.</p>
+        <div class="alias-row">
+          <span>✦ MARCIANITO</span><span>♡ BUBBLES</span><span>☾ SMOKEY</span>
+        </div>
+        <div class="hero-actions">
+          <a class="btn primary" href="#portals" data-i18n="hero.cta">ENTER THE PORTAL</a>
+          <button class="btn ghost" id="soundBtn" type="button"><span>♫</span> <span data-i18n="hero.sound">sound off</span></button>
+        </div>
+      </div>
     </section>
 
-    <section id="about" class="section about-section">
-      <div class="section-head reveal">
-        <span class="section-number">01</span>
-        <div><p class="eyebrow">ABOUT_THE_CREATURE</p><h2 data-i18n="aboutTitle">¿quién está detrás?</h2></div>
+    <div class="ticker" aria-label="site ticker">
+      <div class="ticker-track">
+        <span>✦ welcome to the weird side of the internet</span><span>🛸 transmission received</span><span>✦ no signal is ever completely lost</span><span>🫧 stay strange</span>
+        <span>✦ welcome to the weird side of the internet</span><span>🛸 transmission received</span><span>✦ no signal is ever completely lost</span><span>🫧 stay strange</span>
+      </div>
+    </div>
+
+    <section id="about" class="section about">
+      <div class="section-head">
+        <p class="eyebrow" data-i18n="about.kicker">FILE 001 / UNKNOWN USER</p>
+        <h2 data-i18n="about.title">who is behind the signal?</h2>
       </div>
       <div class="about-grid">
-        <article class="glass-card bio-card reveal">
-          <div class="card-sticker">𖦹</div>
-          <h3 data-i18n="aboutName">MARCianito / Bubbles / Josslyn</h3>
-          <p data-i18n="aboutText">No hay una biografía oficial. Hay alias, obsesiones temporales, pestañas abiertas a las 3 a. m. y demasiadas ideas. Aquí no hace falta saber quién soy en la vida real; basta con conocer este pequeño universo.</p>
-          <div class="tag-cloud">
-            <span>internet creature</span><span>music</span><span>bots</span><span>tarot</span><span>art</span><span>chaos</span><span>dreamcore</span><span>frutiger aero</span>
+        <article class="window-card about-card">
+          <div class="window-bar"><span>about_me.txt</span><span>— □ ×</span></div>
+          <div class="window-content">
+            <p data-i18n="about.text">No name, no coordinates. Just three names that somehow keep opening the same door. Marcianito is the little alien, Bubbles is the soft chaos, and Smokey is the late-night signal. Behind all three is someone who likes making things, collecting strange images, building bots, listening to music and disappearing into the internet for a while.</p>
+            <div class="fake-terminal">
+              <span>guest@marcianito:~$</span> whoami<br>
+              <b>unknown / curious / probably online</b><br>
+              <span>guest@marcianito:~$</span> status<br>
+              <b class="blink" data-i18n="about.status">still figuring it out...</b>
+            </div>
           </div>
         </article>
 
-        <div class="visual-stack reveal">
-          <img src="Gatozasa.jpg" alt="Decoración gatuna" class="stack-img stack-back">
-          <img src="Icono.png" alt="Icono de Marcianito" class="stack-img stack-front">
-          <div class="stack-note">𖧧 <span data-i18n="note">archivo encontrado</span></div>
-        </div>
-
-        <aside class="glass-card terminal-card reveal">
-          <div class="terminal-top"><span>system.log</span><span>● ● ●</span></div>
-          <div class="terminal-content">
-            <p>&gt; identity.load()</p>
-            <p class="muted">aliases: marcianito / bubbles / josslyn</p>
-            <p>&gt; personality.scan()</p>
-            <p class="muted">curious / chaotic / sentimental / nocturnal</p>
-            <p>&gt; current_status()</p>
-            <p class="good">✓ online, probably</p>
-            <p>&gt; future_plan()</p>
-            <p class="muted">████████ unknown ████████</p>
-          </div>
+        <aside class="mood-card">
+          <img src="Gatozaza.jpg" alt="Gatozaza" loading="lazy">
+          <div class="mood-overlay"><span data-i18n="about.mood">current mood</span><strong id="moodText">loading...</strong></div>
         </aside>
       </div>
     </section>
 
-    <section id="portals" class="section portals-section">
-      <div class="section-head reveal">
-        <span class="section-number">02</span>
-        <div><p class="eyebrow">PORTALS.EXE</p><h2 data-i18n="portalsTitle">mis rincones</h2></div>
+    <section id="portals" class="section portals">
+      <div class="section-head">
+        <p class="eyebrow" data-i18n="portals.kicker">PORTALS / CONNECTIONS</p>
+        <h2 data-i18n="portals.title">find the other versions of me</h2>
       </div>
-
       <div class="portal-grid">
-        <a class="portal-card social-x reveal" href="https://x.com/afterthesmok3" target="_blank" rel="noopener">
-          <span class="portal-icon">𝕏</span><span><b>afterthesmok3</b><small data-i18n="xDesc">tweets, pensamientos y caos</small></span><i>↗</i>
-        </a>
-        <a class="portal-card social-ig reveal" href="https://www.instagram.com/josslyn.f4ck?igsi=OHMzYTNsbnVhOXhp" target="_blank" rel="noopener">
-          <span class="portal-icon">◎</span><span><b>josslyn.f4ck</b><small data-i18n="igDesc">fotos, cosas bonitas y otras no tanto</small></span><i>↗</i>
-        </a>
-        <a class="portal-card social-tk reveal" href="https://www.tiktok.com/@lyn..j?_r=1&_t=ZS-99Pw0gByoNU" target="_blank" rel="noopener">
-          <span class="portal-icon">♪</span><span><b>@lyn..j</b><small data-i18n="tkDesc">videos y ocurrencias</small></span><i>↗</i>
-        </a>
-        <a class="portal-card channel reveal" href="https://whatsapp.com/channel/0029VbCliaG96H4RohGVyc0L" target="_blank" rel="noopener">
-          <span class="portal-icon">✉</span><span><b data-i18n="personalChannel">canal personal</b><small data-i18n="personalDesc">cosas que se me ocurren sin aviso</small></span><i>↗</i>
-        </a>
-        <a class="portal-card channel reveal" href="https://whatsapp.com/channel/0029Vb7jRpp7T8bXzYk30M2D" target="_blank" rel="noopener">
-          <span class="portal-icon">⭒</span><span><b>𝙏𝙧𝙖𝙣𝙨𝙩𝙤𝙧𝙣𝙖𝙙𝙞𝙩𝙤𝙨™</b><small data-i18n="gossipDesc">críticas, chismes y opiniones</small></span><i>↗</i>
-        </a>
-        <a class="portal-card channel reveal" href="https://whatsapp.com/channel/0029Vb8fsdr90x34fyLEYq2r" target="_blank" rel="noopener">
-          <span class="portal-icon">✎</span><span><b>CHAIN3008</b><small data-i18n="nieceDesc">animaciones y dibujos</small></span><i>↗</i>
-        </a>
+        <a class="portal-card instagram" href="https://www.instagram.com/josslyn.f4ck?igsi=OHMzYTNsbnVhOXhp" target="_blank" rel="noopener"><span class="portal-icon">◎</span><b>Instagram</b><small>@josslyn.f4ck</small><i>↗</i></a>
+        <a class="portal-card x" href="https://x.com/afterthesmok3" target="_blank" rel="noopener"><span class="portal-icon">𝕏</span><b>afterthesmok3</b><small>late-night signal</small><i>↗</i></a>
+        <a class="portal-card tiktok" href="https://www.tiktok.com/@lyn..j?_r=1&_t=ZS-99Pw0gByoNU" target="_blank" rel="noopener"><span class="portal-icon">♪</span><b>TikTok</b><small>@lyn..j</small><i>↗</i></a>
+        <a class="portal-card whatsapp" href="https://whatsapp.com/channel/0029VbCliaG96H4RohGVyc0L" target="_blank" rel="noopener"><span class="portal-icon">◌</span><b data-i18n="portals.personal">personal channel</b><small data-i18n="portals.personalSub">random things & no context</small><i>↗</i></a>
+        <a class="portal-card drama" href="https://whatsapp.com/channel/0029Vb7jRpp7T8bXzYk30M2D" target="_blank" rel="noopener"><span class="portal-icon">✦</span><b>𝙏𝙧𝙖𝙣𝙨𝙩𝙤𝙧𝙣𝙖𝙙𝙞𝙩𝙤𝙨™</b><small data-i18n="portals.dramaSub">críticas, chismes & opinions</small><i>↗</i></a>
+        <a class="portal-card chain" href="https://whatsapp.com/channel/0029Vb8fsdr90x34fyLEYq2r" target="_blank" rel="noopener"><span class="portal-icon">✎</span><b>CHAIN3008</b><small data-i18n="portals.chainSub">animations & drawings</small><i>↗</i></a>
+      </div>
+      <div class="join-box">
+        <div><span class="mini-alien">👽</span><div><b data-i18n="join.title">join the transmission</b><small data-i18n="join.text">Want a tiny signal from this place? Leave your email and open your mail app.</small></div></div>
+        <form id="joinForm" class="join-form">
+          <input id="joinEmail" type="email" required autocomplete="email" placeholder="you@example.com" data-i18n-placeholder="join.placeholder">
+          <button class="btn primary" type="submit" data-i18n="join.button">JOIN</button>
+        </form>
       </div>
     </section>
 
-    <section id="music" class="section music-section">
-      <div class="section-head reveal">
-        <span class="section-number">03</span>
-        <div><p class="eyebrow">AUDIO_TRANSMISSION</p><h2 data-i18n="musicTitle">mi frecuencia</h2></div>
+    <section id="bots" class="section bots">
+      <div class="section-head">
+        <p class="eyebrow" data-i18n="bots.kicker">DIGITAL CREATURES</p>
+        <h2 data-i18n="bots.title">the bot laboratory</h2>
+      </div>
+      <div class="bot-grid">
+        <a class="bot-card" href="https://tipsy.chat/es/profile/1787466424723383942" target="_blank" rel="noopener"><img src="27ec1d01f3606a1139891fb477d0823c.gif" alt=""><div><b>Tipsy</b><small>Tipsy Chat</small></div><span>↗</span></a>
+        <a class="bot-card" href="https://character.ai/profile/Bubbleseal" target="_blank" rel="noopener"><img src="367ada851d5b95fa915a6516483ff2de.gif" alt=""><div><b>Bubbleseal</b><small>Character.AI</small></div><span>↗</span></a>
+        <a class="bot-card" href="https://www.hiwaifu.com/es/robot/16984395" target="_blank" rel="noopener"><img src="48f28d74336c94cb69c3f013cdb010d7.gif" alt=""><div><b>HiWaifu</b><small>HiWaifu</small></div><span>↗</span></a>
+        <a class="bot-card" href="https://crushon.ai/es/profile/2bd70f05-969c-11f1-818b-6a5b879871a5" target="_blank" rel="noopener"><img src="5054002216b1146455414c5109803df8.gif" alt=""><div><b>CrushOn</b><small>profile</small></div><span>↗</span></a>
+        <a class="bot-card" href="https://www.clank.world/@Bubbless" target="_blank" rel="noopener"><img src="61bbb334f5612c279e4762249156901d.gif" alt=""><div><b>Bubbless</b><small>ClankWorld</small></div><span>↗</span></a>
+        <a class="bot-card" href="https://janitorai.com/es/profiles/2e56df3b-22bd-47be-aab4-27db8e41aaf1_profile-of-bubble-seal" target="_blank" rel="noopener"><img src="6825366421a47665a758e68408528d7f.gif" alt=""><div><b>Bubble Seal</b><small>JanitorAI</small></div><span>↗</span></a>
+      </div>
+      <div class="bot-lab"><img src="Alien.icon" alt="Alien" onerror="this.style.display='none'"><div><b data-i18n="bots.labTitle">LAB NOTE:</b><span data-i18n="bots.labText">some bots are sweet, some are weird, some are definitely awake at 3 AM.</span></div><button class="tiny-btn" id="botShuffle" type="button" data-i18n="bots.shuffle">shuffle</button></div>
+    </section>
+
+    <section id="music" class="section music">
+      <div class="section-head">
+        <p class="eyebrow" data-i18n="music.kicker">AUDIO TRANSMISSION</p>
+        <h2 data-i18n="music.title">things currently playing in my head</h2>
       </div>
       <div class="music-layout">
-        <div class="spotify-wrap reveal">
-          <div class="spotify-title"><span>♫</span><div><b data-i18n="playlistA">playlist // portal 01</b><small>Spotify</small></div></div>
-          <iframe src="https://open.spotify.com/embed/playlist/2Gi9fghWLLI5qETHwMrKrc?utm_source=generator" width="100%" height="352" frameborder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" title="Spotify playlist 1"></iframe>
-          <a class="spotify-direct" href="https://open.spotify.com/playlist/2Gi9fghWLLI5qETHwMrKrc?si=fcEQxGnbTDm9IgYKbXjJ3Q&utm_source=copy-link" target="_blank" rel="noopener">↗ <span data-i18n="openSpotify">abrir directamente en Spotify</span></a>
+        <div class="spotify-stack">
+          <article class="spotify-card">
+            <div class="spotify-head"><span>SPOTIFY / PLAYLIST 01</span><b data-i18n="music.playlist1">main signal</b></div>
+            <iframe title="Spotify playlist 1" src="https://open.spotify.com/embed/playlist/2Gi9fghWLLI5qETHwMrKrc?utm_source=generator" loading="lazy" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
+          </article>
+          <article class="spotify-card">
+            <div class="spotify-head"><span>SPOTIFY / PLAYLIST 02</span><b data-i18n="music.playlist2">side signal</b></div>
+            <iframe title="Spotify playlist 2" src="https://open.spotify.com/embed/playlist/7pKuho7nNNbIDeihFLvNuO?utm_source=generator" loading="lazy" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
+          </article>
         </div>
-        <div class="spotify-wrap reveal">
-          <div class="spotify-title"><span>◉</span><div><b data-i18n="playlistB">playlist // portal 02</b><small>Spotify</small></div></div>
-          <iframe src="https://open.spotify.com/embed/playlist/7pKuho7nNNbIDeihFLvNuO?utm_source=generator" width="100%" height="352" frameborder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" title="Spotify playlist 2"></iframe>
-          <a class="spotify-direct" href="https://open.spotify.com/playlist/7pKuho7nNNbIDeihFLvNuO?si=2SbFqvPXRuOi37u9Ltylnw&utm_source=copy-link&pi=Q_BjgtgeQoa29" target="_blank" rel="noopener">↗ <span data-i18n="openSpotify">abrir directamente en Spotify</span></a>
-        </div>
-      </div>
-
-      <div class="track-cloud reveal">
-        <a href="https://open.spotify.com/track/2mIUxMNXw0u9gewwnomdjL?si=KK6B9GlDR8quPH6e-0aFnQ&utm_source=copy-link" target="_blank" rel="noopener">01 · transmission</a>
-        <a href="https://open.spotify.com/track/5T3yTmOJ1hJxnH8boXgm3l?si=ndQQJfAaTv-6FLAH-BjC9A&utm_source=copy-link" target="_blank" rel="noopener">02 · late night</a>
-        <a href="https://open.spotify.com/track/3u2hfoDnXpCiQQRQkblecj?si=ts2DIQfJRmWptagmiVT-mw&utm_source=copy-link" target="_blank" rel="noopener">03 · bubble radio</a>
-        <a href="https://open.spotify.com/track/2FAZskT9yRjp2Oow9szJD8?si=dcwqYBZKSvqQYSyayPYqqg&utm_source=copy-link" target="_blank" rel="noopener">04 · 404.fm</a>
-        <a href="https://open.spotify.com/track/6M8r5ddeOm2jxoagsSzuFh?si=_7riEB2sQ2a8-rou7MwyqQ&utm_source=copy-link" target="_blank" rel="noopener">05 · dream loop</a>
-        <a href="https://open.spotify.com/track/56fgrIPr54E85K98kmgqwy?si=rVvFsTlyRhCnDVJMxkjUWQ&utm_source=copy-link" target="_blank" rel="noopener">06 · neon rain</a>
-        <a href="https://open.spotify.com/track/1v3rQg6uPY6AnOY5TtxN7I?si=W_OBOvZTSFq_Kn1rjx7LnQ&utm_source=copy-link" target="_blank" rel="noopener">07 · exit the browser</a>
-      </div>
-    </section>
-
-    <section id="bots" class="section bots-section">
-      <div class="section-head reveal">
-        <span class="section-number">04</span>
-        <div><p class="eyebrow">BOT_ARCHIVE</p><h2 data-i18n="botsTitle">criaturas que hice</h2></div>
-      </div>
-      <div class="bots-grid">
-        <a class="bot-card reveal" href="https://tipsy.chat/es/profile/1787466424723383942" target="_blank" rel="noopener"><span class="bot-num">01</span><div><b>Tipsy</b><small>tipsy.chat</small></div><span>↗</span></a>
-        <a class="bot-card reveal" href="https://character.ai/profile/Bubbleseal" target="_blank" rel="noopener"><span class="bot-num">02</span><div><b>Bubbleseal</b><small>Character.AI</small></div><span>↗</span></a>
-        <a class="bot-card reveal" href="https://www.hiwaifu.com/es/robot/16984395" target="_blank" rel="noopener"><span class="bot-num">03</span><div><b>HiWaifu</b><small>hiwaifu</small></div><span>↗</span></a>
-        <a class="bot-card reveal" href="https://crushon.ai/es/profile/2bd70f05-969c-11f1-818b-6a5b879871a5" target="_blank" rel="noopener"><span class="bot-num">04</span><div><b>CrushOn</b><small>crushon.ai</small></div><span>↗</span></a>
-        <a class="bot-card reveal" href="https://www.clank.world/@Bubbless" target="_blank" rel="noopener"><span class="bot-num">05</span><div><b>Bubbless</b><small>Clank.World</small></div><span>↗</span></a>
-        <a class="bot-card reveal" href="https://janitorai.com/es/profiles/2e56df3b-22bd-47be-aab4-27db8e41aaf1_profile-of-bubble-seal" target="_blank" rel="noopener"><span class="bot-num">06</span><div><b>Bubble Seal</b><small>JanitorAI</small></div><span>↗</span></a>
-      </div>
-      <div class="bot-marquee" aria-hidden="true"><span>BOT BOT BOT · SIGNAL · BOT BOT BOT · SIGNAL · BOT BOT BOT · SIGNAL · </span></div>
-    </section>
-
-    <section id="tarot" class="section tarot-section">
-      <div class="section-head reveal">
-        <span class="section-number">05</span>
-        <div><p class="eyebrow">MYSTIC_MODULE</p><h2 data-i18n="tarotTitle">tarot & zodiac</h2></div>
-      </div>
-      <div class="tarot-layout">
-        <div class="tarot-console glass-card reveal">
-          <p class="eyebrow">CARD_MACHINE // 01</p>
-          <div class="tarot-card" id="tarotCard">
-            <div class="tarot-inner"><span>✦</span><strong id="tarotName">THE STAR</strong><small id="tarotMeaning">click below to reveal</small></div>
+        <div class="tracks">
+          <div class="track-intro"><span class="vinyl">◉</span><div><b data-i18n="music.tracksTitle">six little transmissions</b><small data-i18n="music.tracksText">open one and let Spotify do the rest.</small></div></div>
+          <div class="track-list">
+            <a href="https://open.spotify.com/track/2mIUxMNXw0u9gewwnomdjL?si=KK6B9GlDR8quPH6e-0aFnQ&utm_source=copy-link" target="_blank" rel="noopener">01 — <span>track transmission</span> ↗</a>
+            <a href="https://open.spotify.com/track/5T3yTmOJ1hJxnH8boXgm3l?si=ndQQJfAaTv-6FLAH-BjC9A&utm_source=copy-link" target="_blank" rel="noopener">02 — <span>track transmission</span> ↗</a>
+            <a href="https://open.spotify.com/track/3u2hfoDnXpCiQQRQkblecj?si=ts2DIQfJRmWptagmiVT-mw&utm_source=copy-link" target="_blank" rel="noopener">03 — <span>track transmission</span> ↗</a>
+            <a href="https://open.spotify.com/track/2FAZskT9yRjp2Oow9szJD8?si=dcwqYBZKSvqQYSyayPYqqg&utm_source=copy-link" target="_blank" rel="noopener">04 — <span>track transmission</span> ↗</a>
+            <a href="https://open.spotify.com/track/6M8r5ddeOm2jxoagsSzuFh?si=_7riEB2sQ2a8-rou7MwyqQ&utm_source=copy-link" target="_blank" rel="noopener">05 — <span>track transmission</span> ↗</a>
+            <a href="https://open.spotify.com/track/56fgrIPr54E85K98kmgqwy?si=rVvFsTlyRhCnDVJMxkjUWQ&utm_source=copy-link" target="_blank" rel="noopener">06 — <span>track transmission</span> ↗</a>
+            <a href="https://open.spotify.com/track/1v3rQg6uPY6AnOY5TtxN7I?si=W_OBOvZTSFq_Kn1rjx7LnQ&utm_source=copy-link" target="_blank" rel="noopener">07 — <span>track transmission</span> ↗</a>
           </div>
-          <button class="btn primary full" id="drawCard" type="button" data-i18n="draw">SACAR UNA CARTA</button>
-          <p class="tiny-note" data-i18n="tarotNote">Una lectura recreativa para jugar con símbolos e ideas; no es una predicción garantizada.</p>
-        </div>
-        <div class="zodiac-console glass-card reveal">
-          <p class="eyebrow">ZODIAC_SELECTOR</p>
-          <label for="zodiacSelect" data-i18n="chooseSign">elige tu signo</label>
-          <select id="zodiacSelect">
-            <option value="aries">♈ Aries</option><option value="taurus">♉ Tauro</option><option value="gemini">♊ Géminis</option><option value="cancer">♋ Cáncer</option><option value="leo">♌ Leo</option><option value="virgo">♍ Virgo</option><option value="libra">♎ Libra</option><option value="scorpio">♏ Escorpio</option><option value="sagittarius">♐ Sagitario</option><option value="capricorn">♑ Capricornio</option><option value="aquarius">♒ Acuario</option><option value="pisces">♓ Piscis</option>
-          </select>
-          <div class="zodiac-result" id="zodiacResult">♈ <b>Aries</b><span>curiosity mode: ON</span></div>
-          <div class="constellation" id="constellation">✦ ·  ˚ ✧  · ✦  ˚  ·  ✧</div>
         </div>
       </div>
     </section>
 
-    <section id="gallery" class="section gallery-section">
-      <div class="section-head reveal">
-        <span class="section-number">06</span>
-        <div><p class="eyebrow">VISUAL_MEMORY</p><h2 data-i18n="galleryTitle">señales encontradas</h2></div>
+    <section id="tarot" class="section tarot">
+      <div class="section-head">
+        <p class="eyebrow" data-i18n="tarot.kicker">ORACLE MODULE</p>
+        <h2 data-i18n="tarot.title">one-card tarot signal</h2>
       </div>
-      <div class="masonry" id="masonry">
-        <figure class="memory memory-tall reveal"><img src="27ec1d01f3606a1139891fb477d0823c.gif" alt="Visual memory 1"></figure>
-        <figure class="memory reveal"><img src="367ada851d5b95fa915a56516483ff2de.gif" alt="Visual memory 2"></figure>
-        <figure class="memory memory-wide reveal"><img src="48f28d74336c94cb69c3f013cdb010d7.gif" alt="Visual memory 3"></figure>
-        <figure class="memory reveal"><img src="5054002216b1146455414c5109803df8.gif" alt="Visual memory 4"></figure>
-        <figure class="memory reveal"><img src="61bbb334f5612c279e4762249156901d.gif" alt="Visual memory 5"></figure>
-        <figure class="memory memory-tall reveal"><img src="6825366421a47665a758e68408528d7f.gif" alt="Visual memory 6"></figure>
-        <figure class="memory reveal"><img src="84fc7bdae8ee0e30b5b7523deb4b9bf4.gif" alt="Visual memory 7"></figure>
-        <figure class="memory reveal"><img src="8a5d7e646532fd7fa5b9f2d43b4aed9d.gif" alt="Visual memory 8"></figure>
-        <figure class="memory memory-wide reveal"><img src="931dd278c86d39915e40505d9746798b.gif" alt="Visual memory 9"></figure>
-        <figure class="memory reveal"><img src="9373bea609b7f817932c9a5f7423018.gif" alt="Visual memory 10"></figure>
-        <figure class="memory reveal"><img src="97e7c21b1e9eba1725b150f6b40c2192c.gif" alt="Visual memory 11"></figure>
-        <figure class="memory reveal"><img src="9a18d5537fc7c3ad42ae4477eec9fce93.gif" alt="Visual memory 12"></figure>
-        <figure class="memory reveal"><img src="9b29799821c199a6e51e7c4f189630fa.gif" alt="Visual memory 13"></figure>
-        <figure class="memory memory-tall reveal"><img src="b45c6843824977b67180889cf770ccf.gif" alt="Visual memory 14"></figure>
-        <figure class="memory reveal"><img src="bc81e814b7f91a57efbc77b09d53ad0.gif" alt="Visual memory 15"></figure>
-        <figure class="memory reveal"><img src="bc985ac37c2a7bc798014c272c8e9fed.gif" alt="Visual memory 16"></figure>
-        <figure class="memory memory-wide reveal"><img src="ce2ae6a95e299dbba8f4bf88a882ae2.gif" alt="Visual memory 17"></figure>
-        <figure class="memory reveal"><img src="d20e4f017003e8d391df53655f1755b6.gif" alt="Visual memory 18"></figure>
-        <figure class="memory reveal"><img src="d51c6960cdd215c35626921faae9ddb3.gif" alt="Visual memory 19"></figure>
-        <figure class="memory reveal"><img src="d8cb9352502196709a46ec16fdad7635.gif" alt="Visual memory 20"></figure>
-        <figure class="memory reveal"><img src="e3608abfc943aa2fddbe524c399ebea3.gif" alt="Visual memory 21"></figure>
-        <figure class="memory memory-tall reveal"><img src="e8dfa1defe4972bfcc6e279438fc0dfb.gif" alt="Visual memory 22"></figure>
-        <figure class="memory reveal"><img src="faf270c9ddc8098e871c5c16d39c7cbea.gif" alt="Visual memory 23"></figure>
-        <figure class="memory reveal"><img src="Alien.icon" alt="Alien icon"></figure>
-        <figure class="memory reveal"><img src="Fiesta.gif" alt="Fiesta"></figure>
-        <figure class="memory reveal"><img src="Gatozasa.jpg" alt="Gatozasa"></figure>
-        <figure class="memory reveal"><img src="Icono.png" alt="Icono"></figure>
-      </div></div>
+      <div class="tarot-box">
+        <div class="tarot-visual">
+          <div id="tarotCard" class="tarot-card" tabindex="0" role="button" aria-label="Draw tarot card">
+            <div class="tarot-back"><span>✦</span><small>MARC<br>EXE</small><span>✦</span></div>
+            <div class="tarot-front"><span id="tarotSymbol">☾</span><b id="tarotName">—</b><small id="tarotMeaning">—</small></div>
+          </div>
+        </div>
+        <div class="tarot-copy">
+          <p data-i18n="tarot.text">Think of a question. The card is a playful reflection, not a promise about the future.</p>
+          <button class="btn primary" id="drawTarot" type="button" data-i18n="tarot.button">DRAW A CARD</button>
+          <p class="tiny-note" id="tarotNote" data-i18n="tarot.note">tap the card too.</p>
+        </div>
+      </div>
     </section>
 
-    <section id="posts" class="section posts-section">
-      <div class="section-head reveal">
-        <span class="section-number">07</span>
-        <div><p class="eyebrow">PERSONAL_FEED</p><h2 data-i18n="postsTitle">cosas que subo</h2></div>
+    <section id="zodiac" class="section zodiac">
+      <div class="section-head">
+        <p class="eyebrow" data-i18n="zodiac.kicker">COSMIC MODULE</p>
+        <h2 data-i18n="zodiac.title">what's your little star doing?</h2>
       </div>
-      <div class="post-editor glass-card reveal">
-        <div class="editor-top"><span>new_post.txt</span><span id="postCount">0 saved</span></div>
-        <input id="postTitle" maxlength="80" data-placeholder="postTitlePlaceholder" placeholder="título / pensamiento / tontería">
-        <textarea id="postBody" maxlength="600" data-placeholder="postBodyPlaceholder" placeholder="escribe algo para tu pequeño archivo..."></textarea>
-        <div class="editor-actions"><button class="btn primary" id="savePost" type="button" data-i18n="savePost">GUARDAR POST</button><button class="btn ghost" id="clearPosts" type="button" data-i18n="clearPosts">BORRAR TODO</button></div>
+      <div class="zodiac-box">
+        <div class="zodiac-form">
+          <label for="zodiacDate" data-i18n="zodiac.label">your birthday</label>
+          <input id="zodiacDate" type="date">
+          <button class="btn primary" id="zodiacBtn" type="button" data-i18n="zodiac.button">CALCULATE</button>
+        </div>
+        <div id="zodiacResult" class="zodiac-result">
+          <span>✦</span><b data-i18n="zodiac.placeholder">enter a date to receive a signal</b>
+        </div>
+      </div>
+    </section>
+
+    <section id="gallery" class="section gallery">
+      <div class="section-head">
+        <p class="eyebrow" data-i18n="gallery.kicker">VISUAL STATIC</p>
+        <h2 data-i18n="gallery.title">the weird image archive</h2>
+      </div>
+      <div class="gallery-grid" id="galleryGrid"></div>
+    </section>
+
+    <section id="posts" class="section posts">
+      <div class="section-head">
+        <p class="eyebrow" data-i18n="posts.kicker">LOCAL TRANSMISSIONS</p>
+        <h2 data-i18n="posts.title">post something from your side</h2>
+      </div>
+      <div class="post-layout">
+        <form id="postForm" class="window-card post-form">
+          <div class="window-bar"><span>new_post.exe</span><span>— □ ×</span></div>
+          <div class="window-content">
+            <label data-i18n="posts.nameLabel">alias</label>
+            <input id="postName" maxlength="32" placeholder="Marcianito" data-i18n-placeholder="posts.namePlaceholder">
+            <label data-i18n="posts.titleLabel">title</label>
+            <input id="postTitle" maxlength="70" required data-i18n-placeholder="posts.titlePlaceholder" placeholder="something happened...">
+            <label data-i18n="posts.bodyLabel">message</label>
+            <textarea id="postBody" maxlength="800" required data-i18n-placeholder="posts.bodyPlaceholder" placeholder="type your little transmission..."></textarea>
+            <label data-i18n="posts.imageLabel">image URL (optional)</label>
+            <input id="postImage" type="url" placeholder="https://..." autocomplete="off">
+            <button class="btn primary" type="submit" data-i18n="posts.publish">PUBLISH LOCALLY</button>
+            <small class="tiny-note" data-i18n="posts.localNote">Posts are stored in this browser. A shared public feed needs a database/backend.</small>
+          </div>
+        </form>
         <div id="postFeed" class="post-feed"></div>
       </div>
     </section>
 
-    <section id="wall" class="section wall-section">
-      <div class="section-head reveal">
-        <span class="section-number">08</span>
-        <div><p class="eyebrow">ANON_WALL</p><h2 data-i18n="wallTitle">deja una señal</h2></div>
+    <section id="guestbook" class="section guestbook">
+      <div class="section-head">
+        <p class="eyebrow" data-i18n="guestbook.kicker">OPEN FREQUENCY</p>
+        <h2 data-i18n="guestbook.title">anonymous guestbook</h2>
       </div>
-      <div class="wall-layout">
-        <div class="comment-form glass-card reveal">
-          <p data-i18n="wallIntro">Puedes usar un alias o dejarlo anónimo. Los mensajes de este modo se guardan en este navegador.</p>
-          <input id="commentName" maxlength="30" data-placeholder="namePlaceholder" placeholder="nombre o alias (opcional)">
-          <textarea id="commentText" maxlength="240" data-placeholder="commentPlaceholder" placeholder="deja una opinión, saludo o señal..."></textarea>
-          <label class="check"><input id="anonymousCheck" type="checkbox" checked> <span data-i18n="anonymous">publicar como anónimo</span></label>
-          <button class="btn primary full" id="sendComment" type="button" data-i18n="send">TRANSMITIR MENSAJE</button>
-          <p class="tiny-note" data-i18n="commentLimit">Nota: GitHub Pages es estático; para que los comentarios sean públicos para todos hace falta conectar un servicio de base de datos. Esta versión funciona de forma local sin exponer datos.</p>
-        </div>
-        <div class="comment-wall reveal">
-          <div class="wall-header"><span>● LIVE SIGNALS</span><span id="commentCount">0</span></div>
-          <div id="commentList"></div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section join-section">
-      <div class="join-box reveal">
-        <div>
-          <p class="eyebrow">JOIN_THE_SIGNAL</p>
-          <h2 data-i18n="joinTitle">¿quieres aparecer por aquí?</h2>
-          <p data-i18n="joinText">Deja tu correo para recibir futuras transmisiones, novedades o cualquier cosa que termine saliendo de este agujero.</p>
-        </div>
-        <form id="joinForm">
-          <input type="email" id="joinEmail" required data-placeholder="emailPlaceholder" placeholder="tu@email.com">
-          <button class="btn primary" type="submit" data-i18n="join">UNIRME ✦</button>
+      <div class="guestbook-grid">
+        <form id="commentForm" class="comment-form">
+          <div class="comment-orb">🫧</div>
+          <label for="commentAlias" data-i18n="guestbook.alias">name / alias</label>
+          <input id="commentAlias" maxlength="32" data-i18n-placeholder="guestbook.aliasPlaceholder" placeholder="choose a name">
+          <label for="commentText" data-i18n="guestbook.message">message</label>
+          <textarea id="commentText" maxlength="500" required data-i18n-placeholder="guestbook.placeholder" placeholder="leave a thought..."></textarea>
+          <button class="btn primary" type="submit" data-i18n="guestbook.button">SEND SIGNAL</button>
+          <small data-i18n="guestbook.note">No account required. The alias can be anything. On this static version, entries stay on the current browser.</small>
         </form>
-        <small id="joinMessage"></small>
+        <div class="comments-side">
+          <div class="comment-counter"><span data-i18n="guestbook.received">signals received</span><b id="commentCount">0</b></div>
+          <div id="commentsList" class="comments-list"></div>
+        </div>
       </div>
     </section>
   </main>
 
-  <footer>
-    <div class="footer-glitch">MARCianito / Bubbles / Josslyn</div>
-    <p>© <span id="year"></span> · <span data-i18n="footer">made somewhere between earth & the internet</span></p>
-    <button id="secretBtn" class="secret-btn" type="button" aria-label="Secret">✦</button>
+  <footer class="footer">
+    <div class="footer-orbit">🛸</div>
+    <h2>MARCianito<span>.EXE</span></h2>
+    <p data-i18n="footer.text">three aliases, one strange little corner of the internet.</p>
+    <div class="footer-links"><a href="#home">↑ top</a><a href="#guestbook" data-i18n="footer.leave">leave a signal</a><button id="surpriseBtn" type="button" data-i18n="footer.surprise">surprise me</button></div>
+    <small>© <span id="year"></span> MARCianito / Bubbles / Smokey</small>
   </footer>
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
-  <div id="easterEgg" class="easter-egg" aria-hidden="true">
-    <div class="egg-box"><button id="closeEgg" type="button">×</button><div class="egg-art">🛸</div><h3>YOU FOUND IT.</h3><p>signal #404: there was never supposed to be a secret here.</p><div class="egg-code">↑ ↑ ↓ ↓ ← → ← → B A</div></div>
+  <div id="secretModal" class="modal" aria-hidden="true">
+    <div class="modal-card">
+      <button class="modal-close" id="closeModal" type="button">×</button>
+      <img src="Fiesta.gif" alt="" loading="lazy">
+      <h3 data-i18n="secret.title">you found the weird door</h3>
+      <p data-i18n="secret.text">There is nothing here. Which is exactly why it was worth finding.</p>
+      <button class="btn primary" id="modalOk" type="button" data-i18n="secret.ok">okay, alien.</button>
+    </div>
   </div>
 
   <script src="script.js"></script>
