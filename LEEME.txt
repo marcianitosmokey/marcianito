@@ -1,22 +1,49 @@
-BUBBLES × SMOKEY — SITIO PERSONAL
-=================================
-Contenido:
-- index.html: estructura y secciones.
-- estilo.css: diseño responsive, temas, animaciones.
-- app.js: idioma, tarot, zodiaco, reloj, efectos y libro de visitas.
-- assets/: recursos con nombres transcritos de la captura.
+BUBBLES × SMOKEY — sitio personal
+==================================
 
-IMPORTANTE SOBRE LOS RECURSOS:
-La imagen enviada muestra un listado de archivos, pero no contiene los archivos GIF/PNG/JPG originales. Para que el proyecto sea autónomo, se incluyeron GIFs decorativos provisionales con varios de los nombres visibles y tres imágenes de muestra. Sustituye esos recursos por los originales conservando exactamente sus nombres. La captura también corta el nombre del último archivo "archivo_00000000830c81fbaa7bce6ce5cfb7..." y no permite recuperar el nombre completo.
+CONTENIDO
+- index.html       estructura de la página
+- estilo.css       estilos, temas y animaciones
+- script.js        idioma, tarot, astrología, reloj, sonido, efectos y libro de visitas
+- assets.js        lista de recursos con los nombres visibles en la captura
+- LEEME.txt        esta guía
 
-COMENTARIOS:
-El libro de visitas guarda mensajes en localStorage del navegador/dispositivo donde se abre la página. No los envía al propietario ni los comparte entre visitantes. Para recibirlos desde cualquier lugar hay que conectar un backend (por ejemplo Firebase/Supabase o Formspree) y configurar sus credenciales.
+PUBLICACIÓN
+1. Descomprime el ZIP.
+2. Copia tus GIF e imágenes originales a la misma carpeta donde está index.html.
+3. No cambies sus nombres ni extensiones.
+4. Sube todos los archivos de esa carpeta a tu hosting (Netlify, GitHub Pages, Vercel o hosting tradicional).
+5. Abre la dirección publicada y prueba la página en móvil y escritorio.
 
-CORREO:
-En index.html busca:
-href="mailto:YOUR_EMAIL_HERE"
-y reemplaza YOUR_EMAIL_HERE por tu dirección Gmail.
+IMPORTANTE SOBRE LOS RECURSOS
+En esta conversación se recibió una captura de pantalla con los nombres, no los GIF/imágenes como archivos adjuntos. Por eso el ZIP incluye la página y sus referencias, pero no puede incluir el contenido binario de esos recursos. Los archivos que sí tengas deben copiarse junto a index.html. La página tiene un respaldo visual si Gatozaza.jpg no está presente.
 
-PUBLICACIÓN:
-Sube el contenido completo de esta carpeta a GitHub Pages, Netlify o cualquier hosting estático. Mantén index.html, estilo.css, app.js y la carpeta assets juntos.
-Los reproductores Spotify requieren conexión a internet y pueden depender de las cookies/región o de la disponibilidad de Spotify.
+MENSAJES / LIBRO DE VISITAS
+La página guarda los mensajes en localStorage del navegador donde se escriben. Esto NO permite que te lleguen desde otros dispositivos ni que tú los leas remotamente.
+Para recibirlos:
+1. Crea un formulario gratuito en https://formspree.io/
+2. Copia la URL de endpoint que te proporciona Formspree.
+3. En script.js busca: const MESSAGE_ENDPOINT="";
+4. Pega la URL entre comillas. Ejemplo: const MESSAGE_ENDPOINT="https://formspree.io/f/xxxxxxxx";
+5. Vuelve a subir script.js.
+Los mensajes se enviarán al correo que configures en Formspree. No publiques claves privadas ni contraseñas en JavaScript.
+
+CORREO DE CONTACTO
+En script.js busca: const CONTACT_EMAIL="";
+Coloca el correo que quieras mostrar, por ejemplo: const CONTACT_EMAIL="tucorreo@gmail.com";
+El botón "escríbeme" abrirá el programa de correo del visitante.
+
+IDIOMA Y TEMAS
+- El botón EN/ES cambia los textos de la página.
+- El botón ◐ rota entre oscuro, Frutiger Aero, neon y rose.
+- El reloj utiliza la zona horaria local del dispositivo del visitante.
+- El sonido empieza apagado y solo se activa cuando la persona lo enciende.
+
+TAROT Y ASTROLOGÍA
+Las tiradas son aleatorias y las descripciones son contenido recreativo y reflexivo, no predicciones ni asesoramiento profesional.
+
+NOTAS
+- Spotify necesita conexión a internet y puede mostrar avisos de inicio de sesión o limitaciones regionales.
+- Google Fonts necesita conexión; si no carga, se usarán fuentes de respaldo.
+- Los nombres de los recursos en assets.js se transcribieron de la captura y algunos nombres largos/borrosos pueden requerir corrección manual contra los archivos originales. No renombres los originales para que coincidan con una transcripción dudosa: corrige la cadena en assets.js si necesitas enlazar alguno.
+- El archivo "indice.html" de la captura se ha usado como index.html, tal como pediste.

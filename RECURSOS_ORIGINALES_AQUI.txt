@@ -1,0 +1,1 @@
+Coloca aquí, junto a index.html, los GIF e imágenes originales de tu captura. No están incluidos porque solo se recibió una captura con sus nombres, no los archivos binarios.
