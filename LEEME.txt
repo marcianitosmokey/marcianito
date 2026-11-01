@@ -1,56 +1,34 @@
-BUBBLES × SMOKEY — sitio personal
+BUBBLES × SMOKEY — sitio personal responsive
 
-ARCHIVOS PRINCIPALES (mantener estos nombres):
-- index.html
-- estilo.css
-- script.js
+ARCHIVOS PRINCIPALES
+- index.html: estructura de la página.
+- estilo.css: estilos, temas, animaciones y responsive.
+- app.js: idioma, reloj, tarot, astrología, efectos, sonidos, formulario y configuración.
+- assets/: nombres de recursos transcritos de la captura.
 
-IMPORTANTE SOBRE LOS RECURSOS:
-La captura compartida muestra nombres de archivos, pero no incluye los archivos binarios de las imágenes/GIF. Para que aparezcan, copia los originales en esta misma carpeta, sin cambiarles el nombre. El diseño oculta de forma elegante los espacios de imágenes que no encuentre.
+IMPORTANTE SOBRE LAS IMÁGENES
+La captura recibida muestra nombres de archivos, pero no contiene los archivos GIF/JPG/PNG originales. Por eso este ZIP incluye marcadores mínimos válidos con varios de esos nombres para evitar referencias rotas. Sustituye los marcadores por tus imágenes originales conservando exactamente el mismo nombre y extensión. La captura es muy estrecha y algunos nombres hash no se distinguen con certeza; para garantizar coincidencia carácter por carácter, comparte la carpeta original o un listado de nombres copiado como texto.
 
-Nombres de recursos reconocidos por el sitio:
-27ec1d01f3606a1139891fb477d0823c.gif
-367ada851d5b95fa915a6516483ff2de.gif
-48f28d74336c94cb69c3f013cdb010d7.gif
-5054002216b1146455414c5109803df8.gif
-61bbb334f5612c279e4762249156901d.gif
-6825366421a47665a758e68408528d7f.gif
-84fc7bdae8ee0e30b5b7523deb4b9bf4.gif
-8a5d7e646532fd7fa5b9f2d43b4aed9d.gif
-931dd278c86d39915e40505d9746798b.gif
-9373bea609b7ff817932c9a5f7423018.gif
-97e7c21b1e9ba1725b150f6b40c2192c.gif
-9a18d5537fc7c3d42ae447feec9fce93.gif
-9b29799821c199a6e51e7c4f189630fa.gif
-Alien.icon
-Fiesta.gif
-Gatozaza.jpg
-Icono.png
-b45c6843824977b671810889cf770ccf.gif
-bc81e814b7f91a5f7ebfc77b09d53ad0.gif
-bc985ac37c2a7bc798014c272c8e9fed.gif
-ce2ae6a95e299dbba8f4bf88a882ae2.gif
-d20e4f017003e8d391df53655f1755b6.gif
-d51c6960cdd215c35626921faae9ddb3.gif
-d8cb9352502196709a46ec16fdad7635.gif
-e3608abfc943aa2fddbe524c399ebea3.gif
-e8dfa1def4e972bfcc6e279438fc0dfb.gif
-faf270c9ddc8098e871c5c16d397cbea.gif
+CONFIGURAR TU CORREO
+Abre app.js y busca:
+  email: "",
+  feedbackEmail: ""
+- email: coloca tu dirección entre comillas para activar el enlace de contacto.
+- feedbackEmail: coloca el correo donde quieres recibir los mensajes del libro de visitas.
+El formulario usa FormSubmit (servicio externo). La primera vez puede requerir confirmar tu dirección desde el correo que te envíe FormSubmit. Sin configurar esto, los mensajes se guardan solo en el navegador de quien los escribe; no te llegan a ti. Para una web pública, evita pedir datos sensibles.
 
-FUNCIONES:
-- Selector de idioma ES/EN (se recuerda en este navegador).
-- Cuatro temas: oscuro, Frutiger Aero, pink y neon.
-- Spotify embeds para las dos playlists y las siete pistas.
-- Tarot aleatorio de 22 arcanos mayores y calculadora de signo solar.
-- Muro de mensajes con alias opcional y límite de 400 caracteres.
-- Efectos de sonido generados al activar el botón de audio (no hay autoplay).
-- Easter egg: pulsa el logotipo B/S/M cinco veces.
+PUBLICAR
+Sube index.html, estilo.css, app.js y la carpeta assets completa a la raíz de tu hosting (Netlify, GitHub Pages, Cloudflare Pages o hosting tradicional). No cambies la estructura de carpetas.
+Spotify se muestra mediante sus reproductores oficiales; la reproducción puede pedir iniciar sesión o abrir Spotify según la configuración del visitante.
 
-LIMITACIÓN DEL MURO:
-Los comentarios se guardan en localStorage, es decir, solo en el navegador/dispositivo actual. No son anónimos públicos ni se comparten entre visitantes. Para un muro público real hace falta conectar una base de datos y reglas de moderación (por ejemplo Supabase/Firebase); no se incluyen credenciales inventadas.
+FUNCIONES
+- Selector ES/EN para los textos de interfaz.
+- Temas Midnight, Frutiger Aero, Neoncore y Rose dusk.
+- Reloj local del visitante.
+- Tarot recreativo con carta individual y tirada de tres.
+- Signo solar a partir de fecha de nacimiento.
+- Formulario de mensajes con opción anónima.
+- Animaciones al hacer scroll, partículas, microsonidos y easter eggs.
 
-CORREO:
-En index.html, busca la sección "OPEN INBOX". Cuando tengas un correo dedicado, se puede reemplazar el texto de esa sección por un enlace mailto:TU_CORREO. No se ha inventado una dirección.
-
-PRUEBA:
-Abre index.html en un navegador moderno. Spotify necesita conexión a internet. Para publicar en GitHub Pages, sube index.html, estilo.css, script.js y los recursos originales en la raíz del repositorio.
+NOTA
+Los resultados de tarot y astrología son de entretenimiento y reflexión, no predicciones ni asesoramiento profesional.
