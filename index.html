@@ -1,62 +1,165 @@
 <!doctype html>
 <html lang="es">
 <head>
-  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="theme-color" content="#090b16"><meta name="description" content="Un pequeño universo digital entre Bubbles y Smokey.">
-  <title> Bubbles × Smokey — little universe </title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#100d19">
+  <meta name="description" content="Un pequeño universo personal entre Bubbles, Smokey y el espacio exterior.">
+  <title>Bubbles × Smokey — little universe</title>
+  <link rel="icon" href="assets/Alien.icon">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="estilo.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script defer src="script.js"></script>
 </head>
-<body>
-  <div class="noise"></div><div class="aurora"></div><div id="stars" aria-hidden="true"></div>
-  <div class="cursor-glow" id="cursorGlow"></div>
+<body data-theme="void">
+  <div class="noise" aria-hidden="true"></div>
+  <div class="aurora aurora-one" aria-hidden="true"></div>
+  <div class="aurora aurora-two" aria-hidden="true"></div>
+  <canvas id="starfield" aria-hidden="true"></canvas>
+  <div class="cursor-glow" id="cursorGlow" aria-hidden="true"></div>
+
   <header class="topbar">
-    <a class="brand" href="#home" aria-label="Inicio"><span class="brand-orb">✳</span><span>BUBBLES<span class="brand-x">×</span>SMOKEY</span></a>
-    <nav class="desktop-nav"><a href="#about" data-i18n="navAbout">sobre mí</a><a href="#music" data-i18n="navMusic">música</a><a href="#links" data-i18n="navLinks">universos</a><a href="#oracle" data-i18n="navOracle">oráculo</a><a href="#guestbook" data-i18n="navGuest">mensajitos</a></nav>
-    <div class="top-actions"><button class="tiny-btn" id="langBtn" aria-label="Change language">EN</button><button class="tiny-btn" id="soundBtn" aria-label="Toggle sound">♫</button><button class="tiny-btn" id="themeBtn" aria-label="Change theme">◐</button><button class="tiny-btn menu-toggle" id="menuBtn" aria-label="Menu">☰</button></div>
+    <a class="brand" href="#home" aria-label="Bubbles Smokey home">
+      <span class="brand-orb">✦</span><span>BUBBLES<span class="brand-x">×</span>SMOKEY</span>
+    </a>
+    <nav class="desktop-nav" aria-label="Main navigation">
+      <a href="#about" data-i18n="navAbout">about</a><a href="#music" data-i18n="navMusic">music</a>
+      <a href="#links" data-i18n="navLinks">links</a><a href="#arcana" data-i18n="navArcana">arcana</a>
+      <a href="#guestbook" data-i18n="navGuest">guestbook</a>
+    </nav>
+    <div class="top-actions">
+      <button class="tiny-btn" id="langToggle" aria-label="Change language">ES / EN</button>
+      <button class="tiny-btn" id="themeToggle" aria-label="Change theme">◐ <span data-i18n="theme">theme</span></button>
+      <button class="tiny-btn sound-btn" id="soundToggle" aria-label="Toggle sounds">♫ <span data-i18n="soundOff">sound off</span></button>
+      <button class="menu-toggle" id="menuToggle" aria-label="Open menu">☰</button>
+    </div>
   </header>
+  <nav class="mobile-nav" id="mobileNav">
+    <a href="#about" data-i18n="navAbout">about</a><a href="#music" data-i18n="navMusic">music</a>
+    <a href="#links" data-i18n="navLinks">links</a><a href="#arcana" data-i18n="navArcana">arcana</a>
+    <a href="#guestbook" data-i18n="navGuest">guestbook</a>
+  </nav>
+
   <main id="home">
-    <section class="hero section-wrap">
-      <div class="hero-copy reveal"><div class="eyebrow"><span class="live-dot"></span><span data-i18n="eyebrow">TRANSMISIÓN DESDE MI PEQUEÑO UNIVERSO</span></div>
-        <p class="hero-kicker">﹒⌗﹒🦇﹒౨ৎ˚₊‧</p><h1><span class="h1-small" data-i18n="hello">hola, criatura.</span><br><span class="gradient-word">Bubbles</span><span class="amp"> × </span><span class="outline-word">Smokey</span></h1>
-        <p class="hero-text" data-i18n="heroText">Un rincón medio caótico, medio tierno y completamente mío. Aquí conviven canciones, ideas repentinas, curiosidades y pequeñas rarezas.</p>
-        <div class="hero-buttons"><a class="pill primary" href="#about" data-i18n="explore">explorar este universo ↗</a><a class="pill ghost" href="#music" data-i18n="listen">poner música ♫</a></div>
-        <div class="hero-foot"><span>✦ ૮₍ ˃ ⤙ ˂ ₎ა</span><span data-i18n="status">actualmente existiendo...</span></div>
+    <section class="hero section-shell">
+      <div class="hero-stamp"><span class="pulse-dot"></span><span data-i18n="status">SIGNAL RECEIVED · SOMEWHERE IN THE UNIVERSE</span></div>
+      <div class="hero-grid">
+        <div class="hero-copy">
+          <p class="eyebrow" data-i18n="heroEyebrow">A PERSONAL LITTLE UNIVERSE</p>
+          <h1><span class="h1-soft">bubbles</span><br><span class="h1-main">smokey</span><span class="hero-star">✳</span></h1>
+          <p class="hero-sub" data-i18n="heroSub">tres nombres, una misma señal y demasiadas pestañas abiertas en la cabeza.</p>
+          <div class="hero-tags"><span>#bubbles</span><span>#smokey</span><span>#somewhere_else</span></div>
+          <div class="hero-buttons"><a class="button button-primary" href="#about" data-i18n="explore">explorar el universo <span>↘</span></a><button class="button button-ghost" id="surpriseBtn" data-i18n="surprise">sorpréndeme ✧</button></div>
+        </div>
+        <div class="hero-art">
+          <div class="orbit orbit-a"></div><div class="orbit orbit-b"></div><div class="orbit orbit-c"></div>
+          <div class="planet"><div class="planet-shine"></div><span class="planet-face">◡̈</span></div>
+          <div class="floaty floaty-one">✦</div><div class="floaty floaty-two">♡</div><div class="floaty floaty-three">𖦹</div>
+          <div class="art-label label-top">B-03 / SMK</div><div class="art-label label-bottom">MOOD: UNDEFINED</div>
+          <div class="mini-window"><span class="window-dots">● ● ●</span><span data-i18n="transmission">transmission stable</span><b>98.7%</b></div>
+        </div>
       </div>
-      <div class="hero-art reveal"><div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><div class="planet"><div class="planet-shine"></div><span class="planet-face">◡̈</span></div><div class="float-card card-a">✧ 𝓫𝓾𝓫𝓫𝓵𝓮𝓼</div><div class="float-card card-b">☾ smokey.exe</div><div class="float-card card-c">🐾 <span data-i18n="visitor">visitante</span> #<b id="visitorNum">000</b></div><div class="sparkle s1">✦</div><div class="sparkle s2">✧</div><div class="sparkle s3">⋆</div><div class="hero-sticker">NOT<br>LOST<br><span>JUST</span><br>WANDERING</div></div>
-      <div class="scroll-cue"><span></span> SCROLL TO EXPLORE</div>
+      <div class="hero-bottom"><span>✧ 𖦹 ✧</span><span data-i18n="scroll">DESLIZA PARA DESCUBRIR</span><span>✧ 𖦹 ✧</span></div>
     </section>
-    <section class="ticker" aria-label="decorative ticker"><div class="ticker-track">✦ WELCOME TO MY LITTLE UNIVERSE ✦ BIENVENID@ A MI PEQUEÑO UNIVERSO ✦ TAKE NOTHING TOO SERIOUSLY ✦ BUBBLES · SMOKEY · YOUR FRIENDLY ALIEN ✦ &nbsp;</div></section>
-    <section class="section-wrap about-section" id="about"><div class="section-heading reveal"><span class="section-index">01 / INTRO</span><h2 data-i18n="aboutTitle">¿quién anda por aquí<span>?</span></h2><p data-i18n="aboutSub">Una presentación pequeñita, sin revelar demasiado.</p></div>
-      <div class="about-grid"><article class="about-card glass reveal"><div class="card-top"><span class="micro-label">PROFILE.TXT</span><span class="status-chip">● ONLINE-ish</span></div><div class="avatar-frame"><div class="avatar-inner">૮₍ ˶ᵔ ᵕ ᵔ˶ ₎ა</div><span class="avatar-star">✦</span></div><h3 data-i18n="aboutName">Bubbles / Smokey</h3><p data-i18n="aboutBio">A veces Bubbles, a veces Smokey, a veces una criatura que apareció de la nada. Todavía estoy descubriendo qué quiero hacer y hacia dónde voy. Mientras tanto, colecciono canciones, ocurrencias y pequeños universos.</p><div class="tag-row"><span># daydreamer</span><span># night-owl</span><span># odd little thing</span></div></article>
-      <div class="about-side"><article class="mini-note reveal"><span class="note-icon">🫧</span><div><b data-i18n="noteOneTitle">mi pequeño caos</b><p data-i18n="noteOne">Ideas espontáneas, humor cuestionable y muchas pestañas abiertas.</p></div></article><article class="mini-note reveal"><span class="note-icon">🪐</span><div><b data-i18n="noteTwoTitle">tres nombres, una señal</b><p data-i18n="noteTwo">Bubbles, Smokey y ese pequeño alien que aparece cuando menos lo esperas.</p></div></article><article class="clock-card reveal"><div><span class="micro-label" data-i18n="localTime">TU HORA LOCAL</span><div id="clock" class="clock">--:--:--</div><div id="clockDate" class="clock-date">---</div></div><span class="clock-icon">◷</span></article></div></div>
+
+    <section class="ticker" aria-label="Decorative ticker"><div class="ticker-track">
+      <span>𖦹 BUBBLES</span><i>✦</i><span>SMOKEY</span><i>♡</i><span>ALIEN ENERGY</span><i>✧</i><span>SOFT CHAOS</span><i>☾</i><span>𖦹 BUBBLES</span><i>✦</i><span>SMOKEY</span><i>♡</i><span>ALIEN ENERGY</span><i>✧</i><span>SOFT CHAOS</span><i>☾</i>
+    </div></section>
+
+    <section class="section-shell about-section reveal" id="about">
+      <div class="section-heading"><div><p class="eyebrow" data-i18n="aboutEyebrow">01 / THE CREATURE</p><h2 data-i18n="aboutTitle">¿quién anda por aquí?</h2></div><span class="section-mark">୨ৎ</span></div>
+      <div class="about-grid">
+        <div class="about-card glass-card">
+          <div class="avatar-frame"><div class="avatar-halo">✧</div><img class="avatar-img" src="assets/Icono_GENERADO.png" alt="" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'"><div class="avatar-fallback">૮₍ ˶ᵔ ᵕ ᵔ˶ ₎ა</div></div>
+          <div class="identity"><span class="online-pill"><i></i><span data-i18n="online">probablemente en línea</span></span><h3>Bubbles / Smokey</h3><p data-i18n="identityLine">también conocida por aparecer con otra personalidad según el día.</p></div>
+          <div class="identity-foot"><span>✦ EST. ???</span><span>♡ MADE OF STATIC</span></div>
+        </div>
+        <div class="about-text">
+          <span class="quote-mark">“</span>
+          <p class="intro" data-i18n="intro">Soy una mezcla de curiosidad, humor cuestionable, música en bucle y pensamientos que probablemente debieron quedarse en borradores.</p>
+          <p data-i18n="intro2">Este rincón es mi pequeño desorden organizado: cosas que me gustan, proyectos, ocurrencias, personajes, música y señales desde mi planeta. No hay una versión definitiva de mí, y esa es parte de la gracia.</p>
+          <div class="interest-cloud"><span>𖦹 playlists</span><span>୨ৎ internet things</span><span>✧ daydreaming</span><span>♡ silly ideas</span><span>🪼 strange little things</span></div>
+          <div class="local-time"><span class="time-icon">◷</span><div><small data-i18n="yourTime">TU HORA LOCAL</small><strong id="localClock">--:--:--</strong><small id="localDate">---</small></div><span class="time-zone" id="timeZone">LOCAL</span></div>
+        </div>
+      </div>
     </section>
-    <section class="section-wrap music-section" id="music"><div class="section-heading reveal"><span class="section-index">02 / SOUNDTRACK</span><h2 data-i18n="musicTitle">mi banda sonora<span> ♫</span></h2><p data-i18n="musicSub">Un poco de lo que suena en este lado del universo.</p></div>
-      <div class="playlist-grid"><article class="playlist-card reveal"><div class="playlist-art art-one"><span>✧</span><b>soft<br>chaos</b><small>PLAYLIST 01</small></div><div class="playlist-info"><span class="micro-label">SPOTIFY · PLAYLIST</span><h3 data-i18n="playlistOne">para perderme un rato</h3><p data-i18n="playlistDesc">Una mezcla para acompañar el desorden bonito.</p><a target="_blank" rel="noopener" href="https://open.spotify.com/playlist/2Gi9fghWLLI5qETHwMrKrc?si=fcEQxGnbTDm9IgYKbXjJ3Q&utm_source=copy-link" data-i18n="openSpotify">abrir en Spotify ↗</a></div><iframe class="spotify-embed" src="https://open.spotify.com/embed/playlist/2Gi9fghWLLI5qETHwMrKrc?utm_source=generator" loading="lazy" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" title="Spotify playlist 1"></iframe></article>
-      <article class="playlist-card reveal"><div class="playlist-art art-two"><span>☾</span><b>midnight<br>mood</b><small>PLAYLIST 02</small></div><div class="playlist-info"><span class="micro-label">SPOTIFY · PLAYLIST</span><h3 data-i18n="playlistTwo">ruido de medianoche</h3><p data-i18n="playlistDesc2">Para cuando el mundo baja el volumen.</p><a target="_blank" rel="noopener" href="https://open.spotify.com/playlist/6nUG1BFGXct7RbHnwLJyOr?si=UJXUEZbwQsa17eSxWq9Vfw&utm_source=copy-link" data-i18n="openSpotify">abrir en Spotify ↗</a></div><iframe class="spotify-embed" src="https://open.spotify.com/embed/playlist/6nUG1BFGXct7RbHnwLJyOr?utm_source=generator" loading="lazy" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" title="Spotify playlist 2"></iframe></article>
-      <article class="playlist-card reveal"><div class="playlist-art art-three"><span>♡</span><b>dream<br>dump</b><small>PLAYLIST 03</small></div><div class="playlist-info"><span class="micro-label">SPOTIFY · PLAYLIST</span><h3 data-i18n="playlistThree">un cajón de canciones</h3><p data-i18n="playlistDesc3">Canciones que encontraron su lugar aquí.</p><a target="_blank" rel="noopener" href="https://open.spotify.com/playlist/7pKuho7nNNbIDeihFLvNuO?si=2SbFqvPXRuOi37u9Ltylnw&utm_source=copy-link&pi=Q_BjgtgeQoa29" data-i18n="openSpotify">abrir en Spotify ↗</a></div><iframe class="spotify-embed" src="https://open.spotify.com/embed/playlist/7pKuho7nNNbIDeihFLvNuO?utm_source=generator" loading="lazy" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" title="Spotify playlist 3"></iframe></article></div>
-      <div class="tracks-panel reveal"><div class="tracks-heading"><div><span class="micro-label">ON REPEAT</span><h3 data-i18n="tracksTitle">canciones sueltas</h3></div><span class="equalizer"><i></i><i></i><i></i><i></i><i></i></span></div><div class="track-list">
-        <a href="https://open.spotify.com/track/2mIUxMNXw0u9gewwnomdjL?si=KK6B9GlDR8quPH6e-0aFnQ&utm_source=copy-link" target="_blank" rel="noopener"><span>01</span><b>Track 01</b><small>Spotify ↗</small></a>
-        <a href="https://open.spotify.com/track/5T3yTmOJ1hJxnH8boXgm3l?si=ndQQJfAaTv-6FLAH-BjC9A&utm_source=copy-link" target="_blank" rel="noopener"><span>02</span><b>Track 02</b><small>Spotify ↗</small></a>
-        <a href="https://open.spotify.com/track/3u2hfoDnXpCiQQRQkblecj?si=ts2DIQfJRmWptagmiVT-mw&utm_source=copy-link" target="_blank" rel="noopener"><span>03</span><b>Track 03</b><small>Spotify ↗</small></a>
-        <a href="https://open.spotify.com/track/2FAZskT9yRjp2Oow9szJD8?si=dcwqYBZKSvqQYSyayPYqqg&utm_source=copy-link" target="_blank" rel="noopener"><span>04</span><b>Track 04</b><small>Spotify ↗</small></a>
-        <a href="https://open.spotify.com/track/6M8r5ddeOm2jxoagsSzuFh?si=_7riEB2sQ2a8-rou7MwyqQ&utm_source=copy-link" target="_blank" rel="noopener"><span>05</span><b>Track 05</b><small>Spotify ↗</small></a>
-        <a href="https://open.spotify.com/track/56fgrIPr54E85K98kmgqwy?si=rVvFsTlyRhCnDVJMxkjUWQ&utm_source=copy-link" target="_blank" rel="noopener"><span>06</span><b>Track 06</b><small>Spotify ↗</small></a>
-        <a href="https://open.spotify.com/track/1v3rQg6uPY6AnOY5TtxN7I?si=W_OBOvZTSFq_Kn1rjx7LnQ&utm_source=copy-link" target="_blank" rel="noopener"><span>07</span><b>Track 07</b><small>Spotify ↗</small></a></div></div>
+
+    <section class="section-shell music-section reveal" id="music">
+      <div class="section-heading"><div><p class="eyebrow" data-i18n="musicEyebrow">02 / SOUND PORTAL</p><h2 data-i18n="musicTitle">lo que suena en mi cabeza</h2></div><span class="section-mark">♫</span></div>
+      <p class="section-lead" data-i18n="musicLead">Un pequeño portal a mis playlists. Ponte cómoda y deja que suene.</p>
+      <div class="playlist-grid">
+        <article class="playlist-card glass-card"><div class="playlist-top"><span class="playlist-number">PLAYLIST_01</span><span>♡</span></div><div class="cover cover-one">✧<b>01</b><span>little<br>universe</span></div><h3 data-i18n="playlistOne">frecuencia personal</h3><p data-i18n="playlistDesc">una colección para perderse un ratito.</p><iframe title="Spotify playlist 1" src="https://open.spotify.com/embed/playlist/2Gi9fghWLLI5qETHwMrKrc?utm_source=generator&theme=0" loading="lazy" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe></article>
+        <article class="playlist-card glass-card"><div class="playlist-top"><span class="playlist-number">PLAYLIST_02</span><span>𖦹</span></div><div class="cover cover-two">☾<b>02</b><span>after<br>hours</span></div><h3 data-i18n="playlistTwo">después de horas</h3><p data-i18n="playlistDesc2">para cuando el mundo baja el volumen.</p><iframe title="Spotify playlist 2" src="https://open.spotify.com/embed/playlist/6nUG1BFGXct7RbHnwLJyOr?utm_source=generator&theme=0" loading="lazy" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe></article>
+        <article class="playlist-card glass-card"><div class="playlist-top"><span class="playlist-number">PLAYLIST_03</span><span>✿</span></div><div class="cover cover-three">♡<b>03</b><span>soft<br>chaos</span></div><h3 data-i18n="playlistThree">caos bonito</h3><p data-i18n="playlistDesc3">un poquito de todo, como debe ser.</p><iframe title="Spotify playlist 3" src="https://open.spotify.com/embed/playlist/7pKuho7nNNbIDeihFLvNuO?utm_source=generator&theme=0" loading="lazy" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe></article>
+      </div>
+      <div class="track-strip"><div><span class="eyebrow" data-i18n="tracksEyebrow">ON REPEAT</span><h3 data-i18n="tracksTitle">canciones sueltas</h3></div><div class="track-links">
+        <a href="https://open.spotify.com/track/2mIUxMNXw0u9gewwnomdjL" target="_blank" rel="noopener">track 01 ↗</a><a href="https://open.spotify.com/track/5T3yTmOJ1hJxnH8boXgm3l" target="_blank" rel="noopener">track 02 ↗</a><a href="https://open.spotify.com/track/3u2hfoDnXpCiQQRQkblecj" target="_blank" rel="noopener">track 03 ↗</a><a href="https://open.spotify.com/track/2FAZskT9yRjp2Oow9szJD8" target="_blank" rel="noopener">track 04 ↗</a><a href="https://open.spotify.com/track/6M8r5ddeOm2jxoagsSzuFh" target="_blank" rel="noopener">track 05 ↗</a><a href="https://open.spotify.com/track/56fgrIPr54E85K98kmgqwy" target="_blank" rel="noopener">track 06 ↗</a><a href="https://open.spotify.com/track/1v3rQg6uPY6AnOY5TtxN7I" target="_blank" rel="noopener">track 07 ↗</a>
+      </div></div>
     </section>
-    <section class="section-wrap links-section" id="links"><div class="section-heading reveal"><span class="section-index">03 / PORTALS</span><h2 data-i18n="linksTitle">mis otros universos<span> ↗</span></h2><p data-i18n="linksSub">Puertas a mis rincones de internet.</p></div>
-      <div class="portal-group reveal"><div class="group-title"><span>✦</span><h3 data-i18n="socialTitle">redes sociales</h3><small>01 — 02</small></div><div class="portal-grid"><a class="portal" href="https://x.com/afterthesmok3" target="_blank" rel="noopener"><span class="portal-symbol">𝕏</span><span><b>X / Twitter</b><small>@afterthesmok3</small></span><i>↗</i></a><a class="portal" href="https://www.instagram.com/josslyn.f4ck?igsi=OHMzYTNsbnVhOXhp" target="_blank" rel="noopener"><span class="portal-symbol">◎</span><span><b>Instagram</b><small>photographs & fragments</small></span><i>↗</i></a><a class="portal" href="https://www.tiktok.com/@bubsmokey?_r=1&_t=ZS-9B0EpEngdJH" target="_blank" rel="noopener"><span class="portal-symbol">♪</span><span><b>TikTok</b><small>@bubsmokey</small></span><i>↗</i></a></div></div>
-      <div class="portal-group reveal"><div class="group-title"><span>☏</span><h3 data-i18n="channelsTitle">canales de WhatsApp</h3><small>02 — 03</small></div><div class="portal-grid"><a class="portal" href="https://whatsapp.com/channel/0029VbCliaG96H4RohGVyc0L" target="_blank" rel="noopener"><span class="portal-symbol">☻</span><span><b data-i18n="channelPersonal">mi cajón de ocurrencias</b><small data-i18n="channelPersonalSub">cosas random, pensamientos y más</small></span><i>↗</i></a><a class="portal" href="https://whatsapp.com/channel/0029Vb7jRpp7T8bXzYk30M2D" target="_blank" rel="noopener"><span class="portal-symbol">⚡</span><span><b>Trans­tornaditos™</b><small data-i18n="channelGossip">críticas, chismes y comentarios</small></span><i>↗</i></a><a class="portal" href="https://whatsapp.com/channel/0029Vb8fsdr90x34fyLEYq2r" target="_blank" rel="noopener"><span class="portal-symbol">✎</span><span><b>CHAIN3008</b><small data-i18n="channelNiece">animaciones, dibujos y videos</small></span><i>↗</i></a></div></div>
-      <div class="portal-group reveal"><div class="group-title"><span>⌘</span><h3 data-i18n="botsTitle">bots & perfiles</h3><small>03 — 08</small></div><div class="portal-grid bots-grid">
-        <a class="portal" href="https://tipsy.chat/es/profile/1787466424723383942" target="_blank" rel="noopener"><span class="portal-symbol">✧</span><span><b>Tipsy</b><small>profile</small></span><i>↗</i></a><a class="portal" href="https://character.ai/profile/Bubbleseal" target="_blank" rel="noopener"><span class="portal-symbol">◉</span><span><b>Character.AI</b><small>Bubbleseal</small></span><i>↗</i></a><a class="portal" href="https://www.hiwaifu.com/es/robot/16984395" target="_blank" rel="noopener"><span class="portal-symbol">♡</span><span><b>HiWaifu</b><small>robot profile</small></span><i>↗</i></a><a class="portal" href="https://crushon.ai/es/profile/2bd70f05-969c-11f1-818b-6a5b879871a5" target="_blank" rel="noopener"><span class="portal-symbol">❀</span><span><b>CrushOn</b><small>profile</small></span><i>↗</i></a><a class="portal" href="https://www.clank.world/@Bubbless" target="_blank" rel="noopener"><span class="portal-symbol">⌬</span><span><b>Clank</b><small>@Bubbless</small></span><i>↗</i></a><a class="portal" href="https://janitorai.com/es/profiles/2e56df3b-22bd-47be-aab4-27db8e41aaf1_profile-of-bubble-seal" target="_blank" rel="noopener"><span class="portal-symbol">☾</span><span><b>JanitorAI</b><small>Bubble Seal</small></span><i>↗</i></a><a class="portal" href="https://app.wyvern.chat/profiles/Bubblessmokey" target="_blank" rel="noopener"><span class="portal-symbol">♜</span><span><b>Wyvern</b><small>Bubblessmokey</small></span><i>↗</i></a><a class="portal" href="https://s.rubii.ai/MvTb8bKB" target="_blank" rel="noopener"><span class="portal-symbol">𖹭</span><span><b>Rubii</b><small>profile</small></span><i>↗</i></a></div></div>
+
+    <section class="section-shell links-section reveal" id="links">
+      <div class="section-heading"><div><p class="eyebrow" data-i18n="linksEyebrow">03 / OTHER DIMENSIONS</p><h2 data-i18n="linksTitle">mis rincones de internet</h2></div><span class="section-mark">⌁</span></div>
+      <div class="link-tabs" role="tablist"><button class="link-tab active" data-filter="all" data-i18n="all">todo</button><button class="link-tab" data-filter="social" data-i18n="social">redes</button><button class="link-tab" data-filter="channels" data-i18n="channels">canales</button><button class="link-tab" data-filter="bots" data-i18n="bots">bots & profiles</button></div>
+      <div class="link-grid">
+        <a class="link-card glass-card" data-category="social" href="https://x.com/afterthesmok3" target="_blank" rel="noopener"><span class="link-icon">𝕏</span><span><b>X / Twitter</b><small>@afterthesmok3</small></span><span class="link-arrow">↗</span></a>
+        <a class="link-card glass-card" data-category="social" href="https://www.instagram.com/josslyn.f4ck" target="_blank" rel="noopener"><span class="link-icon">◎</span><span><b>Instagram</b><small>photo dump & moments</small></span><span class="link-arrow">↗</span></a>
+        <a class="link-card glass-card" data-category="social" href="https://www.tiktok.com/@bubsmokey" target="_blank" rel="noopener"><span class="link-icon">♪</span><span><b>TikTok</b><small>@bubsmokey</small></span><span class="link-arrow">↗</span></a>
+        <a class="link-card glass-card" data-category="channels" href="https://whatsapp.com/channel/0029VbCliaG96H4RohGVyc0L" target="_blank" rel="noopener"><span class="link-icon">☁</span><span><b data-i18n="personalChannel">canal personal</b><small data-i18n="personalChannelDesc">ocurrencias sin contexto</small></span><span class="link-arrow">↗</span></a>
+        <a class="link-card glass-card" data-category="channels" href="https://whatsapp.com/channel/0029Vb7jRpp7T8bXzYk30M2D" target="_blank" rel="noopener"><span class="link-icon">⚡</span><span><b>Transtornaditos™</b><small data-i18n="gossipDesc">críticas, chismes y demás</small></span><span class="link-arrow">↗</span></a>
+        <a class="link-card glass-card" data-category="channels" href="https://whatsapp.com/channel/0029Vb8fsdr90x34fyLEYq2r" target="_blank" rel="noopener"><span class="link-icon">✿</span><span><b>CHAIN3008</b><small data-i18n="nieceDesc">animaciones y dibujos</small></span><span class="link-arrow">↗</span></a>
+        <a class="link-card glass-card" data-category="bots" href="https://tipsy.chat/es/profile/1787466424723383942" target="_blank" rel="noopener"><span class="link-icon">☻</span><span><b>Tipsy</b><small>profile</small></span><span class="link-arrow">↗</span></a>
+        <a class="link-card glass-card" data-category="bots" href="https://character.ai/profile/Bubbleseal" target="_blank" rel="noopener"><span class="link-icon">✧</span><span><b>Character.AI</b><small>Bubbleseal</small></span><span class="link-arrow">↗</span></a>
+        <a class="link-card glass-card" data-category="bots" href="https://www.hiwaifu.com/es/robot/16984395" target="_blank" rel="noopener"><span class="link-icon">♡</span><span><b>HiWaifu</b><small>robot profile</small></span><span class="link-arrow">↗</span></a>
+        <a class="link-card glass-card" data-category="bots" href="https://crushon.ai/es/profile/2bd70f05-969c-11f1-818b-6a5b879871a5" target="_blank" rel="noopener"><span class="link-icon">❀</span><span><b>CrushOn</b><small>profile</small></span><span class="link-arrow">↗</span></a>
+        <a class="link-card glass-card" data-category="bots" href="https://www.clank.world/@Bubbless" target="_blank" rel="noopener"><span class="link-icon">⌘</span><span><b>Clank</b><small>@Bubbless</small></span><span class="link-arrow">↗</span></a>
+        <a class="link-card glass-card" data-category="bots" href="https://janitorai.com/es/profiles/2e56df3b-22bd-47be-aab4-27db8e41aaf1_profile-of-bubble-seal" target="_blank" rel="noopener"><span class="link-icon">☾</span><span><b>JanitorAI</b><small>Bubble Seal</small></span><span class="link-arrow">↗</span></a>
+        <a class="link-card glass-card" data-category="bots" href="https://app.wyvern.chat/profiles/Bubblessmokey" target="_blank" rel="noopener"><span class="link-icon">♢</span><span><b>Wyvern</b><small>Bubblessmokey</small></span><span class="link-arrow">↗</span></a>
+        <a class="link-card glass-card" data-category="bots" href="https://s.rubii.ai/MvTb8bKB" target="_blank" rel="noopener"><span class="link-icon">𖦹</span><span><b>Rubii</b><small>profile</small></span><span class="link-arrow">↗</span></a>
+      </div>
     </section>
-    <section class="oracle-section" id="oracle"><div class="section-wrap"><div class="section-heading reveal"><span class="section-index">04 / COSMIC CORNER</span><h2 data-i18n="oracleTitle">el rincón del destino<span> ✧</span></h2><p data-i18n="oracleSub">No es ciencia, es una excusa bonita para jugar con el misterio.</p></div><div class="oracle-grid"><article class="oracle-card tarot-card reveal"><div class="oracle-icon">✧</div><span class="micro-label">THE DAILY ORACLE</span><h3 data-i18n="tarotTitle">una carta para ti</h3><p data-i18n="tarotDesc">Respira, piensa en algo y deja que el azar hable.</p><div class="tarot-deck" id="tarotDeck"><div class="tarot-back"><span>✦</span><b>?</b><small>THE UNKNOWN</small></div></div><button class="pill primary" id="drawCard" data-i18n="drawCard">revelar mi carta ✦</button><p class="tarot-result" id="tarotResult" aria-live="polite"></p></article>
-      <article class="oracle-card zodiac-card reveal"><div class="oracle-icon">☾</div><span class="micro-label">STAR MAP</span><h3 data-i18n="zodiacTitle">tu pequeño horóscopo</h3><p data-i18n="zodiacDesc">Elige tu signo y mira qué vibra trae hoy.</p><select id="zodiacSelect" aria-label="Zodiac sign"><option value="aries">♈ Aries</option><option value="taurus">♉ Taurus</option><option value="gemini">♊ Gemini</option><option value="cancer">♋ Cancer</option><option value="leo">♌ Leo</option><option value="virgo">♍ Virgo</option><option value="libra">♎ Libra</option><option value="scorpio">♏ Scorpio</option><option value="sagittarius">♐ Sagittarius</option><option value="capricorn">♑ Capricorn</option><option value="aquarius">♒ Aquarius</option><option value="pisces">♓ Pisces</option></select><div class="zodiac-output" id="zodiacOutput" data-i18n="zodiacDefault">Tu mensaje estelar aparecerá aquí ✨</div><button class="pill ghost" id="zodiacBtn" data-i18n="readStars">consultar estrellas ↗</button></article></div><p class="disclaimer" data-i18n="disclaimer">Lecturas recreativas y simbólicas; no sustituyen decisiones personales ni asesoramiento profesional.</p></div></section>
-    <section class="section-wrap guest-section" id="guestbook"><div class="section-heading reveal"><span class="section-index">05 / MESSAGE IN A BOTTLE</span><h2 data-i18n="guestTitle">deja una señal<span> ♡</span></h2><p data-i18n="guestSub">Un pensamiento, una opinión, un hola desde otra galaxia.</p></div><div class="guest-grid"><form class="guest-form glass reveal" id="guestForm"><label for="guestName" data-i18n="aliasLabel">alias (opcional)</label><input id="guestName" maxlength="32" placeholder="anonymous little creature"><label for="guestMessage" data-i18n="messageLabel">tu mensaje</label><textarea id="guestMessage" maxlength="500" required placeholder="deja algo bonito por aquí..."></textarea><div class="form-bottom"><label class="anon-check"><input type="checkbox" id="anonymous" checked><span data-i18n="anonLabel">publicar como anónimo</span></label><button class="pill primary" type="submit" data-i18n="sendMessage">enviar mensaje ↗</button></div><p class="form-hint" data-i18n="guestHint">Los mensajes se guardan en este navegador. Para recibirlos desde otros dispositivos, configura un servicio de formularios en script.js.</p><p class="form-feedback" id="formFeedback" aria-live="polite"></p></form><div class="guest-wall reveal"><div class="wall-head"><span class="micro-label">THE WALL OF LITTLE THINGS</span><span>♡ <b id="messageCount">0</b></span></div><div id="messageWall" class="message-wall"><div class="empty-wall" data-i18n="emptyWall">este espacio espera su primer mensajito... 🫧</div></div></div></div></section>
-    <section class="contact-strip section-wrap reveal"><div><span class="micro-label" data-i18n="contactLabel">PARA PEDIDOS / CONTACTO</span><h2 data-i18n="contactTitle">¿algo que decirme?</h2><p data-i18n="contactText">Pronto habrá un portal directo para pedidos y otras cositas.</p></div><a class="pill ghost" href="mailto:TU_CORREO_AQUI" id="emailLink" data-i18n="emailButton">correo próximamente ↗</a></section>
+
+    <section class="arcana-section reveal" id="arcana">
+      <div class="section-shell">
+        <div class="section-heading"><div><p class="eyebrow" data-i18n="arcanaEyebrow">04 / THE UNKNOWN</p><h2 data-i18n="arcanaTitle">un mensaje del universo</h2></div><span class="section-mark">☾</span></div>
+        <p class="section-lead" data-i18n="arcanaLead">Tómalo como un juego de introspección y entretenimiento, no como una predicción literal del futuro.</p>
+        <div class="arcana-grid">
+          <article class="oracle-card glass-card"><div class="oracle-top"><span>✧ TAROT / 01</span><span>𖤐</span></div><div class="tarot-card" id="tarotCard"><div class="tarot-back"><span>✦</span><b>?</b><span>✦</span></div></div><h3 data-i18n="tarotTitle">tu carta del momento</h3><p id="tarotMeaning" data-i18n="tarotHint">Respira, piensa en algo y deja que una carta te encuentre.</p><button class="button button-primary full-button" id="drawCard" data-i18n="drawCard">revelar una carta ✧</button></article>
+          <article class="oracle-card glass-card zodiac-card"><div class="oracle-top"><span>✧ ASTRO / 02</span><span>☼</span></div><div class="zodiac-symbol" id="zodiacSymbol">♓</div><h3 data-i18n="zodiacTitle">mensaje zodiacal</h3><p data-i18n="zodiacLead">Elige tu signo para recibir una lectura breve.</p><select id="zodiacSelect" aria-label="Zodiac sign"><option value="">— elige tu signo —</option><option value="aries">♈ Aries</option><option value="taurus">♉ Tauro / Taurus</option><option value="gemini">♊ Géminis / Gemini</option><option value="cancer">♋ Cáncer / Cancer</option><option value="leo">♌ Leo</option><option value="virgo">♍ Virgo</option><option value="libra">♎ Libra</option><option value="scorpio">♏ Escorpio / Scorpio</option><option value="sagittarius">♐ Sagitario / Sagittarius</option><option value="capricorn">♑ Capricornio / Capricorn</option><option value="aquarius">♒ Acuario / Aquarius</option><option value="pisces">♓ Piscis / Pisces</option></select><div class="zodiac-result" id="zodiacResult" data-i18n="zodiacHint">Tu mensaje aparecerá aquí.</div><button class="button button-ghost full-button" id="zodiacRead" data-i18n="zodiacButton">consultar los astros ☼</button></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-shell guest-section reveal" id="guestbook">
+      <div class="section-heading"><div><p class="eyebrow" data-i18n="guestEyebrow">05 / LEAVE A TRACE</p><h2 data-i18n="guestTitle">deja una señal</h2></div><span class="section-mark">♡</span></div>
+      <p class="section-lead" data-i18n="guestLead">Un pensamiento, una recomendación, un hola o cualquier cosa que quieras dejar por aquí.</p>
+      <div class="guest-grid">
+        <form class="guest-form glass-card" id="guestForm">
+          <label for="guestName" data-i18n="nameLabel">¿cómo te llamamos?</label><input id="guestName" maxlength="40" placeholder="tu apodo / nickname">
+          <label for="guestMessage" data-i18n="messageLabel">tu mensaje</label><textarea id="guestMessage" maxlength="800" required placeholder="escribe algo bonito, raro o caótico..."></textarea>
+          <label class="anonymous-check"><input type="checkbox" id="anonymous"><span data-i18n="anonymous">enviar de forma anónima</span></label>
+          <button class="button button-primary full-button" type="submit" data-i18n="sendMessage">enviar mensaje ↗</button>
+          <p class="form-note" id="formNote" data-i18n="formLocalNote">Los mensajes se guardan en este dispositivo. Para recibirlos desde cualquier lugar, hay que conectar un servicio de formularios.</p>
+        </form>
+        <div class="guest-side"><div class="guest-quote">“<span data-i18n="guestQuote">internet también puede ser una pequeña botella lanzada al mar.</span>”</div><div class="message-wall glass-card"><div class="wall-head"><span data-i18n="wallTitle">MENSAJES ENCONTRADOS</span><span class="wall-count" id="wallCount">0</span></div><div id="messageWall" class="message-wall-list"><p class="empty-wall" data-i18n="emptyWall">Todavía no hay señales. Sé la primera.</p></div></div></div>
+      </div>
+    </section>
+
+    <section class="section-shell contact-section reveal">
+      <div class="contact-card">
+        <div><p class="eyebrow" data-i18n="contactEyebrow">06 / OPEN TRANSMISSION</p><h2 data-i18n="contactTitle">¿tienes una idea?</h2><p data-i18n="contactText">Pedidos, propuestas, recomendaciones o mensajes para el otro lado de la pantalla.</p></div>
+        <a class="button button-primary" id="emailLink" href="#" data-i18n="contactButton">enviar una señal ↗</a>
+        <span class="contact-decoration">✳</span>
+      </div>
+      <p class="email-hint" data-i18n="emailHint">El correo se agrega desde la configuración del archivo script.js.</p>
+    </section>
   </main>
-  <footer><div class="footer-symbol">✳</div><p>made of stardust, questionable decisions & soft chaos.</p><span>© <span id="year"></span> BUBBLES × SMOKEY</span><a href="#home" data-i18n="backTop">volver arriba ↑</a></footer>
-  <div class="toast" id="toast" role="status"></div><button class="back-top" id="backTop" aria-label="Back to top">↑</button>
-  <script src="script.js"></script>
-</body></html>
+
+  <footer class="footer"><div class="footer-top"><a class="brand" href="#home"><span class="brand-orb">✦</span>BUBBLES<span class="brand-x">×</span>SMOKEY</a><span data-i18n="footerLine">hecho de pixeles, curiosidad y un poquito de caos.</span><a href="#home" class="back-top">↑ <span data-i18n="backTop">volver arriba</span></a></div><div class="footer-bottom"><span>© <span id="year"></span> / B-S UNIVERSE</span><span>𖦹 ୨ৎ ✧ ☾ ♡</span><span data-i18n="footerSignal">SIGNAL: STILL HERE</span></div></footer>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <button class="secret-button" id="secretButton" aria-label="A little secret">✦</button>
+  <div class="secret-modal" id="secretModal" aria-hidden="true"><div class="secret-box glass-card"><button class="modal-close" id="closeSecret" aria-label="Close">×</button><span class="secret-spark">𖦹</span><p class="eyebrow">HIDDEN TRANSMISSION</p><h3 data-i18n="secretTitle">encontraste una señal secreta</h3><p data-i18n="secretText">No todo lo interesante necesita tener sentido. Gracias por explorar este pequeño universo.</p><button class="button button-primary" id="secretOkay" data-i18n="secretButton">seguir explorando</button></div></div>
+</body>
+</html>

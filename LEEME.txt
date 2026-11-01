@@ -1,25 +1,52 @@
-BUBBLES × SMOKEY — sitio estático
+BUBBLES × SMOKEY — sitio web estático
+========================================
 
 ARCHIVOS
-- index.html: estructura y contenido.
-- estilo.css: estilos, temas y responsive.
-- script.js: idioma, reloj, tarot, astrología, efectos y libro de visitas.
-- Alien.icon, Fiesta.gif, Gatozaza.jpg, Icono.png, Icono_GENERADO.png y los GIF con hash: son nombres que aparecen en la captura, pero sus archivos originales no venían adjuntos. Copia los originales junto a index.html para poder usarlos.
+- index.html: estructura y contenido de la página.
+- estilo.css: diseño, temas, responsive y animaciones.
+- script.js: idioma, reloj, tarot, astrología, filtros, efectos y formulario.
+- assets/: aquí van las imágenes y GIF originales.
 
-PUBLICACIÓN
-Sube el contenido de esta carpeta a la raíz de tu hosting (Netlify, GitHub Pages, cPanel, etc.). No cambies los nombres de index.html, estilo.css ni script.js.
+PARA PUBLICAR
+1. Descomprime el ZIP.
+2. Sube index.html, estilo.css, script.js y la carpeta assets completa a la misma carpeta de tu hosting.
+3. Abre index.html. No necesita instalar paquetes ni compilar.
+
+IMPORTANTE SOBRE LOS RECURSOS
+La única carga recibida en esta conversación fue una captura de pantalla del listado de archivos, no los GIF/JPG/PNG originales. Por eso no se incluyen imágenes binarias falsas. Coloca los originales dentro de assets/ conservando exactamente sus nombres. La página ya busca estos recursos:
+- Icono_GENERADO.png (avatar)
+- Icono.png
+- Gatozaza.jpg
+- Fiesta.gif
+- Alien.icon (favicon; si no funciona como icono, puedes omitirlo)
+
+La captura también muestra muchos nombres hash y duplicados, pero el texto de esos nombres no se distingue con suficiente nitidez para transcribirlos sin riesgo de cambiar caracteres. Vuelve a adjuntar los archivos originales o un ZIP de la carpeta para integrarlos todos fielmente.
+
+CONFIGURAR TU CORREO
+Abre script.js y cambia:
+  const CONTACT_EMAIL = "";
+por:
+  const CONTACT_EMAIL = "tu-correo@gmail.com";
+El botón de contacto abrirá el correo del visitante. El correo no se muestra públicamente en la página.
+
+RECIBIR MENSAJES DEL LIBRO DE VISITAS
+Por seguridad, una página HTML estática no puede guardar mensajes en una base de datos privada ni enviártelos automáticamente por sí sola.
+Para recibir mensajes desde cualquier visitante:
+1. Crea un formulario en https://formspree.io/ (o un servicio equivalente).
+2. Confirma tu correo dentro del servicio.
+3. Copia la URL de envío del formulario.
+4. En script.js, cambia FORMSPREE_ENDPOINT = "" por esa URL.
+5. Haz una prueba desde otro dispositivo.
+Si dejas ese campo vacío, el libro de visitas funciona como demostración local: guarda los mensajes en el navegador del visitante, no los envía a tu correo ni los comparte entre dispositivos. El modo anónimo oculta el nombre en el formulario.
 
 IDIOMA Y TEMAS
-El botón EN/ES cambia los textos principales. La tecla T alterna los temas oscuro, Frutiger Aero, neon y rosa.
+- El botón ES / EN cambia los textos de la interfaz.
+- El botón theme recorre Void, Frutiger Aero, Neon y Pink.
+- El sonido comienza apagado y solo se activa si el visitante lo solicita.
+- El reloj usa la zona horaria detectada por el navegador.
+- Tarot y astrología son contenido recreativo y de reflexión, no predicciones reales.
 
-COMENTARIOS: IMPORTANTE
-Sin backend, una web estática no puede enviarte comentarios ni compartirlos entre visitantes. Por defecto se guardan únicamente en el navegador de quien los escribe (localStorage). Para recibirlos, crea un formulario en Formspree o Getform y pega su endpoint en la constante FORM_ENDPOINT de script.js. Revisa las opciones de privacidad y spam del proveedor.
-
-CORREO
-En index.html busca TU_CORREO_AQUI en el enlace mailto y reemplázalo por tu dirección cuando quieras publicarla.
-
-SPOTIFY
-Los enlaces abren tus playlists y canciones en Spotify. La reproducción incrustada puede añadirse más adelante; la disponibilidad depende de Spotify y del navegador.
-
-PRIVACIDAD
-El sitio no solicita datos personales ni envía mensajes a ningún servidor mientras FORM_ENDPOINT esté vacío. El contador de visitas es local al navegador, no una analítica global.
+NOTAS
+- Los reproductores Spotify necesitan conexión a internet y pueden depender de cookies o de las restricciones del navegador.
+- Las fuentes web y los embeds también necesitan internet.
+- No se garantiza que servicios externos estén disponibles siempre.
