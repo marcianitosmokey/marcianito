@@ -1,0 +1,60 @@
+MARC1ANITO.EXE — ARCHIVOS DEL SITIO
+==================================
+
+ARCHIVOS PRINCIPALES
+- index.html   estructura y contenido
+- estilo.css   diseño adaptable, colores, animaciones y efectos
+- script.js    idioma, temas, tarot, astrología, galería, sonidos, posts y guestbook
+- supabase.sql tablas y permisos para comentarios, publicaciones y suscripciones compartidas
+
+IMPORTANTE: nombres de archivos
+El HTML usa los nombres de imágenes/GIF tal como aparecen en el repositorio de GitHub.
+No cambies mayúsculas, minúsculas, puntos ni extensiones. GitHub Pages distingue los nombres.
+Se usa Alien.icon como avatar (con Icono.png como respaldo) y el resto de imágenes se enlaza por su nombre.
+
+SUBIR LOS ARCHIVOS
+1. En GitHub abre el repositorio marcianito.
+2. Sube index.html, estilo.css y script.js a la raíz (donde están tus imágenes).
+3. Si GitHub pregunta si quieres reemplazar archivos existentes, confirma para actualizar los anteriores.
+4. Sube también supabase.sql y este LEEME.txt si quieres conservar las instrucciones.
+5. En Settings > Pages, selecciona Deploy from a branch, branch principal/main y carpeta /(root), y guarda.
+6. Espera a que GitHub Pages publique el sitio.
+
+NOTA SOBRE INDEX
+En tu captura el navegador tradujo el texto de la interfaz. El nombre real del archivo debe ser index.html.
+Si en tu repositorio aparece realmente como indice.html, renómbralo a index.html.
+
+FUNCIONES QUE YA TRABAJAN SIN SERVIDOR
+- Diseño responsive.
+- Cambio ES/EN de textos de interfaz.
+- Cuatro temas visuales.
+- Sonidos opcionales generados en el navegador (se activan manualmente).
+- Tarot de 22 arcanos mayores con interpretaciones en ambos idiomas.
+- Consulta recreativa de los doce signos.
+- Galería con visor ampliado.
+- Easter egg: escribe marci! en el teclado.
+- Publicaciones y comentarios guardados localmente en el navegador.
+
+LIMITACIONES IMPORTANTES DE GITHUB PAGES
+GitHub Pages no tiene base de datos ni servidor. En el modo inicial, las publicaciones y comentarios se guardan solo en el navegador/dispositivo donde se escriben. Otros visitantes no los verán.
+Para tener comentarios anónimos compartidos, posts sincronizados y suscripciones reales, configura Supabase siguiendo los pasos siguientes.
+
+CONFIGURAR SUPABASE (opcional, para compartir datos)
+1. Crea un proyecto gratuito en https://supabase.com/
+2. En Project Settings > API copia Project URL y la clave anon/public.
+3. Abre script.js y pega esos valores en SUPABASE_URL y SUPABASE_ANON_KEY.
+4. Abre el SQL Editor de Supabase, pega el contenido de supabase.sql y ejecútalo.
+5. En script.js, asigna tu correo a OWNER_EMAIL (entre comillas). En supabase.sql, reemplaza TU_CORREO@EJEMPLO.COM por ese mismo correo antes de ejecutar el SQL.
+6. Activa Authentication > Providers > Email en Supabase. En el sitio, pulsa INICIAR SESIÓN PARA PUBLICAR e introduce tu correo; Supabase te enviará un enlace mágico. Una vez iniciada la sesión, podrás publicar desde el formulario. La política SQL restringe las publicaciones a ese correo.
+7. No pegues nunca la service_role key en un sitio público.
+8. La tabla guestbook permite leer y publicar comentarios sin iniciar sesión. Los visitantes pueden elegir un alias o dejarlo vacío.
+9. La tabla subscribers almacena correos si activas la integración. Añade una política de inserción en Supabase si deseas habilitarla; por seguridad el SQL de ejemplo no permite insertar correos de forma pública por defecto.
+
+PRIVACIDAD Y MODERACIÓN
+- No pidas ni publiques datos personales en el guestbook.
+- Los comentarios públicos necesitan moderación. Supabase permite añadir herramientas o políticas adicionales para moderarlos.
+- No existe protección real de autoría si se intenta esconder una contraseña/PIN dentro de HTML o JavaScript. No pongas contraseñas privadas en estos archivos.
+- Las lecturas de tarot y astrología son recreativas y simbólicas, no predicciones ni asesoramiento profesional.
+
+SPOTIFY
+Los reproductores usan embeds oficiales de Spotify. Su disponibilidad depende de la conexión, cookies y configuración de Spotify del visitante.
