@@ -1,0 +1,40 @@
+BUBBLES × SMOKEY — LITTLE UNIVERSE
+====================================
+
+ARCHIVOS PRINCIPALES
+- index.html
+- style.css
+- script.js
+- assets/ (coloca aquí tus GIF, JPG, PNG e iconos originales)
+
+PARA PUBLICAR
+1. Descomprime el ZIP.
+2. Coloca los archivos multimedia originales dentro de la carpeta assets.
+3. Sube index.html, style.css, script.js y la carpeta assets al mismo directorio de tu hosting.
+4. Abre index.html o publica la carpeta en GitHub Pages, Netlify o un hosting estático.
+
+IMPORTANTE: la captura enviada muestra nombres de archivos, pero no contiene los archivos multimedia originales. Por eso no están incrustados en este ZIP. El inventario de nombres está en ARCHIVOS_DE_LA_CAPTURA.txt. La lista incluye nombres leídos de la captura y el último archivo aparece truncado en la propia captura; verifica esa línea con el nombre real.
+
+COMENTARIOS
+El libro de visitas actual guarda los mensajes en localStorage del navegador del visitante. Eso NO envía mensajes a tu dispositivo ni crea una base de datos compartida.
+Para recibir mensajes reales, crea un formulario en Formspree (o servicio equivalente), copia su endpoint y configura el envío en script.js. No publiques claves privadas en el navegador.
+Puedes usar un backend propio con una base de datos si necesitas moderación, almacenamiento y notificaciones.
+
+CORREO
+En index.html busca la sección "OPEN PORTAL" / "contact-card". Cuando tengas tu correo, cambia el texto y añade un enlace:
+<a href="mailto:TU_CORREO@gmail.com">contactar</a>
+No se ha inventado ni colocado un correo.
+
+SPOTIFY
+Los enlaces abren tus playlists/canciones. El reproductor incrustado carga la primera playlist; Spotify puede requerir cookies, iniciar sesión o abrir la app.
+
+FUNCIONES
+- Idioma español/inglés, preferencia guardada localmente.
+- Temas dark, Frutiger Aero, neon y rose.
+- Reloj según zona horaria del navegador.
+- Tarot simbólico aleatorio y horóscopo recreativo.
+- Efectos de sonido opcionales (se activan con el botón ♫).
+- Animaciones con soporte para prefers-reduced-motion.
+- Guestbook local y easter egg: escribe "bubbles" con el teclado.
+
+El tarot y el horóscopo son entretenimiento/reflexión, no predicciones fiables.
