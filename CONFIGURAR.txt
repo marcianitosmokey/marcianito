@@ -1,0 +1,31 @@
+BUBBLES / SMOKEY — NOTAS DE CONFIGURACIÓN
+
+ARCHIVOS PRINCIPALES
+- index.html: estructura de la página.
+- estilo.css: estilos, temas, animaciones y diseño responsive.
+- app.js: idioma, reloj, tarot, zodiaco, efectos y formulario.
+- assets/: coloca aquí tus GIF e imágenes originales.
+
+IMPORTANTE SOBRE TUS RECURSOS
+En esta conversación solo llegó una captura de pantalla con los nombres de archivo; no llegaron los archivos GIF/PNG/JPG/ICO originales. Por eso no se pueden incrustar ni comprobar todavía. No se han creado imágenes falsas ni archivos vacíos con esos nombres, porque eso haría que los recursos fallaran. Conserva los nombres originales y súbelos dentro de assets/ cuando tengas los archivos. El diseño ya funciona sin ellos.
+
+BUZÓN DE MENSAJES
+Un sitio estático HTML/CSS/JS no puede guardar ni enviarte mensajes por sí solo. Para recibir mensajes:
+1. Crea un formulario en https://formspree.io/ (o un servicio equivalente).
+2. Copia tu endpoint, por ejemplo https://formspree.io/f/xxxxxxxx.
+3. Abre app.js y busca FORM_ENDPOINT.
+4. Pega el endpoint entre las comillas. No pongas tu Gmail en el código público.
+El alias es opcional y la casilla anónima elimina el nombre enviado. El servicio externo recibirá el mensaje.
+
+GMAIL / PEDIDOS
+Cuando quieras añadir tu correo público, edita index.html y añade un enlace mailto:TU_CORREO@gmail.com donde prefieras. No se inventó una dirección.
+
+IDIOMA Y TEMAS
+- Botón ES / EN: cambia los textos de la interfaz.
+- Botón ◐: alterna Midnight, Frutiger Aero y Neon.
+- El reloj toma la hora y zona horaria local del dispositivo.
+- Tarot y mensajes zodiacales son interactivos y recreativos.
+
+PUBLICACIÓN
+Sube el contenido de esta carpeta (index.html, estilo.css, app.js y assets/) a la raíz de tu hosting estático. La página de entrada se llama index.html.
+Los reproductores de Spotify requieren conexión a internet y pueden depender de las restricciones de Spotify/navegador.
