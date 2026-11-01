@@ -5,7 +5,7 @@ const $=(s,root=document)=>root.querySelector(s), $$=(s,root=document)=>[...root
 const STORAGE={lang:"marci-lang",theme:"marci-theme",sound:"marci-sound",posts:"marci-posts",guests:"marci-guests"};
 const SUPABASE_URL=""; // Pega aquí la URL de tu proyecto Supabase
 const SUPABASE_ANON_KEY=""; // Pega aquí la clave anon/public de Supabase
-const OWNER_EMAIL=""; // Correo autorizado para publicar en modo conectado
+const OWNER_EMAIL="canelitarosaita234@gmail.com"; // Correo autorizado para publicar en modo conectado
 let db=null;
 if(window.supabase?.createClient && SUPABASE_URL && SUPABASE_ANON_KEY){db=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);}
 let lang=localStorage.getItem(STORAGE.lang)||"es",theme=localStorage.getItem(STORAGE.theme)||"void",sound=localStorage.getItem(STORAGE.sound)==="on";
