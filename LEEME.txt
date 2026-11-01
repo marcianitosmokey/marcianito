@@ -1,37 +1,25 @@
-BUBBLES / SMOKEY — sitio web
+BUBBLES × SMOKEY — sitio estático
 
-ARCHIVOS PRINCIPALES
-- index.html: página principal.
-- estilo.css: diseño responsive, temas, animaciones y estilos.
-- script.js: idioma, reloj local, sonido, tarot, astrología, temas, efectos y formulario.
-- assets/: coloca aquí los archivos gráficos originales que aparecen en tu captura.
+ARCHIVOS
+- index.html: estructura y contenido.
+- estilo.css: estilos, temas y responsive.
+- script.js: idioma, reloj, tarot, astrología, efectos y libro de visitas.
+- Alien.icon, Fiesta.gif, Gatozaza.jpg, Icono.png, Icono_GENERADO.png y los GIF con hash: son nombres que aparecen en la captura, pero sus archivos originales no venían adjuntos. Copia los originales junto a index.html para poder usarlos.
 
-IMPORTANTE SOBRE LAS IMÁGENES
-La única imagen recibida para este trabajo fue una captura de pantalla con nombres de archivo. No se recibieron los GIF/JPG/PNG originales como archivos utilizables. Por eso no se han fabricado imágenes falsas ni se han incluido archivos vacíos con esos nombres. Para añadir tus imágenes, copia los archivos originales a la carpeta assets/. Para incorporarlos visualmente a una sección concreta, agrega sus rutas en index.html (por ejemplo: assets/Gatozaza.jpg). Los nombres originales deben conservarse exactamente, respetando mayúsculas y minúsculas.
+PUBLICACIÓN
+Sube el contenido de esta carpeta a la raíz de tu hosting (Netlify, GitHub Pages, cPanel, etc.). No cambies los nombres de index.html, estilo.css ni script.js.
 
-PUBLICAR
-Sube el contenido de esta carpeta a la raíz de tu hosting (Netlify, GitHub Pages, servidor web, etc.). Abre index.html para probar localmente. Para que los embeds de Spotify funcionen se necesita conexión a internet y, en algunos casos, iniciar sesión/aceptar cookies en Spotify.
+IDIOMA Y TEMAS
+El botón EN/ES cambia los textos principales. La tecla T alterna los temas oscuro, Frutiger Aero, neon y rosa.
 
-MENSAJES / LIBRO DE VISITAS
-Un sitio estático no puede enviar mensajes al propietario ni guardar una base de datos compartida por sí solo. En script.js:
-1. Crea un formulario en Formspree (https://formspree.io/).
-2. Copia el endpoint que te proporciona.
-3. Pégalo en la constante FORM_ENDPOINT.
-Sin ese endpoint, el formulario guarda los mensajes solamente en el almacenamiento local del navegador de quien los escribe; NO te los envía. No publiques el sitio creyendo que ese modo local te notificará.
+COMENTARIOS: IMPORTANTE
+Sin backend, una web estática no puede enviarte comentarios ni compartirlos entre visitantes. Por defecto se guardan únicamente en el navegador de quien los escribe (localStorage). Para recibirlos, crea un formulario en Formspree o Getform y pega su endpoint en la constante FORM_ENDPOINT de script.js. Revisa las opciones de privacidad y spam del proveedor.
 
 CORREO
-En script.js cambia CONTACT_EMAIL = "TU_CORREO_AQUI" por tu dirección. También cambia el enlace mailto de respaldo en index.html si lo deseas.
+En index.html busca TU_CORREO_AQUI en el enlace mailto y reemplázalo por tu dirección cuando quieras publicarla.
 
-FUNCIONES
-- Selector ES/EN.
-- Temas Midnight, Frutiger Aero, Neoncore y Berry Milk.
-- Reloj local que detecta la zona horaria del visitante.
-- Reproductores Spotify incrustados (3 playlists y 7 canciones).
-- Tarot de 22 arcanos mayores con mensajes de reflexión recreativos.
-- Selector zodiacal con textos recreativos (no es una carta astral ni predicción).
-- Sonido opcional generado en el navegador.
-- Animaciones, aparición al hacer scroll, partículas y easter egg de teclado.
-- Diseño responsive y respeto a la preferencia de movimiento reducido del sistema.
+SPOTIFY
+Los enlaces abren tus playlists y canciones en Spotify. La reproducción incrustada puede añadirse más adelante; la disponibilidad depende de Spotify y del navegador.
 
-NOTA
-No se puede garantizar funcionamiento idéntico en todos los navegadores, servicios de terceros o configuraciones de hosting. Los embeds dependen de Spotify; el formulario compartido depende de que configures un proveedor externo.
+PRIVACIDAD
+El sitio no solicita datos personales ni envía mensajes a ningún servidor mientras FORM_ENDPOINT esté vacío. El contador de visitas es local al navegador, no una analítica global.
