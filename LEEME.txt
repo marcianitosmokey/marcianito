@@ -1,34 +1,22 @@
-BUBBLES × SMOKEY — sitio personal responsive
+BUBBLES × SMOKEY — SITIO PERSONAL
+=================================
+Contenido:
+- index.html: estructura y secciones.
+- estilo.css: diseño responsive, temas, animaciones.
+- app.js: idioma, tarot, zodiaco, reloj, efectos y libro de visitas.
+- assets/: recursos con nombres transcritos de la captura.
 
-ARCHIVOS PRINCIPALES
-- index.html: estructura de la página.
-- estilo.css: estilos, temas, animaciones y responsive.
-- app.js: idioma, reloj, tarot, astrología, efectos, sonidos, formulario y configuración.
-- assets/: nombres de recursos transcritos de la captura.
+IMPORTANTE SOBRE LOS RECURSOS:
+La imagen enviada muestra un listado de archivos, pero no contiene los archivos GIF/PNG/JPG originales. Para que el proyecto sea autónomo, se incluyeron GIFs decorativos provisionales con varios de los nombres visibles y tres imágenes de muestra. Sustituye esos recursos por los originales conservando exactamente sus nombres. La captura también corta el nombre del último archivo "archivo_00000000830c81fbaa7bce6ce5cfb7..." y no permite recuperar el nombre completo.
 
-IMPORTANTE SOBRE LAS IMÁGENES
-La captura recibida muestra nombres de archivos, pero no contiene los archivos GIF/JPG/PNG originales. Por eso este ZIP incluye marcadores mínimos válidos con varios de esos nombres para evitar referencias rotas. Sustituye los marcadores por tus imágenes originales conservando exactamente el mismo nombre y extensión. La captura es muy estrecha y algunos nombres hash no se distinguen con certeza; para garantizar coincidencia carácter por carácter, comparte la carpeta original o un listado de nombres copiado como texto.
+COMENTARIOS:
+El libro de visitas guarda mensajes en localStorage del navegador/dispositivo donde se abre la página. No los envía al propietario ni los comparte entre visitantes. Para recibirlos desde cualquier lugar hay que conectar un backend (por ejemplo Firebase/Supabase o Formspree) y configurar sus credenciales.
 
-CONFIGURAR TU CORREO
-Abre app.js y busca:
-  email: "",
-  feedbackEmail: ""
-- email: coloca tu dirección entre comillas para activar el enlace de contacto.
-- feedbackEmail: coloca el correo donde quieres recibir los mensajes del libro de visitas.
-El formulario usa FormSubmit (servicio externo). La primera vez puede requerir confirmar tu dirección desde el correo que te envíe FormSubmit. Sin configurar esto, los mensajes se guardan solo en el navegador de quien los escribe; no te llegan a ti. Para una web pública, evita pedir datos sensibles.
+CORREO:
+En index.html busca:
+href="mailto:YOUR_EMAIL_HERE"
+y reemplaza YOUR_EMAIL_HERE por tu dirección Gmail.
 
-PUBLICAR
-Sube index.html, estilo.css, app.js y la carpeta assets completa a la raíz de tu hosting (Netlify, GitHub Pages, Cloudflare Pages o hosting tradicional). No cambies la estructura de carpetas.
-Spotify se muestra mediante sus reproductores oficiales; la reproducción puede pedir iniciar sesión o abrir Spotify según la configuración del visitante.
-
-FUNCIONES
-- Selector ES/EN para los textos de interfaz.
-- Temas Midnight, Frutiger Aero, Neoncore y Rose dusk.
-- Reloj local del visitante.
-- Tarot recreativo con carta individual y tirada de tres.
-- Signo solar a partir de fecha de nacimiento.
-- Formulario de mensajes con opción anónima.
-- Animaciones al hacer scroll, partículas, microsonidos y easter eggs.
-
-NOTA
-Los resultados de tarot y astrología son de entretenimiento y reflexión, no predicciones ni asesoramiento profesional.
+PUBLICACIÓN:
+Sube el contenido completo de esta carpeta a GitHub Pages, Netlify o cualquier hosting estático. Mantén index.html, estilo.css, app.js y la carpeta assets juntos.
+Los reproductores Spotify requieren conexión a internet y pueden depender de las cookies/región o de la disponibilidad de Spotify.
