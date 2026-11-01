@@ -1,88 +1,271 @@
-/* MARC1ANITO.EXE — script.js */
-(() => {
+/* BUBBLES × SMOKEY — interactive layer
+   Add your contact email below when you are ready. */
 "use strict";
-const $=(s,root=document)=>root.querySelector(s), $$=(s,root=document)=>[...root.querySelectorAll(s)];
-const STORAGE={lang:"marci-lang",theme:"marci-theme",sound:"marci-sound",posts:"marci-posts",guests:"marci-guests"};
-const SUPABASE_URL=""; // Pega aquí la URL de tu proyecto Supabase
-const SUPABASE_ANON_KEY=""; // Pega aquí la clave anon/public de Supabase
-const OWNER_EMAIL="canelitarosaita234@gmail.com"; // Correo autorizado para publicar en modo conectado
-let db=null;
-if(window.supabase?.createClient && SUPABASE_URL && SUPABASE_ANON_KEY){db=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);}
-let lang=localStorage.getItem(STORAGE.lang)||"es",theme=localStorage.getItem(STORAGE.theme)||"void",sound=localStorage.getItem(STORAGE.sound)==="on";
-const dict={
-es:{signal:"SEÑAL DETECTADA",heroSub:"un pequeño rincón de internet, transmitiendo desde quién sabe dónde.",enter:"ENTRAR AL SISTEMA ↘",random:"SORPRÉNDEME ✦",navAbout:"SOBRE MÍ",navPortals:"PORTALES",navMusic:"MÚSICA",navTarot:"TAROT",navZodiac:"ZODIACO",navGuest:"VISITAS",aboutTitle:"¿QUIÉN ANDA AHÍ?",intro:"No soy exactamente de aquí.",aboutText:"A veces Marcianito, a veces Bubbles, a veces Smokey. Una criatura de internet que colecciona música, ideas repentinas, universos ficticios, tarot, bots y cosas que probablemente no necesitaban existir. Todavía estoy descubriendo qué hacer con todo esto. Mientras tanto, hice una página.",fact1:"estado: en proceso",fact2:"ubicación: señal desconocida",fact3:"intereses: demasiados",aboutNote:"No hay una historia muy ordenada detrás. Y está bien.",portalsTitle:"PORTALES A OTROS LADOS",portalsLead:"Si llegaste hasta aquí, también puedes encontrarme por estos rincones.",personalChannel:"CANAL PERSONAL",randomThings:"cosas que se me ocurren",critique:"críticas, chismes y opiniones",nieceChannel:"animaciones y dibujos",botsTitle:"MIS CRIATURAS DIGITALES",botsLead:"Bots, personajes y experimentos conversacionales. Cada portal lleva a uno de mis perfiles.",musicTitle:"FRECUENCIAS FAVORITAS",musicLead:"Una pequeña muestra de lo que suena dentro de esta cabeza. Los reproductores son de Spotify.",tracksTitle:"EN ROTACIÓN",tarotTitle:"ORÁCULO DE BOLSILLO",tarotLead:"Piensa en una pregunta, respira un momento y deja que salga una carta. Es una lectura recreativa y simbólica, no una predicción segura.",drawCard:"SACAR UNA CARTA ✦",waitingCard:"Tu carta aparecerá aquí.",zodiacTitle:"ARCHIVO ZODIACAL",zodiacQuestion:"¿Qué signo quieres consultar?",chooseSign:"ELIGE UN SIGNO",readSign:"CONSULTAR ✧",zodiacHint:"Selecciona un signo para recibir una lectura general.",zodiacNote:"Astrología recreativa: úsala como reflexión, no como regla para tomar decisiones.",archiveTitle:"ARCHIVO DE SEÑALES",archiveLead:"Fragmentos encontrados en alguna carpeta perdida. Toca una imagen para verla más grande.",diaryTitle:"MENSAJES DESDE MI CABEZA",diaryIntro:"Un espacio para pensamientos sueltos, hallazgos, dibujos, recomendaciones o cualquier cosa que se me ocurra.",diaryLimit:"Modo local: lo que publiques aquí se guarda en este navegador. Para que todos lo vean, conecta Supabase siguiendo el archivo LEEME.",postTitleLabel:"TÍTULO",postBodyLabel:"MENSAJE",publish:"GUARDAR PUBLICACIÓN",guestTitle:"DEJA UNA SEÑAL",guestLead:"¿Qué te pareció este rincón? Puedes dejar un saludo, una opinión o una señal de que pasaste por aquí.",signalsLeft:"SEÑALES RECIBIDAS EN ESTE DISPOSITIVO",nameLabel:"NOMBRE / ALIAS (OPCIONAL)",messageLabel:"TU MENSAJE",privacyNote:"No pongas datos personales. Puedes usar un alias.",send:"ENVIAR ↗",guestLocal:"Modo de prueba: el mensaje se guarda solo en este navegador hasta conectar la base de datos.",joinTitle:"¿TE QUEDAS POR AQUÍ?",joinText:"Guarda este rincón o sígueme por alguno de los portales. No hay spam ni club secreto (todavía).",subscribe:"UNIRME ✦",subscribeNote:"La suscripción real requiere conectar una base de datos. Por ahora puedes abrir tu correo para enviar una solicitud.",adminLogin:"INICIAR SESIÓN PARA PUBLICAR",backTop:"VOLVER ARRIBA ↑",anon:"Visitante anónimo",emptyPosts:"Todavía no hay publicaciones. Este espacio está esperando algo.",emptyGuests:"Todavía no hay señales. Puedes dejar la primera.",postSaved:"Publicación guardada en este dispositivo.",guestSaved:"Tu señal quedó guardada en este dispositivo.",emailOpen:"Abriendo tu correo para preparar la solicitud.",needSupabase:"Para compartirlo con todos, configura Supabase (instrucciones en LEEME).",chooseFirst:"Primero elige un signo.",cardDrawn:"Carta revelada.",copied:"Enlace copiado.",hello:"¡Señal recibida!"},
-en:{signal:"SIGNAL DETECTED",heroSub:"a tiny corner of the internet, broadcasting from who-knows-where.",enter:"ENTER THE SYSTEM ↘",random:"SURPRISE ME ✦",navAbout:"ABOUT",navPortals:"PORTALS",navMusic:"MUSIC",navTarot:"TAROT",navZodiac:"ZODIAC",navGuest:"GUESTBOOK",aboutTitle:"WHO'S THERE?",intro:"I'm not exactly from around here.",aboutText:"Sometimes Marcianito, sometimes Bubbles, sometimes Smokey. An internet creature collecting music, sudden ideas, fictional universes, tarot, bots and things that probably didn't need to exist. Still figuring out what to do with all of it. In the meantime, I made a website.",fact1:"status: in progress",fact2:"location: unknown signal",fact3:"interests: too many",aboutNote:"There isn't a very organized story behind this. And that's fine.",portalsTitle:"PORTALS TO ELSEWHERE",portalsLead:"If you made it here, you can also find me in these corners.",personalChannel:"PERSONAL CHANNEL",randomThings:"random things I think of",critique:"criticism, gossip & opinions",nieceChannel:"animations & drawings",botsTitle:"MY DIGITAL CREATURES",botsLead:"Bots, characters and conversational experiments. Each portal leads to one of my profiles.",musicTitle:"FREQUENCIES I LIKE",musicLead:"A small sample of what's playing inside this head. Players are powered by Spotify.",tracksTitle:"ON REPEAT",tarotTitle:"POCKET ORACLE",tarotLead:"Think of a question, take a breath and draw a card. This is a playful symbolic reading, not a certain prediction.",drawCard:"DRAW A CARD ✦",waitingCard:"Your card will appear here.",zodiacTitle:"ZODIAC DATABASE",zodiacQuestion:"Which sign would you like to explore?",chooseSign:"CHOOSE A SIGN",readSign:"READ ✧",zodiacHint:"Choose a sign to get a general reading.",zodiacNote:"For fun and reflection: don't use astrology as a rule for major decisions.",archiveTitle:"SIGNAL ARCHIVE",archiveLead:"Fragments found in a lost folder. Tap an image to view it larger.",diaryTitle:"MESSAGES FROM MY HEAD",diaryIntro:"A place for random thoughts, finds, drawings, recommendations or whatever comes to mind.",diaryLimit:"Local mode: posts are saved in this browser. To share them with everyone, connect Supabase using the LEEME file.",postTitleLabel:"TITLE",postBodyLabel:"MESSAGE",publish:"SAVE POST",guestTitle:"LEAVE A SIGNAL",guestLead:"What did you think of this corner? Leave a hello, an opinion or proof that you passed by.",signalsLeft:"SIGNALS RECEIVED ON THIS DEVICE",nameLabel:"NAME / ALIAS (OPTIONAL)",messageLabel:"YOUR MESSAGE",privacyNote:"Don't share personal information. An alias is fine.",send:"SEND ↗",guestLocal:"Demo mode: your message is saved only in this browser until a database is connected.",joinTitle:"STICK AROUND?",joinText:"Bookmark this corner or follow one of the portals. No spam and no secret club (yet).",subscribe:"JOIN ✦",subscribeNote:"Real subscriptions need a database. For now, your email app can open a request draft.",adminLogin:"SIGN IN TO PUBLISH",backTop:"BACK TO TOP ↑",anon:"Anonymous visitor",emptyPosts:"No posts yet. This space is waiting for something.",emptyGuests:"No signals yet. You can leave the first one.",postSaved:"Post saved on this device.",guestSaved:"Your signal was saved on this device.",emailOpen:"Opening your email app to prepare a request.",needSupabase:"To share it with everyone, configure Supabase (see LEEME).",chooseFirst:"Choose a sign first.",cardDrawn:"Card revealed.",copied:"Link copied.",hello:"Signal received!"}
+
+const CONTACT_EMAIL = ""; // Example: "hello@example.com" — leave empty until ready.
+const STORAGE_KEY = "bubblesSmokey_guestbook_v1";
+const THEME_KEY = "bubblesSmokey_theme";
+const LANG_KEY = "bubblesSmokey_language";
+
+const translations = {
+es:{
+topline:"TRANSMISIÓN INTERESTELAR · EST. EN ALGÚN LUGAR",status:"EN LÍNEA / MÁS O MENOS",navAbout:"sobre mí",navMusic:"música",navUniverse:"universo",navTarot:"tarot",navGuest:"mensajes",heroEyebrow:"BIENVENIDX A MI PEQUEÑO CAOS",heroSmall:"somewhere between",heroText:"Un rincón de internet hecho de música, ideas repentinas, criaturas digitales y cosas que probablemente no necesitaban existir… pero aquí están.",explore:"explorar el universo",listen:"poner música ♫",heroFoot:"NO HAY MAPA. ESA ES LA IDEA.",floatOne:"caos suave",scroll:"DESLIZA PARA DESCUBRIR",aboutEyebrow:"01 / QUIÉN TRANSMITE",aboutTitle:"Una persona, <em>varias frecuencias.</em>",visualCaption:"una criatura de internet",aboutLabel:"HOLA, EXTRAÑX.",aboutHeadline:"No soy una marca. Soy un montón de pestañas abiertas.",aboutP1:"Puedes encontrarme bajo distintos nombres: Bubbles, Smokey o Marcianito. No son personajes separados; son distintas ventanitas del mismo pequeño desastre creativo.",aboutP2:"Me gustan los rincones raros de internet, crear cosas, descubrir música, inventar historias y coleccionar ideas que aparecen a las tres de la mañana. Todavía estoy descubriendo qué quiero hacer con todo eso. Por ahora, este espacio es el experimento.",musicEyebrow:"02 / FRECUENCIAS FAVORITAS",musicTitle:"Dale play al <em>desorden.</em>",musicIntro:"Una pequeña selección de playlists y canciones. Los reproductores son de Spotify: inicia sesión allí si te lo pide.",playlistOne:"frecuencia burbuja",playlistOneDesc:"Para flotar sin pedir permiso.",playlistTwo:"smokey after hours",playlistTwoDesc:"Sonidos para perder la noción del tiempo.",openSpotify:"abrir en Spotify ↗",tracksTitle:"Pistas sueltas en órbita",tracksSub:"un poco de todo, cero explicaciones",linksEyebrow:"03 / PORTALES EXTERNOS",linksTitle:"Mis otras <em>dimensiones.</em>",linksIntro:"Cada portal lleva a una parte distinta del universo. Entra bajo tu propio riesgo (de encontrar algo absurdo).",xDesc:"pensamientos en tiempo real",igDesc:"fragmentos visuales",ttDesc:"videos y ocurrencias",channelOne:"el cajón de ideas",channelOneDesc:"cosas sin sentido, pero mías",channelTwoDesc:"críticas, chismes y comentarios",channelThreeDesc:"animaciones y dibujos",botsTitle:"Laboratorio de bots",botsSub:"personajes, historias y experimentos",galleryEyebrow:"04 / ARCHIVO VISUAL",galleryTitle:"Pequeñas cosas <em>guardadas.</em>",galleryIntro:"Un museo personal de GIFs, imágenes y detalles encontrados. Toca una pieza para verla más grande.",mysticEyebrow:"05 / EL RINCÓN MISTERIOSO",mysticTitle:"Un poco de <em>magia simbólica.</em>",tarotLabel:"TAROT / CARTA ALEATORIA",tarotTitle:"¿Qué energía te acompaña?",tarotIntro:"Piensa en una pregunta o simplemente deja que el azar elija una carta. Es una lectura simbólica para reflexionar, no una predicción garantizada.",drawCard:"revelar mi carta ✦",tarotHint:"Tu carta aparecerá aquí.",zodiacLabel:"ASTROLOGÍA / TU SIGNO",zodiacTitle:"¿Bajo qué constelación naciste?",zodiacIntro:"Elige tu signo para leer una pequeña descripción astrológica recreativa.",chooseSign:"ELIGE TU SIGNO",selectPlaceholder:"Selecciona uno…",zodiacHint:"Tu constelación te espera.",astroDisclaimer:"Astrología y tarot aquí son herramientas culturales y recreativas; no sustituyen decisiones informadas ni asesoramiento profesional.",guestEyebrow:"06 / SEÑALES DE VIDA",guestTitle:"Deja una <em>señal.</em>",guestHeadline:"El buzón intergaláctico.",guestText:"Puedes dejar una opinión, un saludo o una idea. Usa un apodo o publica como anónimo. Sé amable: hay personas reales al otro lado de la pantalla.",privacyNote:"Privacidad: esta demo guarda mensajes solo en este navegador. No se publican en internet ni se comparten con otras personas.",nameLabel:"TU APODO (OPCIONAL)",anonymousLabel:"Publicar como anónimo",messageLabel:"TU MENSAJE",sendMessage:"enviar señal ↗",messagesTitle:"Mensajes recibidos en este dispositivo",clearMessages:"borrar mis mensajes",emptyMessages:"Todavía no hay señales. Puedes inaugurar el buzón.",contactEyebrow:"07 / MENSAJES PARA LA TIERRA",contactTitle:"¿Tienes una idea <em>en mente?</em>",contactText:"Para pedidos, propuestas o colaboraciones, pronto habrá una dirección de contacto aquí.",emailPlaceholder:"correo próximamente ✉",emailHint:"El correo se agrega en script.js. Busca CONTACT_EMAIL.",footerText:"hecho de curiosidad, pestañas abiertas y un poquito de caos.",footerMade:"TRANSMISIÓN FINALIZADA… ¿O NO?",backTop:"volver arriba ↑",secretTitle:"Encontraste el rincón secreto.",secretText:"No todo lo que brilla es una estrella. A veces solo es una pestaña que olvidaste cerrar.",sendOk:"Tu señal quedó guardada en este dispositivo.",sendError:"Escribe un mensaje antes de enviarlo.",clearConfirm:"¿Borrar todos los mensajes guardados en este navegador?",cleared:"Mensajes locales eliminados.",themeChanged:"Tema visual actualizado.",languageChanged:"Idioma actualizado.",anonymous:"Anónimo",contactToast:"El correo todavía no está configurado."
+},
+en:{
+topline:"INTERSTELLAR TRANSMISSION · EST. SOMEWHERE",status:"ONLINE / MORE OR LESS",navAbout:"about",navMusic:"music",navUniverse:"universe",navTarot:"tarot",navGuest:"guestbook",heroEyebrow:"WELCOME TO MY LITTLE CHAOS",heroSmall:"somewhere between",heroText:"A little corner of the internet made of music, sudden ideas, digital creatures and things that probably didn't need to exist… but here they are.",explore:"explore the universe",listen:"play some music ♫",heroFoot:"NO MAP. THAT'S THE POINT.",floatOne:"soft chaos",scroll:"SCROLL TO DISCOVER",aboutEyebrow:"01 / WHO'S TRANSMITTING",aboutTitle:"One person, <em>many frequencies.</em>",visualCaption:"an internet creature",aboutLabel:"HELLO, STRANGER.",aboutHeadline:"I'm not a brand. I'm a bunch of open tabs.",aboutP1:"You might find me under different names: Bubbles, Smokey or Marcianito. They're not separate characters; just different little windows into the same creative mess.",aboutP2:"I like strange corners of the internet, making things, discovering music, inventing stories and collecting ideas that show up at 3 a.m. I'm still figuring out what I want to do with all of it. For now, this space is the experiment.",musicEyebrow:"02 / FAVORITE FREQUENCIES",musicTitle:"Press play on the <em>mess.</em>",musicIntro:"A small selection of playlists and tracks. These are Spotify players; sign in there if asked.",playlistOne:"bubble frequency",playlistOneDesc:"For floating without permission.",playlistTwo:"smokey after hours",playlistTwoDesc:"Sounds for losing track of time.",openSpotify:"open in Spotify ↗",tracksTitle:"Loose tracks in orbit",tracksSub:"a little bit of everything, no explanations",linksEyebrow:"03 / EXTERNAL PORTALS",linksTitle:"My other <em>dimensions.</em>",linksIntro:"Each portal leads to a different part of the universe. Enter at your own risk (of finding something absurd).",xDesc:"real-time thoughts",igDesc:"visual fragments",ttDesc:"videos and random bits",channelOne:"the idea drawer",channelOneDesc:"nonsense, but mine",channelTwoDesc:"takes, gossip and commentary",channelThreeDesc:"animations and drawings",botsTitle:"Bot laboratory",botsSub:"characters, stories and experiments",galleryEyebrow:"04 / VISUAL ARCHIVE",galleryTitle:"Little things <em>saved.</em>",galleryIntro:"A personal museum of GIFs, images and found details. Tap a piece to see it larger.",mysticEyebrow:"05 / THE MYSTERY CORNER",mysticTitle:"A little <em>symbolic magic.</em>",tarotLabel:"TAROT / RANDOM CARD",tarotTitle:"What energy is accompanying you?",tarotIntro:"Think of a question or simply let chance choose a card. This is a symbolic reading for reflection, not a guaranteed prediction.",drawCard:"reveal my card ✦",tarotHint:"Your card will appear here.",zodiacLabel:"ASTROLOGY / YOUR SIGN",zodiacTitle:"Under which constellation were you born?",zodiacIntro:"Choose your sign for a short, recreational astrological description.",chooseSign:"CHOOSE YOUR SIGN",selectPlaceholder:"Choose one…",zodiacHint:"Your constellation is waiting.",astroDisclaimer:"Tarot and astrology here are cultural and recreational tools; they don't replace informed decisions or professional advice.",guestEyebrow:"06 / SIGNS OF LIFE",guestTitle:"Leave a <em>signal.</em>",guestHeadline:"The intergalactic mailbox.",guestText:"Leave an opinion, a hello or an idea. Use a nickname or post anonymously. Be kind: there are real people on the other side of the screen.",privacyNote:"Privacy: this demo stores messages only in this browser. They are not published online or shared with anyone else.",nameLabel:"YOUR NICKNAME (OPTIONAL)",anonymousLabel:"Post anonymously",messageLabel:"YOUR MESSAGE",sendMessage:"send signal ↗",messagesTitle:"Messages saved on this device",clearMessages:"clear my messages",emptyMessages:"No signals yet. You can open the mailbox.",contactEyebrow:"07 / MESSAGES TO EARTH",contactTitle:"Got an idea <em>in mind?</em>",contactText:"For requests, proposals or collaborations, a contact address will be added here soon.",emailPlaceholder:"email coming soon ✉",emailHint:"Add your email in script.js. Look for CONTACT_EMAIL.",footerText:"made of curiosity, open tabs and a little chaos.",footerMade:"TRANSMISSION ENDED… OR DID IT?",backTop:"back to top ↑",secretTitle:"You found the secret corner.",secretText:"Not everything that shines is a star. Sometimes it's just a tab you forgot to close.",sendOk:"Your signal has been saved on this device.",sendError:"Write a message before sending it.",clearConfirm:"Delete all messages saved in this browser?",cleared:"Local messages deleted.",themeChanged:"Visual theme updated.",languageChanged:"Language updated.",anonymous:"Anonymous",contactToast:"The email address hasn't been configured yet."
+}
 };
-function t(key){return (dict[lang]&&dict[lang][key])||dict.es[key]||key}
-function applyLanguage(){document.documentElement.lang=lang;$$("[data-i18n]").forEach(el=>{const k=el.dataset.i18n;if(t(k))el.textContent=t(k)});$("#langToggle").textContent=lang==="es"?"EN":"ES";$("#guestModeNote").textContent=t("guestLocal");renderPosts();renderGuests()}
-function applyTheme(){document.body.dataset.theme=theme;localStorage.setItem(STORAGE.theme,theme)}
-function toast(message){const el=$("#toast");el.textContent=message;el.classList.add("show");clearTimeout(toast.timer);toast.timer=setTimeout(()=>el.classList.remove("show"),2600)}
-function beep(freq=520,duration=.055){if(!sound)return;try{const ctx=new (window.AudioContext||window.webkitAudioContext)(),o=ctx.createOscillator(),g=ctx.createGain();o.type="sine";o.frequency.value=freq;g.gain.setValueAtTime(.035,ctx.currentTime);g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+duration);o.connect(g);g.connect(ctx.destination);o.start();o.stop(ctx.currentTime+duration);o.onended=()=>ctx.close()}catch(e){}}
-function safeText(v){return String(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
-function getLocal(key){try{return JSON.parse(localStorage.getItem(key)||"[]")}catch(e){return []}}
-function setLocal(key,value){localStorage.setItem(key,JSON.stringify(value))}
-function updateClock(){const d=new Date();$("#clock").textContent=d.toLocaleTimeString(lang==="es"?"es-MX":"en-US",{hour12:false});$("#visitorDate").textContent=d.toLocaleDateString(lang==="es"?"es-MX":"en-US",{year:"numeric",month:"short",day:"numeric"})}
-const cards=[
-["El Loco","The Fool","Un comienzo inesperado, curiosidad y libertad. Da el primer paso sin exigir tener todo resuelto.","A fresh beginning, curiosity and freedom. Take the first step without needing every answer."],
-["El Mago","The Magician","Tienes herramientas que quizá no estás usando. Convierte una idea en una acción pequeña y concreta.","You have tools you may not be using. Turn an idea into one small, concrete action."],
-["La Sacerdotisa","The High Priestess","Escucha tu intuición, pero deja espacio para comprobar los hechos. No todo necesita una respuesta inmediata.","Listen to your intuition, while leaving room to check the facts. Not everything needs an instant answer."],
-["La Emperatriz","The Empress","Cuidado, creatividad y crecimiento. Algo puede avanzar si le das tiempo y atención.","Care, creativity and growth. Something can develop when you give it time and attention."],
-["El Emperador","The Emperor","Ordena tus prioridades y establece límites claros. La estructura puede darte más libertad.","Organize your priorities and set clear boundaries. Structure can give you more freedom."],
-["El Hierofante","The Hierophant","Aprender de otras personas puede servir, siempre que no abandones tu propio criterio.","Learning from others can help, as long as you keep your own judgment."],
-["Los Enamorados","The Lovers","Una elección importante pide coherencia con tus valores, no solamente complacer a los demás.","An important choice asks you to align with your values, not just please others."],
-["El Carro","The Chariot","Avanza con dirección. No necesitas correr: necesitas saber qué paso sí depende de ti.","Move with direction. You don't need to rush; focus on the next step within your control."],
-["La Fuerza","Strength","La paciencia y la firmeza también son fuerza. Trata tus emociones con respeto, no como enemigas.","Patience and steadiness are forms of strength. Treat your emotions with respect, not as enemies."],
-["El Ermitaño","The Hermit","Un poco de espacio puede ayudarte a ordenar pensamientos. Aislarte no tiene que ser la única respuesta.","Some quiet space may help you sort your thoughts. Isolation doesn't have to be the only answer."],
-["La Rueda de la Fortuna","Wheel of Fortune","Las circunstancias cambian. Observa qué puedes adaptar en lugar de intentar controlarlo todo.","Circumstances change. Notice what you can adapt instead of trying to control everything."],
-["La Justicia","Justice","Busca equilibrio y mira la situación con honestidad. Tus decisiones tienen contexto y consecuencias.","Seek balance and look at the situation honestly. Your choices have context and consequences."],
-["El Colgado","The Hanged Man","Cambiar de perspectiva puede revelar una opción que no habías considerado.","A shift in perspective may reveal an option you hadn't considered."],
-["La Muerte","Death","Cierre simbólico y transformación: algo puede terminar para dejar espacio a otra etapa.","Symbolic closure and transformation: something may end to make room for another chapter."],
-["La Templanza","Temperance","Ve paso a paso. Mezclar paciencia con acción suele funcionar mejor que irte a los extremos.","Take it step by step. Mixing patience with action often works better than extremes."],
-["El Diablo","The Devil","Revisa qué hábitos o expectativas te hacen sentir atrapada. Reconocerlos abre posibilidades.","Notice which habits or expectations make you feel stuck. Recognizing them opens possibilities."],
-["La Torre","The Tower","Una idea puede necesitar revisión. Reconstruir con información nueva también es avanzar.","An idea may need rethinking. Rebuilding with new information is also progress."],
-["La Estrella","The Star","Recupera la esperanza de forma práctica: busca una cosa pequeña que te haga bien hoy.","Restore hope in a practical way: find one small thing that helps you today."],
-["La Luna","The Moon","No confundas una preocupación con un hecho. Descansa, pregunta y reúne más información.","Don't mistake a worry for a fact. Rest, ask questions and gather more information."],
-["El Sol","The Sun","Claridad, energía y disfrute. Reconoce lo que sí está saliendo bien, aunque sea pequeño.","Clarity, energy and enjoyment. Notice what's going well, even if it's something small."],
-["El Juicio","Judgement","Es buen momento para revisar una decisión y quedarte con lo aprendido, sin castigarte por el pasado.","A good moment to review a choice and keep what you learned without punishing yourself for the past."],
-["El Mundo","The World","Un ciclo se integra. Celebra lo que terminaste y decide qué quieres explorar después.","A cycle comes together. Celebrate what you completed and choose what to explore next."]
+
+const tarotDeck = [
+{es:["El Loco","Comienzos, curiosidad y libertad","☼","0","Da espacio a lo nuevo. No necesitas tener cada paso resuelto para comenzar."],en:["The Fool","Beginnings, curiosity and freedom","☼","0","Make room for something new. You don't need every step figured out to begin."]},
+{es:["El Mago","Iniciativa y recursos","✧","I","Tienes herramientas a tu alcance. La invitación es reconocerlas y usarlas con intención."],en:["The Magician","Initiative and resources","✧","I","You have tools within reach. The invitation is to recognize them and use them with intention."]},
+{es:["La Sacerdotisa","Intuición y observación","☾","II","Haz una pausa y escucha lo que todavía no has puesto en palabras."],en:["The High Priestess","Intuition and observation","☾","II","Pause and listen to what you haven't put into words yet."]},
+{es:["La Emperatriz","Creatividad y cuidado","❀","III","Nutre aquello que quieres ver crecer, sin olvidar darte el mismo cuidado."],en:["The Empress","Creativity and care","❀","III","Nurture what you want to see grow, without forgetting to offer yourself the same care."]},
+{es:["El Emperador","Estructura y límites","♜","IV","Un poco de orden puede darte más libertad. Define qué merece tu energía."],en:["The Emperor","Structure and boundaries","♜","IV","A little structure can give you more freedom. Decide what deserves your energy."]},
+{es:["El Hierofante","Aprendizaje y tradición","⌘","V","Explora lo que otras personas pueden enseñarte, pero conserva tu criterio."],en:["The Hierophant","Learning and tradition","⌘","V","Explore what others can teach you, while keeping your own judgment."]},
+{es:["Los Enamorados","Valores y elecciones","♡","VI","Vuelve a tus valores. Una elección coherente empieza por saber qué importa."],en:["The Lovers","Values and choices","♡","VI","Return to your values. A grounded choice begins with knowing what matters."]},
+{es:["El Carro","Dirección y determinación","➶","VII","Elige una dirección posible y avanza con atención, no por pura inercia."],en:["The Chariot","Direction and determination","➶","VII","Choose a possible direction and move with awareness, not sheer momentum."]},
+{es:["La Fuerza","Paciencia y valentía","♌","VIII","La firmeza también puede ser tranquila. No confundas fuerza con dureza."],en:["Strength","Patience and courage","♌","VIII","Steadiness can be gentle, too. Don't mistake strength for harshness."]},
+{es:["El Ermitaño","Silencio y perspectiva","灯","IX","Un momento a solas puede ayudarte a distinguir tu propia voz del ruido."],en:["The Hermit","Solitude and perspective","灯","IX","A little time alone may help you tell your own voice from the noise."]},
+{es:["La Rueda","Cambio y ciclos","◉","X","Los ciclos cambian. Observa qué termina, qué comienza y qué puedes aprender."],en:["Wheel of Fortune","Change and cycles","◉","X","Cycles shift. Notice what ends, what begins and what you can learn."]},
+{es:["La Justicia","Equilibrio y responsabilidad","⚖","XI","Mira la situación con honestidad. Considera hechos, consecuencias y equilibrio."],en:["Justice","Balance and responsibility","⚖","XI","Look at the situation honestly. Consider facts, consequences and balance."]},
+{es:["El Colgado","Pausa y nueva mirada","⌁","XII","Cambiar de perspectiva no es quedarse atrás. Date permiso de observar."],en:["The Hanged One","Pause and a new perspective","⌁","XII","A change of perspective isn't falling behind. Give yourself room to observe."]},
+{es:["La Muerte","Transformación y cierre","✿","XIII","Algo puede necesitar una conclusión para dejar espacio a otra etapa."],en:["Death","Transformation and closure","✿","XIII","Something may need a conclusion to make room for another chapter."]},
+{es:["La Templanza","Medida y armonía","⚗","XIV","Busca una mezcla sostenible. No todo tiene que resolverse de golpe."],en:["Temperance","Moderation and harmony","⚗","XIV","Look for a sustainable balance. Not everything has to be solved at once."]},
+{es:["El Diablo","Apegos y conciencia","⛓","XV","Observa qué hábitos o ideas te limitan. Reconocerlos abre posibilidades."],en:["The Devil","Attachments and awareness","⛓","XV","Notice which habits or ideas limit you. Recognizing them opens possibilities."]},
+{es:["La Torre","Revisión y cambio","⚡","XVI","Cuando una estructura ya no sirve, revisar sus cimientos puede ser útil."],en:["The Tower","Reassessment and change","⚡","XVI","When a structure no longer works, examining its foundations can help."]},
+{es:["La Estrella","Esperanza y renovación","☆","XVII","Busca pequeñas fuentes de calma y confianza. La recuperación también es gradual."],en:["The Star","Hope and renewal","☆","XVII","Look for small sources of calm and trust. Renewal can be gradual."]},
+{es:["La Luna","Imaginación e incertidumbre","☽","XVIII","No todas las dudas exigen una respuesta inmediata. Contrasta intuiciones con hechos."],en:["The Moon","Imagination and uncertainty","☽","XVIII","Not every uncertainty needs an immediate answer. Balance intuition with facts."]},
+{es:["El Sol","Claridad y vitalidad","☀","XIX","Reconoce lo que sí está funcionando y permite que lo sencillo también cuente."],en:["The Sun","Clarity and vitality","☀","XIX","Notice what is working and let simple things count, too."]},
+{es:["El Juicio","Reflexión y despertar","♧","XX","Revisa lo aprendido sin castigarte por el pasado. Puedes responder de otra manera."],en:["Judgement","Reflection and awakening","♧","XX","Review what you've learned without punishing yourself for the past. You can respond differently."]},
+{es:["El Mundo","Integración y culminación","◎","XXI","Reconoce el camino recorrido. Una etapa puede completarse y abrir otra."],en:["The World","Integration and completion","◎","XXI","Acknowledge the path you've travelled. One chapter can close and make room for another."]}
 ];
-$("#drawCard").addEventListener("click",()=>{const c=cards[Math.floor(Math.random()*cards.length)],title=lang==="es"?c[0]:c[1],meaning=lang==="es"?c[2]:c[3];$("#tarotCard").classList.remove("flipped");setTimeout(()=>{$("#tarotCard").classList.add("flipped");$("#tarotCard").innerHTML=`<div class="tarot-card-back"><span>✧</span><b>${safeText(title)}</b><small>MAJOR ARCANA</small><span>☾</span></div>`;$("#tarotResult").innerHTML=`<strong>${safeText(title)}</strong>${safeText(meaning)}`;$("#oracleStatus").textContent=lang==="es"?"CARD FOUND":"CARD FOUND";toast(t("cardDrawn"));beep(740,.12)},120);});
-const signs={
-aries:["♈","Aries","21 mar – 19 abr","Tu impulso puede abrir caminos, pero no todo necesita resolverse hoy. Elige una prioridad y dale dirección.","Your drive can open doors, but not everything needs solving today. Choose one priority and give it direction."],
-taurus:["♉","Tauro","20 abr – 20 may","Busca estabilidad sin quedarte inmóvil. Un cambio pequeño también puede sentirse seguro.","Seek stability without standing still. A small change can still feel safe."],
-gemini:["♊","Géminis","21 may – 20 jun","Tu curiosidad necesita espacio. Anota las ideas que te entusiasman y vuelve a la que más importa.","Your curiosity needs room. Write down the ideas that excite you and return to the one that matters most."],
-cancer:["♋","Cáncer","21 jun – 22 jul","Cuida tus límites y no asumas que tienes que resolver las emociones de todo el mundo.","Protect your boundaries; you don't have to solve everyone's feelings."],
-leo:["♌","Leo","23 jul – 22 ago","Comparte lo que haces sin esperar que todo salga perfecto. Tu creatividad merece un lugar.","Share what you make without waiting for perfection. Your creativity deserves space."],
-virgo:["♍","Virgo","23 ago – 22 sep","Organizarte puede ayudar, pero deja margen para lo inesperado. No todo tiene que quedar impecable.","Organization can help, but leave room for the unexpected. Not everything has to be flawless."],
-libra:["♎","Libra","23 sep – 22 oct","Busca equilibrio sin dejar tus necesidades al final de la lista. Tu opinión también cuenta.","Seek balance without putting your needs last. Your opinion matters too."],
-scorpio:["♏","Escorpio","23 oct – 21 nov","Tu intensidad puede convertirse en enfoque. Comprueba lo que sospechas antes de darlo por hecho.","Your intensity can become focus. Check what you suspect before treating it as fact."],
-sagittarius:["♐","Sagitario","22 nov – 21 dic","Explora algo nuevo, aunque sea en pequeño. La aventura también puede empezar desde tu escritorio.","Explore something new, even in a small way. Adventure can start at your desk."],
-capricorn:["♑","Capricornio","22 dic – 19 ene","La constancia importa más que hacerlo todo de golpe. Reconoce el progreso que ya existe.","Consistency matters more than doing everything at once. Notice the progress already made."],
-aquarius:["♒","Acuario","20 ene – 18 feb","Una idea diferente puede ser valiosa. Busca a alguien con quien compartirla y ponerla a prueba.","An unusual idea can be valuable. Find someone to share it with and test it."],
-pisces:["♓","Piscis","19 feb – 20 mar","Dale espacio a tu imaginación, pero mantén un pie en lo práctico. Ambas cosas pueden convivir.","Give your imagination room, while keeping one foot in the practical world. Both can coexist."]
+
+const zodiac = {
+aries:{symbol:"♈",es:["Aries","Fuego · iniciativa","Directo, dinámico y orientado a comenzar. Su reto simbólico es combinar impulso con paciencia."],en:["Aries","Fire · initiative","Direct, energetic and drawn to beginnings. Its symbolic challenge is balancing momentum with patience."]},
+taurus:{symbol:"♉",es:["Tauro","Tierra · constancia","Busca estabilidad, placer sensorial y resultados concretos. Su reto simbólico es hacer espacio para el cambio."],en:["Taurus","Earth · steadiness","Values stability, sensory pleasure and tangible results. Its symbolic challenge is making room for change."]},
+gemini:{symbol:"♊",es:["Géminis","Aire · curiosidad","Versátil, comunicativo y curioso. Su reto simbólico es profundizar sin dispersar toda su atención."],en:["Gemini","Air · curiosity","Versatile, communicative and curious. Its symbolic challenge is going deeper without scattering attention."]},
+cancer:{symbol:"♋",es:["Cáncer","Agua · sensibilidad","Atento a los vínculos y a los matices emocionales. Su reto simbólico es cuidar sin cargar con todo."],en:["Cancer","Water · sensitivity","Attuned to bonds and emotional nuance. Its symbolic challenge is caring without carrying everything."]},
+leo:{symbol:"♌",es:["Leo","Fuego · expresión","Creativo, cálido y expresivo. Su reto simbólico es compartir su luz sin depender de la aprobación."],en:["Leo","Fire · expression","Creative, warm and expressive. Its symbolic challenge is sharing its light without depending on approval."]},
+virgo:{symbol:"♍",es:["Virgo","Tierra · observación","Analítico, atento al detalle y práctico. Su reto simbólico es aceptar que lo suficientemente bueno también vale."],en:["Virgo","Earth · observation","Analytical, detail-aware and practical. Its symbolic challenge is accepting that good enough can be enough."]},
+libra:{symbol:"♎",es:["Libra","Aire · equilibrio","Busca armonía, diálogo y perspectiva. Su reto simbólico es decidir sin esperar condiciones perfectas."],en:["Libra","Air · balance","Seeks harmony, dialogue and perspective. Its symbolic challenge is deciding without waiting for perfect conditions."]},
+scorpio:{symbol:"♏",es:["Escorpio","Agua · profundidad","Intenso, observador y reservado. Su reto simbólico es confiar sin convertir cada duda en una prueba."],en:["Scorpio","Water · depth","Intense, observant and private. Its symbolic challenge is trusting without turning every doubt into a test."]},
+sagittarius:{symbol:"♐",es:["Sagitario","Fuego · exploración","Entusiasta, explorador y amante de las ideas amplias. Su reto simbólico es sostener lo que empieza."],en:["Sagittarius","Fire · exploration","Enthusiastic, exploratory and drawn to big ideas. Its symbolic challenge is following through on what it starts."]},
+capricorn:{symbol:"♑",es:["Capricornio","Tierra · propósito","Paciente, estratégico y orientado a objetivos. Su reto simbólico es valorar el proceso además del resultado."],en:["Capricorn","Earth · purpose","Patient, strategic and goal-oriented. Its symbolic challenge is valuing the process as much as the result."]},
+aquarius:{symbol:"♒",es:["Acuario","Aire · originalidad","Independiente, inventivo y atraído por lo diferente. Su reto simbólico es conectar ideas con necesidades reales."],en:["Aquarius","Air · originality","Independent, inventive and drawn to the unconventional. Its symbolic challenge is connecting ideas with real needs."]},
+pisces:{symbol:"♓",es:["Piscis","Agua · imaginación","Imaginativo, receptivo y sensible al ambiente. Su reto simbólico es poner límites y mantener los pies en la tierra."],en:["Pisces","Water · imagination","Imaginative, receptive and sensitive to atmosphere. Its symbolic challenge is setting boundaries and staying grounded."]}
 };
-$("#readZodiac").addEventListener("click",()=>{const s=signs[$("#zodiacSelect").value];if(!s){toast(t("chooseFirst"));return}$("#zodiacResult").innerHTML=`<span class="zodiac-symbol">${s[0]}</span><div><b>${s[1]} · ${s[2]}</b><p>${lang==="es"?s[3]:s[4]}</p></div>`;beep(620,.08)});
-async function renderGuests(){const box=$("#guestMessages");let items=getLocal(STORAGE.guests);if(db){try{const {data,error}=await db.from("guestbook").select("name,message,created_at").order("created_at",{ascending:false}).limit(40);if(!error&&data)items=data}catch(e){}}$("#guestCount").textContent=items.length;box.innerHTML=items.length?items.map(x=>`<article class="guest-message"><b>${safeText(x.name||t("anon"))}</b><time>${x.created_at?new Date(x.created_at).toLocaleDateString():""}</time><p>${safeText(x.message)}</p></article>`).join(""):`<p class="tiny-note">${t("emptyGuests")}</p>`}
-$("#guestForm").addEventListener("submit",async e=>{e.preventDefault();const name=$("#guestName").value.trim().slice(0,32)||t("anon"),message=$("#guestMessage").value.trim();if(!message)return;const item={name,message,created_at:new Date().toISOString()};let ok=false;if(db){try{const {error}=await db.from("guestbook").insert({name,message});ok=!error}catch(e){}}if(!ok){const list=getLocal(STORAGE.guests);list.unshift(item);setLocal(STORAGE.guests,list.slice(0,50));}e.target.reset();await renderGuests();toast(ok?t("hello"):t("guestSaved"));beep(580,.07)});
-async function renderPosts(){const box=$("#postsList");let items=getLocal(STORAGE.posts);if(db){try{const {data,error}=await db.from("posts").select("title,body,created_at").order("created_at",{ascending:false}).limit(30);if(!error&&data)items=data}catch(e){}}box.innerHTML=items.length?items.map(p=>`<article class="post-card"><time>${p.created_at?new Date(p.created_at).toLocaleDateString():"LOCAL LOG"}</time><h3>${safeText(p.title)}</h3><p>${safeText(p.body)}</p></article>`).join(""):`<p class="tiny-note">${t("emptyPosts")}</p>`}
-$("#adminLogin").addEventListener("click",async()=>{if(!db){toast(t("needSupabase"));return}const email=OWNER_EMAIL||prompt(lang==="es"?"Correo autorizado para publicar:":"Authorized publishing email:");if(!email)return;try{const {error}=await db.auth.signInWithOtp({email,options:{emailRedirectTo:location.origin}});if(error)throw error;toast(lang==="es"?"Revisa tu correo para iniciar sesión.":"Check your email for the sign-in link.")}catch(err){toast("AUTH ERROR: "+(err.message||"unknown"))}});
-$("#postForm").addEventListener("submit",async e=>{e.preventDefault();const title=$("#postTitle").value.trim(),body=$("#postBody").value.trim();if(!title||!body)return;let ok=false;if(db){try{const {data:sessionData}=await db.auth.getSession();if(sessionData?.session){const {error}=await db.from("posts").insert({title,body});ok=!error}else{toast(lang==="es"?"Inicia sesión para publicar en línea.":"Sign in to publish online.");return}}catch(e){}}if(!ok){const list=getLocal(STORAGE.posts);list.unshift({title,body,created_at:new Date().toISOString()});setLocal(STORAGE.posts,list.slice(0,30));}e.target.reset();await renderPosts();toast(ok?t("hello"):t("postSaved"))});
-$("#subscribeForm").addEventListener("submit",async e=>{e.preventDefault();const email=$("#subscribeEmail").value.trim();if(!email)return;let ok=false;if(db){try{const {error}=await db.from("subscribers").insert({email});ok=!error}catch(e){}}if(ok){$("#subscribeFeedback").textContent=lang==="es"?"Listo: tu correo quedó registrado.":"Done: your email has been registered."}else{const subject=encodeURIComponent("Marcianito — subscription"),body=encodeURIComponent(`Please add ${email} to the Marcianito updates list.`);location.href=`mailto:?subject=${subject}&body=${body}`;$("#subscribeFeedback").textContent=t("emailOpen")}});
-$$(".gallery-item").forEach(btn=>btn.addEventListener("click",()=>{const src=btn.dataset.full;$("#lightboxImage").src=src;$("#lightboxCaption").textContent=src;$("#lightbox").classList.add("open");$("#lightbox").setAttribute("aria-hidden","false");beep(500,.05)}));
-function closeLightbox(){$("#lightbox").classList.remove("open");$("#lightbox").setAttribute("aria-hidden","true");$("#lightboxImage").src=""}
-$("#closeLightbox").addEventListener("click",closeLightbox);$("#lightbox").addEventListener("click",e=>{if(e.target.id==="lightbox")closeLightbox()});
-$("#langToggle").addEventListener("click",()=>{lang=lang==="es"?"en":"es";localStorage.setItem(STORAGE.lang,lang);applyLanguage();updateClock();beep(660)});
-const themes=["void","black","aqua","pink"];$("#themeToggle").addEventListener("click",()=>{theme=themes[(themes.indexOf(theme)+1)%themes.length];applyTheme();toast(`THEME: ${theme.toUpperCase()}`);beep(480)});
-$("#soundToggle").textContent=sound?"♫ ON":"♫ OFF";$("#soundToggle").addEventListener("click",()=>{sound=!sound;localStorage.setItem(STORAGE.sound,sound?"on":"off");$("#soundToggle").textContent=sound?"♫ ON":"♫ OFF";if(sound)beep(700)});
-$("#menuToggle").addEventListener("click",()=>{$(".nav-links").classList.toggle("open");beep(450)});
-$$(".nav-links a").forEach(a=>a.addEventListener("click",()=>$(".nav-links").classList.remove("open")));
-$("#randomPortal").addEventListener("click",()=>{const links=["#about","#portals","#bots","#music","#tarot","#zodiac","#archive","#guestbook"];location.hash=links[Math.floor(Math.random()*links.length)];beep(780)});
-$("#backTop").addEventListener("click",()=>window.scrollTo({top:0,behavior:"smooth"}));window.addEventListener("scroll",()=>$("#backTop").classList.toggle("visible",window.scrollY>500));
-$("#closeEgg").addEventListener("click",()=>$("#easterEgg").classList.remove("open"));
-let keyBuffer=[];window.addEventListener("keydown",e=>{keyBuffer.push(e.key.toLowerCase());keyBuffer=keyBuffer.slice(-6);if(keyBuffer.join("")==="marci!"){$("#easterEgg").classList.add("open");beep(880,.2)}if(e.key==="Escape"){closeLightbox();$("#easterEgg").classList.remove("open")}});
-document.addEventListener("click",e=>{if(e.target.closest("button,.button,.portal-card,.bot-card"))beep(390,.035)});
-const typing=["loading strange things...","searching for a signal...","bubbles in the system...","smokey.exe is awake...","marcianito was here..."];let ti=0;setInterval(()=>{const el=$("#typingText");if(el){ti=(ti+1)%typing.length;el.textContent=typing[ti]}},2800);
-const canvas=$("#stars"),ctx=canvas.getContext("2d");let particles=[];function resizeStars(){canvas.width=innerWidth*devicePixelRatio;canvas.height=innerHeight*devicePixelRatio;ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);particles=Array.from({length:Math.min(85,Math.floor(innerWidth/13))},()=>({x:Math.random()*innerWidth,y:Math.random()*innerHeight,r:Math.random()*1.5+.3,v:Math.random()*.25+.05,a:Math.random()*.65+.15}))}function drawStars(){ctx.clearRect(0,0,innerWidth,innerHeight);particles.forEach(p=>{p.y-=p.v;if(p.y<0)p.y=innerHeight;ctx.globalAlpha=p.a;ctx.fillStyle="#b9a6ff";ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill()});ctx.globalAlpha=1;requestAnimationFrame(drawStars)}addEventListener("resize",resizeStars);resizeStars();drawStars();
-const glow=$("#cursorGlow");addEventListener("pointermove",e=>{glow.style.left=e.clientX+"px";glow.style.top=e.clientY+"px"});
-applyTheme();applyLanguage();updateClock();setInterval(updateClock,1000);renderGuests();renderPosts();
-})();
+
+const tracks = [
+["2mIUxMNXw0u9gewwnomdjL","TRACK / 01"],["5T3yTmOJ1hJxnH8boXgm3l","TRACK / 02"],
+["3u2hfoDnXpCiQQRQkblecj","TRACK / 03"],["2FAZskT9yRjp2Oow9szJD8","TRACK / 04"],
+["6M8r5ddeOm2jxoagsSzuFh","TRACK / 05"],["56fgrIPr54E85K98kmgqwy","TRACK / 06"],
+["1v3rQg6uPY6AnOY5TtxN7I","TRACK / 07"]
+];
+
+const galleryFiles = [
+"27ec1d01f3606a1139891fb477d0823c.gif","367ada851d5b95fa915a6516483ff2de.gif","48f28d74336c94cb69c3f013cdb010d7.gif",
+"5054002216b1146455414c5109803df8.gif","61bbb334f5612c279e4762249156901d.gif","6825366421a47665a758e68408528d7f.gif",
+"84fc7bdae8ee0e30b5b7523deb4b9bf4.gif","8a5d7e646532fd7fa5b9f2d43b4aed9d.gif","931dd278c86d39915e40505d9746798b.gif",
+"9373bea609b7ff817932c9a5f7423018.gif","97e7c21b1e9ba1725b150f6b40c2192c.gif","9a18d5537fc7c3d42ae447feec9fce93.gif",
+"9b29799821c199a6e51e7c4f189630fa.gif","Alien.icon","Fiesta.gif","Gatozaza.jpg","Icono.png",
+"b45c6843824977b671810889cf770ccf.gif","bc81e814b7f91a5f7ebfc77b09d53ad0.gif","bc985ac37c2a7bc798014c272c8e9fed.gif",
+"ce2ae6a95fe299dbba8f4bf88a882ae2.gif","d20e4f017003e8d391df53655f1755b6.gif","d51c6960cdd215c35626921faae9ddb3.gif",
+"d8cb9352502196709a46ec16fdad7635.gif","e3608abfc943aa2fddbe524c399ebea3.gif","e8dfa1def4e972bfcc6e279438fc0dfb.gif",
+"fa2f0c9ddc8098e871c5c16d397cbea.gif"
+];
+
+const $ = (selector, root=document) => root.querySelector(selector);
+const $$ = (selector, root=document) => [...root.querySelectorAll(selector)];
+let language = localStorage.getItem(LANG_KEY) || "es";
+let currentTheme = localStorage.getItem(THEME_KEY) || "default";
+let toastTimer;
+
+function showToast(message){
+  const toast=$("#toast"); if(!toast) return;
+  toast.textContent=message; toast.classList.add("show");
+  clearTimeout(toastTimer); toastTimer=setTimeout(()=>toast.classList.remove("show"),2600);
+}
+function setLanguage(next){
+  language=next; localStorage.setItem(LANG_KEY,language);
+  document.documentElement.lang=language;
+  $$("[data-i18n]").forEach(el=>{
+    const value=translations[language][el.dataset.i18n];
+    if(value!==undefined) el.innerHTML=value;
+  });
+  $("#languageToggle").textContent=language==="es"?"EN":"ES";
+  $("#guestName").placeholder=language==="es"?"bubbles, quizá…":"maybe bubbles…";
+  $("#guestMessage").placeholder=language==="es"?"Escribe algo bonito, raro o interesante…":"Write something nice, strange or interesting…";
+  renderMessages(); updateZodiac();
+}
+function setTheme(theme){
+  document.body.classList.remove("theme-aero","theme-neon","theme-dark");
+  if(theme!=="default") document.body.classList.add(`theme-${theme}`);
+  currentTheme=theme; localStorage.setItem(THEME_KEY,theme);
+  showToast(translations[language].themeChanged);
+}
+function cycleTheme(){
+  const themes=["default","aero","neon","dark"];
+  setTheme(themes[(themes.indexOf(currentTheme)+1)%themes.length]);
+  $("#themeToggle").textContent=["◐","◉","✧","●"][themes.indexOf(currentTheme)];
+}
+function renderStars(){
+  const field=$("#starfield");
+  for(let i=0;i<65;i++){
+    const star=document.createElement("i"); star.className="star";
+    star.style.left=`${Math.random()*100}%`; star.style.top=`${Math.random()*100}%`;
+    star.style.animationDelay=`${Math.random()*4}s`; star.style.animationDuration=`${2+Math.random()*4}s`;
+    field.append(star);
+  }
+}
+function renderTracks(){
+  $("#trackGrid").innerHTML=tracks.map(([id,label],i)=>`
+    <article class="track-card"><span>${label}</span><strong>${language==="es"?"Pista en órbita":"Track in orbit"} ${String(i+1).padStart(2,"0")}</strong>
+    <a href="https://open.spotify.com/track/${id}" target="_blank" rel="noopener noreferrer">${language==="es"?"escuchar en Spotify ↗":"listen on Spotify ↗"}</a></article>`).join("");
+}
+function renderGallery(){
+  const grid=$("#galleryGrid"); grid.innerHTML="";
+  galleryFiles.forEach((file,index)=>{
+    const item=document.createElement("button"); item.type="button"; item.className="gallery-item";
+    item.setAttribute("aria-label",`${language==="es"?"Abrir":"Open"} ${file}`);
+    const thumb=document.createElement("span"); thumb.className="gallery-thumb";
+    const img=document.createElement("img"); img.src=file; img.alt=file; img.loading="lazy";
+    img.onerror=()=>{thumb.textContent="✧";thumb.title=language==="es"?"Coloca el archivo original junto a index.html":"Place the original file next to index.html";};
+    thumb.append(img);
+    const caption=document.createElement("small"); caption.textContent=file;
+    item.append(thumb,caption);
+    item.addEventListener("click",()=>{
+      const box=$("#lightbox"); $("#lightboxImage").src=file; $("#lightboxImage").alt=file;
+      $("#lightboxCaption").textContent=file; box.classList.add("open"); box.setAttribute("aria-hidden","false");
+    });
+    grid.append(item);
+  });
+}
+function closeLightbox(){
+  $("#lightbox").classList.remove("open"); $("#lightbox").setAttribute("aria-hidden","true"); $("#lightboxImage").src="";
+}
+function drawTarot(){
+  const card=tarotDeck[Math.floor(Math.random()*tarotDeck.length)];
+  const data=card[language];
+  const cardEl=$("#tarotCard"); cardEl.classList.remove("revealed");
+  window.setTimeout(()=>{
+    $("#tarotNumber").textContent=data[3]; $("#tarotGlyph").textContent=data[2];
+    $("#tarotName").textContent=data[0]; $("#tarotKeyword").textContent=data[1].toUpperCase();
+    $("#tarotReading").textContent=data[4]; cardEl.classList.add("revealed");
+  },120);
+}
+function updateZodiac(){
+  const key=$("#zodiacSelect").value, result=$("#zodiacResult");
+  if(!key){result.innerHTML=`<span class="zodiac-big">☾</span><p>${translations[language].zodiacHint}</p>`;return;}
+  const sign=zodiac[key], data=sign[language];
+  result.innerHTML=`<span class="zodiac-big">${sign.symbol}</span><p><strong>${data[0]} · ${data[1]}</strong><br>${data[2]}</p>`;
+}
+function readMessages(){
+  try{
+    const value=JSON.parse(localStorage.getItem(STORAGE_KEY)||"[]");
+    return Array.isArray(value)?value:[];
+  }catch(error){return [];}
+}
+function saveMessages(messages){
+  try{localStorage.setItem(STORAGE_KEY,JSON.stringify(messages));return true;}
+  catch(error){showToast(language==="es"?"No se pudo guardar. Revisa el almacenamiento del navegador.":"Could not save. Check browser storage.");return false;}
+}
+function renderMessages(){
+  const list=$("#messageList"), messages=readMessages();
+  if(!messages.length){list.innerHTML=`<p class="empty-state">${translations[language].emptyMessages}</p>`;return;}
+  list.innerHTML="";
+  messages.slice().reverse().forEach(message=>{
+    const card=document.createElement("article");card.className="message-card";
+    const name=document.createElement("strong");name.textContent=message.name||translations[language].anonymous;
+    const time=document.createElement("time");time.textContent=new Date(message.date).toLocaleDateString(language==="es"?"es-MX":"en-US");
+    const body=document.createElement("p");body.textContent=message.text;
+    card.append(name,time,body);list.append(card);
+  });
+}
+function initGuestbook(){
+  const form=$("#guestForm"), textarea=$("#guestMessage"), counter=$("#charCount"), name=$("#guestName"), anonymous=$("#anonymousCheck");
+  textarea.addEventListener("input",()=>counter.textContent=`${textarea.value.length} / 400`);
+  anonymous.addEventListener("change",()=>{name.disabled=anonymous.checked;name.style.opacity=anonymous.checked?".45":"1";});
+  name.disabled=true;name.style.opacity=".45";
+  form.addEventListener("submit",event=>{
+    event.preventDefault();
+    const text=textarea.value.trim();
+    if(!text){$("#formFeedback").textContent=translations[language].sendError;return;}
+    const cleanName=anonymous.checked?"":name.value.trim().slice(0,24);
+    const messages=readMessages();
+    messages.push({name:cleanName,text:text.slice(0,400),date:new Date().toISOString()});
+    if(saveMessages(messages)){textarea.value="";counter.textContent="0 / 400";$("#formFeedback").textContent=translations[language].sendOk;renderMessages();}
+  });
+  $("#clearMessages").addEventListener("click",()=>{
+    if(!readMessages().length)return;
+    if(window.confirm(translations[language].clearConfirm)){localStorage.removeItem(STORAGE_KEY);renderMessages();showToast(translations[language].cleared);}
+  });
+}
+function initContact(){
+  if(!CONTACT_EMAIL)return;
+  const link=$("#emailLink");link.href=`mailto:${CONTACT_EMAIL}`;link.textContent=language==="es"?"escríbeme ✉":"send an email ✉";
+  link.addEventListener("click",event=>{if(!CONTACT_EMAIL){event.preventDefault();showToast(translations[language].contactToast);}});
+}
+function initSound(){
+  let audioContext=null,enabled=false;
+  $("#soundToggle").addEventListener("click",()=>{
+    enabled=!enabled;$("#soundToggle").setAttribute("aria-pressed",String(enabled));
+    $("#soundToggle").textContent=enabled?"♫̸":"♫";
+    if(enabled){
+      try{audioContext=audioContext||new (window.AudioContext||window.webkitAudioContext)();}catch(e){enabled=false;}
+    }
+    showToast(enabled?(language==="es"?"Sonido sutil activado":"Subtle sound enabled"):(language==="es"?"Sonido desactivado":"Sound disabled"));
+  });
+  document.addEventListener("click",event=>{
+    if(!enabled||!audioContext||event.target.closest("button,a")===null)return;
+    const oscillator=audioContext.createOscillator(),gain=audioContext.createGain();
+    oscillator.type="sine";oscillator.frequency.value=event.target.closest("a")?660:520;
+    gain.gain.setValueAtTime(.0001,audioContext.currentTime);
+    gain.gain.exponentialRampToValueAtTime(.035,audioContext.currentTime+.012);
+    gain.gain.exponentialRampToValueAtTime(.0001,audioContext.currentTime+.11);
+    oscillator.connect(gain);gain.connect(audioContext.destination);
+    oscillator.start();oscillator.stop(audioContext.currentTime+.12);
+  });
+}
+function initNavigation(){
+  const menu=$("#menuToggle"),nav=$(".main-nav");
+  menu.addEventListener("click",()=>{
+    const open=nav.classList.toggle("open");menu.setAttribute("aria-expanded",String(open));menu.textContent=open?"×":"☰";
+  });
+  $$(".main-nav a").forEach(link=>link.addEventListener("click",()=>{nav.classList.remove("open");menu.setAttribute("aria-expanded","false");menu.textContent="☰";}));
+  const back=$("#backTop");
+  window.addEventListener("scroll",()=>back.classList.toggle("visible",window.scrollY>500),{passive:true});
+  back.addEventListener("click",()=>window.scrollTo({top:0,behavior:"smooth"}));
+  $("#backTop").addEventListener("click",()=>{});
+  $("#languageToggle").addEventListener("click",()=>{setLanguage(language==="es"?"en":"es");showToast(translations[language].languageChanged);renderTracks();});
+  $("#themeToggle").addEventListener("click",cycleTheme);
+  $("#drawCard").addEventListener("click",drawTarot);
+  $("#zodiacSelect").addEventListener("change",updateZodiac);
+  $("#lightboxClose").addEventListener("click",closeLightbox);
+  $("#lightbox").addEventListener("click",event=>{if(event.target.id==="lightbox")closeLightbox();});
+  $("#secretClose").addEventListener("click",()=>{$("#secretOverlay").classList.remove("open");$("#secretOverlay").setAttribute("aria-hidden","true");});
+  $("#secretOverlay").addEventListener("click",event=>{if(event.target.id==="secretOverlay"){$("#secretOverlay").classList.remove("open");$("#secretOverlay").setAttribute("aria-hidden","true");}});
+  document.addEventListener("keydown",event=>{if(event.key==="Escape"){closeLightbox();$("#secretOverlay").classList.remove("open");}});
+  let sequence=[];const code=["ArrowUp","ArrowUp","ArrowDown","ArrowDown","ArrowLeft","ArrowRight","ArrowLeft","ArrowRight","b","a"];
+  document.addEventListener("keydown",event=>{
+    sequence.push(event.key);sequence=sequence.slice(-code.length);
+    if(code.every((key,index)=>key.toLowerCase()===String(sequence[index]).toLowerCase())){$("#secretOverlay").classList.add("open");$("#secretOverlay").setAttribute("aria-hidden","false");sequence=[];}
+  });
+  let logoClicks=0;$(".brand-orb").addEventListener("click",()=>{logoClicks++;if(logoClicks===5){$("#secretOverlay").classList.add("open");$("#secretOverlay").setAttribute("aria-hidden","false");logoClicks=0;}});
+}
+function initCursor(){
+  const glow=$("#cursorGlow");
+  if(window.matchMedia("(pointer:fine)").matches){
+    document.addEventListener("pointermove",event=>{glow.style.left=`${event.clientX}px`;glow.style.top=`${event.clientY}px`;glow.style.opacity="1";},{passive:true});
+    document.addEventListener("pointerleave",()=>glow.style.opacity="0");
+  }
+}
+function init(){
+  renderStars();renderTracks();renderGallery();initGuestbook();initNavigation();initSound();initCursor();initContact();
+  $("#year").textContent=new Date().getFullYear();
+  setLanguage(language);
+  if(currentTheme!=="default"){document.body.classList.add(`theme-${currentTheme}`);}
+  const themeIcons={default:"◐",aero:"◉",neon:"✧",dark:"●"};$("#themeToggle").textContent=themeIcons[currentTheme]||"◐";
+  updateZodiac();
+}
+document.addEventListener("DOMContentLoaded",init);
