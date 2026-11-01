@@ -1,30 +1,20 @@
-BUBBLES × SMOKEY × ALIEN — SITIO PERSONAL
+BUBBLES / SMOKEY — sitio estático
 
-ARCHIVOS PRINCIPALES
-- index.html: estructura y contenido de la página.
-- estilo.css: diseño responsive, temas, animaciones y efectos.
-- interacciones.js: idioma, reloj, Spotify, tarot, astrología, formulario, sonidos y easter eggs.
-- assets/: coloca aquí tus imágenes y GIF originales SIN cambiar sus nombres.
+Archivos incluidos:
+- index.html (página principal; corresponde a “indice.html” de la captura, normalizado a index.html)
+- estilo.css (estilos responsivos y temas)
+- script.js (idioma, tarot, astrología, reloj, efectos y formulario)
+- assets/ (carpeta para los recursos visuales originales)
 
-IMPORTANTE SOBRE TUS RECURSOS
-La entrega recibida para construir este sitio contenía una captura de pantalla con los nombres, no los archivos GIF/PNG/JPG originales. Por eso esta carpeta no incluye copias falsas de tus imágenes. Copia tus archivos originales dentro de assets/ respetando exactamente sus nombres. El sitio ya utiliza assets/Icono.png y assets/Icono_GENERADO.png como icono y retrato decorativo; Fiesta.gif, Gatozaza.jpg y el resto pueden incorporarse en cuanto se reciban los originales.
+IMPORTANTE SOBRE LOS RECURSOS:
+En esta conversación solo se recibió una captura de pantalla con el listado de nombres; no se adjuntaron los GIF/PNG/JPG/ICON originales. No es posible reconstruir los archivos binarios desde una captura. Copia tus archivos originales sin renombrarlos a la misma carpeta que index.html (o a assets/ y ajusta las rutas en index.html). Los nombres que aparecen en la captura se han respetado donde son legibles; no se inventaron imágenes falsas.
 
-MENSAJES ANÓNIMOS
-El formulario funciona en modo demostración y guarda los mensajes en el almacenamiento local del navegador que los envía. Eso NO hace que lleguen a tu dispositivo. Para recibir mensajes desde cualquier visitante:
-1. Crea un formulario gratuito en https://formspree.io/ (o usa otro servicio de formularios).
-2. Copia el endpoint que te proporcione.
-3. Abre interacciones.js y busca FORMSPREE_ENDPOINT.
-4. Pega el endpoint entre las comillas. Vuelve a subir el sitio.
-No pongas tu Gmail públicamente en el código; usa el servicio para recibir los mensajes en tu correo sin exponer la dirección.
+Para que el formulario te llegue:
+1. Abre script.js.
+2. Busca EMAIL_DESTINO al principio.
+3. Coloca tu dirección Gmail entre comillas. Ejemplo: const EMAIL_DESTINO = "tucorreo@gmail.com";
+4. El formulario abre la app de correo de quien lo envía con el mensaje preparado. No almacena ni envía silenciosamente; para recepción automática y base de datos necesitas un servicio backend/formulario (por ejemplo Formspree o Firebase).
 
-PUBLICACIÓN
-Sube el contenido de esta carpeta a la raíz de tu hosting (por ejemplo, GitHub Pages, Netlify o cualquier hosting estático). La página no requiere instalación ni compilación. Se recomienda probarla en HTTPS.
-
-SPOTIFY
-Los reproductores oficiales necesitan conexión a internet y pueden pedir iniciar sesión o mostrar limitaciones según región/cuenta. Los enlaces de canciones y perfiles abren sus páginas originales.
-
-PRIVACIDAD Y LIMITACIONES
-- Tarot y astrología son entretenimiento/reflexión, no predicciones científicas ni certezas.
-- El reloj usa la zona horaria del visitante.
-- Los sonidos están apagados por defecto y solo se activan cuando la persona los solicita.
-- El cambio de idioma traduce la interfaz y las lecturas generadas.
+Spotify usa reproductores oficiales incrustados; pueden requerir cookies/inicio de sesión o bloquearse según el navegador.
+El reloj usa la zona horaria local del visitante. Tarot, astrología y mensajes son entretenimiento, no predicciones ni asesoría.
+Sube el contenido de esta carpeta a tu hosting manteniendo juntos index.html, estilo.css y script.js.
