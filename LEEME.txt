@@ -1,52 +1,30 @@
-BUBBLES × SMOKEY — sitio web estático
-========================================
+BUBBLES × SMOKEY × ALIEN — SITIO PERSONAL
 
-ARCHIVOS
+ARCHIVOS PRINCIPALES
 - index.html: estructura y contenido de la página.
-- estilo.css: diseño, temas, responsive y animaciones.
-- script.js: idioma, reloj, tarot, astrología, filtros, efectos y formulario.
-- assets/: aquí van las imágenes y GIF originales.
+- estilo.css: diseño responsive, temas, animaciones y efectos.
+- interacciones.js: idioma, reloj, Spotify, tarot, astrología, formulario, sonidos y easter eggs.
+- assets/: coloca aquí tus imágenes y GIF originales SIN cambiar sus nombres.
 
-PARA PUBLICAR
-1. Descomprime el ZIP.
-2. Sube index.html, estilo.css, script.js y la carpeta assets completa a la misma carpeta de tu hosting.
-3. Abre index.html. No necesita instalar paquetes ni compilar.
+IMPORTANTE SOBRE TUS RECURSOS
+La entrega recibida para construir este sitio contenía una captura de pantalla con los nombres, no los archivos GIF/PNG/JPG originales. Por eso esta carpeta no incluye copias falsas de tus imágenes. Copia tus archivos originales dentro de assets/ respetando exactamente sus nombres. El sitio ya utiliza assets/Icono.png y assets/Icono_GENERADO.png como icono y retrato decorativo; Fiesta.gif, Gatozaza.jpg y el resto pueden incorporarse en cuanto se reciban los originales.
 
-IMPORTANTE SOBRE LOS RECURSOS
-La única carga recibida en esta conversación fue una captura de pantalla del listado de archivos, no los GIF/JPG/PNG originales. Por eso no se incluyen imágenes binarias falsas. Coloca los originales dentro de assets/ conservando exactamente sus nombres. La página ya busca estos recursos:
-- Icono_GENERADO.png (avatar)
-- Icono.png
-- Gatozaza.jpg
-- Fiesta.gif
-- Alien.icon (favicon; si no funciona como icono, puedes omitirlo)
+MENSAJES ANÓNIMOS
+El formulario funciona en modo demostración y guarda los mensajes en el almacenamiento local del navegador que los envía. Eso NO hace que lleguen a tu dispositivo. Para recibir mensajes desde cualquier visitante:
+1. Crea un formulario gratuito en https://formspree.io/ (o usa otro servicio de formularios).
+2. Copia el endpoint que te proporcione.
+3. Abre interacciones.js y busca FORMSPREE_ENDPOINT.
+4. Pega el endpoint entre las comillas. Vuelve a subir el sitio.
+No pongas tu Gmail públicamente en el código; usa el servicio para recibir los mensajes en tu correo sin exponer la dirección.
 
-La captura también muestra muchos nombres hash y duplicados, pero el texto de esos nombres no se distingue con suficiente nitidez para transcribirlos sin riesgo de cambiar caracteres. Vuelve a adjuntar los archivos originales o un ZIP de la carpeta para integrarlos todos fielmente.
+PUBLICACIÓN
+Sube el contenido de esta carpeta a la raíz de tu hosting (por ejemplo, GitHub Pages, Netlify o cualquier hosting estático). La página no requiere instalación ni compilación. Se recomienda probarla en HTTPS.
 
-CONFIGURAR TU CORREO
-Abre script.js y cambia:
-  const CONTACT_EMAIL = "";
-por:
-  const CONTACT_EMAIL = "tu-correo@gmail.com";
-El botón de contacto abrirá el correo del visitante. El correo no se muestra públicamente en la página.
+SPOTIFY
+Los reproductores oficiales necesitan conexión a internet y pueden pedir iniciar sesión o mostrar limitaciones según región/cuenta. Los enlaces de canciones y perfiles abren sus páginas originales.
 
-RECIBIR MENSAJES DEL LIBRO DE VISITAS
-Por seguridad, una página HTML estática no puede guardar mensajes en una base de datos privada ni enviártelos automáticamente por sí sola.
-Para recibir mensajes desde cualquier visitante:
-1. Crea un formulario en https://formspree.io/ (o un servicio equivalente).
-2. Confirma tu correo dentro del servicio.
-3. Copia la URL de envío del formulario.
-4. En script.js, cambia FORMSPREE_ENDPOINT = "" por esa URL.
-5. Haz una prueba desde otro dispositivo.
-Si dejas ese campo vacío, el libro de visitas funciona como demostración local: guarda los mensajes en el navegador del visitante, no los envía a tu correo ni los comparte entre dispositivos. El modo anónimo oculta el nombre en el formulario.
-
-IDIOMA Y TEMAS
-- El botón ES / EN cambia los textos de la interfaz.
-- El botón theme recorre Void, Frutiger Aero, Neon y Pink.
-- El sonido comienza apagado y solo se activa si el visitante lo solicita.
-- El reloj usa la zona horaria detectada por el navegador.
-- Tarot y astrología son contenido recreativo y de reflexión, no predicciones reales.
-
-NOTAS
-- Los reproductores Spotify necesitan conexión a internet y pueden depender de cookies o de las restricciones del navegador.
-- Las fuentes web y los embeds también necesitan internet.
-- No se garantiza que servicios externos estén disponibles siempre.
+PRIVACIDAD Y LIMITACIONES
+- Tarot y astrología son entretenimiento/reflexión, no predicciones científicas ni certezas.
+- El reloj usa la zona horaria del visitante.
+- Los sonidos están apagados por defecto y solo se activan cuando la persona los solicita.
+- El cambio de idioma traduce la interfaz y las lecturas generadas.
